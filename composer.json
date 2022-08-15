@@ -5,9 +5,9 @@
   "description": "Webman plugin webman/admin",
   "require": {
     "workerman/webman-framework": "^1.4",
-    "illuminate/database": ">=8.83",
-    "illuminate/pagination": ">=8.83",
-    "illuminate/events": ">=8.83",
+    "illuminate/database": ">=7.30",
+    "illuminate/pagination": ">=7.30",
+    "illuminate/events": ">=7.30",
     "intervention/image": "^2.7",
     "webman/event": "^1.0"
   },
