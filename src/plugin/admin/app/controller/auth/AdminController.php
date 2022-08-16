@@ -37,7 +37,7 @@ class AdminController extends Base
      * 删除
      * @param Request $request
      * @return \support\Response
-     * @throws \Support\Exception\BusinessException
+     * @throws \support\exception\BusinessException
      */
     public function delete(Request $request)
     {

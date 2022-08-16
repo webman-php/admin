@@ -159,7 +159,7 @@ trait Crud
      * 删除
      * @param Request $request
      * @return \support\Response
-     * @throws \Support\Exception\BusinessException
+     * @throws \support\exception\BusinessException
      */
     public function delete(Request $request)
     {
@@ -173,7 +173,7 @@ trait Crud
      * 摘要
      * @param Request $request
      * @return \support\Response
-     * @throws \Support\Exception\BusinessException
+     * @throws \support\exception\BusinessException
      */
     public function schema(Request $request)
     {

@@ -4,10 +4,10 @@ namespace plugin\admin\app\controller\database;
 
 use Illuminate\Database\Schema\Blueprint;
 use plugin\admin\app\controller\Base;
-use plugin\admin\App\Util;
-use Support\Db;
-use Support\Exception\BusinessException;
-use Support\Request;
+use plugin\admin\app\Util;
+use support\Db;
+use support\exception\BusinessException;
+use support\Request;
 
 class TableController extends Base
 {
