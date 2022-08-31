@@ -10,7 +10,6 @@ namespace plugin\admin\app\model;
  * @property string $component 组件
  * @property string $path 路径
  * @property string $icon 图标
- * @property string $status 状态
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  * @property string $frame_src url

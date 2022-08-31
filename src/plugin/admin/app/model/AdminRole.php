@@ -8,7 +8,6 @@ namespace plugin\admin\app\model;
  * @property string $rules 规则
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
- * @property string $status 状态
  */
 class AdminRole extends Base
 {

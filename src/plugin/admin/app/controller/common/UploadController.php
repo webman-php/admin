@@ -8,9 +8,18 @@ use support\Request;
 use function base_path;
 use function json;
 
+/**
+ * 上传
+ */
 class UploadController extends Base
 {
 
+    /**
+     * 上传文件
+     *
+     * @param Request $request
+     * @return \support\Response
+     */
     public function file(Request $request)
     {
         $file = current($request->file());
@@ -30,9 +39,16 @@ class UploadController extends Base
         if ($data['code']) {
             return $this->json($data['code'], $data['message']);
         }
-        return json(['code' => 0, 'message' => 'ok', 'url' => $data['data']['src']]);
+        return json(['code' => 0, 'message' => '上传成功', 'url' => $data['data']['src']]);
     }
 
+    /**
+     * 上传头像
+     *
+     * @param Request $request
+     * @return \support\Response
+     * @throws \Exception
+     */
     public function avatar(Request $request)
     {
         $file = current($request->file());
@@ -71,13 +87,19 @@ class UploadController extends Base
 
             return json([
                 'code' => 0,
-                'message' => 'upload success',
+                'message' => '上传成功',
                 'url' => "/app/admin/$relative_path/$name.$ext"
             ]);
         }
         return json(['code' => 1, 'msg' => 'file not found']);
     }
 
+    /**
+     * 上传图片
+     *
+     * @param Request $request
+     * @return \support\Response
+     */
     public function image(Request $request)
     {
         $data = $this->base($request, '/upload/img/'.date('Ymd'));
@@ -104,12 +126,20 @@ class UploadController extends Base
             ]);
         }
         return json( [
-            'code'  => 1,
-            'message'  => 'ok',
+            'code'  => 0,
+            'message'  => '上传成功',
             'url'      => $data['data']['src']
         ]);
     }
 
+    /**
+     * 获取上传数据
+     *
+     * @param Request $request
+     * @param $relative_dir
+     * @return array
+     * @throws \Exception
+     */
     protected function base(Request $request, $relative_dir)
     {
         $relative_dir = ltrim($relative_dir, '/');
@@ -137,7 +167,7 @@ class UploadController extends Base
         $file->move($full_path);
         return [
             'code' => 0,
-            'msg'  => 'ok',
+            'msg'  => '上传成功',
             'data' => [
                 'src'      => "/app/admin/$relative_path",
                 'name'     => $file_name,

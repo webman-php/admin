@@ -13,11 +13,7 @@
  */
 
 use Webman\Route;
+use plugin\admin\app\controller\common\AccountController;
 
-
-
-Route::fallback(function (\support\Request $request) {
-    return response("url " . $request->path() . " not found", 404);
-});
-
+Route::any('/app/admin/common/account/captcha/{type}', [AccountController::class, 'captcha']);
 

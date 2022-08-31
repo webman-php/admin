@@ -13,5 +13,5 @@
  */
 
 return [
-    '' => \plugin\admin\app\exception\Handler::class,
+    '' => \plugin\admin\App\exception\Handler::class,
 ];

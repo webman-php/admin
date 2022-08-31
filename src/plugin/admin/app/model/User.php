@@ -19,7 +19,6 @@ namespace plugin\admin\app\model;
  * @property string $last_ip 上次登录ip
  * @property string $join_time 注册时间
  * @property string $join_ip 注册ip
- * @property string $status 状态
  * @property string $token token
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间

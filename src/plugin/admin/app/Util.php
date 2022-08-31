@@ -2,7 +2,7 @@
 
 namespace plugin\admin\app;
 
-use support\exception\BusinessException;
+use Support\Exception\BusinessException;
 
 class Util
 {

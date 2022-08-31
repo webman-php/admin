@@ -3,42 +3,70 @@
  * Here is your custom functions.
  */
 
-use support\Db;
-
+/**
+ * 当前登录管理员id
+ *
+ * @return mixed|null
+ */
 function admin_id()
 {
-    return session('admin_id');
+    return session('admin.id');
 }
 
-function admin($column = null)
+/**
+ * 当前管理员
+ *
+ * @param null|array|string $fields
+ * @return array|mixed|null
+ */
+function admin($fields = null)
 {
-    if (!$admin_id = admin_id()) {
+    if (!$admin = session('admin')) {
         return null;
     }
-    if ($column) {
-        if (!is_array($column)) {
-            return Db::connection('plugin.admin.mysql')->table('wa_admins')->where('id', $admin_id)->value($column);
-        }
-        return (array)Db::connection('plugin.admin.mysql')->table('wa_admins')->where('id', $admin_id)->select($column)->first();
+    if ($fields === null) {
+        return $admin;
     }
-    return (array)Db::connection('plugin.admin.mysql')->table('wa_admins')->where('id', $admin_id)->first();
+    if (is_array($fields)) {
+        $results = [];
+        foreach ($fields as $field) {
+            $results[$field] = $admin[$field] ?? null;
+        }
+        return $results;
+    }
+    return $admin[$fields] ?? null;
 }
 
+/**
+ * 当前登录用户id
+ *
+ * @return mixed|null
+ */
 function user_id()
 {
-    return session('admin_id');
+    return session('user.id');
 }
 
-function user($column = null)
+/**
+ * 当前登录用户
+ *
+ * @param null|array|string $fields
+ * @return array|mixed|null
+ */
+function user($fields = null)
 {
-    if (!$user_id = user_id()) {
+    if (!$user = session('user')) {
         return null;
     }
-    if ($column) {
-        if (!is_array($column)) {
-            return Db::connection('plugin.admin.mysql')->table('wa_users')->where('id', $user_id)->value($column);
-        }
-        return (array)Db::connection('plugin.admin.mysql')->table('wa_users')->where('id', $user_id)->select($column)->first();
+    if ($fields === null) {
+        return $user;
     }
-    return (array)Db::connection('plugin.admin.mysql')->table('wa_users')->where('id', $user_id)->first();
+    if (is_array($fields)) {
+        $results = [];
+        foreach ($fields as $field) {
+            $results[$field] = $user[$field] ?? null;
+        }
+        return $results;
+    }
+    return $user[$fields] ?? null;
 }

@@ -23,7 +23,8 @@ class Admin
         $admin = admin();
         if (!$admin) {
             $msg = '请登录';
-            $code = 1;
+            // 401是未登录固定的返回码
+            $code = 401;
             return false;
         }
 
@@ -33,7 +34,7 @@ class Admin
         }
 
         // 当前管理员无角色
-        $roles = $admin['roles'] ? explode(',', $admin['roles']) : [];
+        $roles = $admin['roles'];
         if (!$roles) {
             $msg = '无权限';
             $code = 2;
@@ -61,7 +62,9 @@ class Admin
         }
 
         // 没有当前控制器的规则
-        $rule = AdminRule::where('name', $controller)->whereIn('id', $rule_ids)->first();
+        $rule = AdminRule::where(function ($query) use ($controller, $action) {
+            $query->where('name', "$controller@$action")->orWhere('name', $controller);
+        })->whereIn('id', $rule_ids)->first();
         if (!$rule) {
             $msg = '无权限';
             $code = 2;

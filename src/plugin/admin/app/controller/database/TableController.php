@@ -4,20 +4,22 @@ namespace plugin\admin\app\controller\database;
 
 use Illuminate\Database\Schema\Blueprint;
 use plugin\admin\app\controller\Base;
-use plugin\admin\app\Util;
-use support\Db;
-use support\exception\BusinessException;
-use support\Request;
+use plugin\admin\app\model\Option;
+use plugin\admin\App\Util;
+use Support\Db;
+use Support\Exception\BusinessException;
+use Support\Request;
 
 class TableController extends Base
 {
     /**
+     * 不需要鉴权的方法
      * @var string[]
      */
     public $noNeedAuth = ['types'];
 
     /**
-     * 显示说有表
+     * 查询表
      *
      * @param Request $request
      * @return \support\Response
@@ -49,181 +51,7 @@ class TableController extends Base
     }
 
     /**
-     * 获取某条记录
-     *
-     * @param Request $request
-     * @return \support\Response
-     */
-    public function selectOne(Request $request)
-    {
-        $table = $request->get('table');
-        $column = $request->get('column');
-        $value = $request->get('value');
-        $data = (array)Db::connection('plugin.admin.mysql')->table($table)->where($column, $value)->first();
-        if (!$data) {
-            return $this->json(404, '记录不存在');
-        }
-        return $this->json(0, 'ok', $data);
-    }
-
-    /**
-     * 查询
-     *
-     * @param Request $request
-     * @return \support\Response
-     */
-    public function select(Request $request)
-    {
-        $page = $request->get('page', 1);
-        $field = $request->get('field');
-        $order = $request->get('order', 'descend');
-        $table = $request->get('table');
-        $format = $request->get('format', 'normal');
-        $page_size = $request->get('pageSize', $format === 'tree' ? 1000 : 10);
-
-        if (!preg_match('/[a-zA-Z_0-9]+/', $table)) {
-            return $this->json(1, '表不存在');
-        }
-        $allow_column = Db::select("desc $table");
-        if (!$allow_column) {
-            return $this->json(2, '表不存在');
-        }
-        $allow_column = array_column($allow_column, 'Field', 'Field');
-        if (!in_array($field, $allow_column)) {
-            $field = current($allow_column);
-        }
-        $order = $order === 'ascend' ? 'asc' : 'desc';
-        $paginator = Db::connection('plugin.admin.mysql')->table($table);
-        foreach ($request->get() as $column => $value) {
-            if (!$value) {
-                continue;
-            }
-            if (isset($allow_column[$column])) {
-                if (is_array($value)) {
-                    if ($value[0] == 'undefined' || $value[1] == 'undefined') {
-                        continue;
-                    }
-                    $paginator = $paginator->whereBetween($column, $value);
-                } else {
-                    $paginator = $paginator->where($column, $value);
-                }
-            }
-        }
-        $paginator = $paginator->orderBy($field, $order)->paginate($page_size, '*', 'page', $page);
-
-        $items = $paginator->items();
-        if ($format == 'tree') {
-            $items_map = [];
-            foreach ($items as $item) {
-                $items_map[$item->id] = (array)$item;
-            }
-            $formatted_items = [];
-            foreach ($items_map as $item) {
-                if ($item['pid'] && isset($items_map[$item['pid']])) {
-                    $items_map[$item['pid']]['children'][] = $item;
-                }
-            }
-            foreach ($items_map as $item) {
-                if (!$item['pid']) {
-                    $formatted_items[] = $item;
-                }
-            }
-            $items = $formatted_items;
-        }
-
-        return $this->json(0, 'ok', [
-            'items' => $items,
-            'total' => $paginator->total()
-        ]);
-    }
-
-    /**
-     * 插入
-     *
-     * @param Request $request
-     * @return \support\Response
-     */
-    public function insert(Request $request)
-    {
-        $table = $request->input('table');
-        $data = $request->post('data');
-        $columns = $this->getSchema($table, 'columns');
-        foreach ($data as $col => $item) {
-            if (is_array($item)) {
-                $data[$col] = implode(',', $item);
-                continue;
-            }
-            if ($col === 'password') {
-                $data[$col] = Util::passwordHash($item);
-            }
-        }
-        $datetime = date('Y-m-d H:i:s');
-        if (isset($columns['created_at']) && !isset($data['created_at'])) {
-            $data['created_at'] = $datetime;
-        }
-        if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
-            $data['updated_at'] = $datetime;
-        }
-        $id = Db::connection('plugin.admin.mysql')->table($table)->insertGetId($data);
-        return $this->json(0, $id);
-    }
-
-    /**
-     * 更新
-     *
-     * @param Request $request
-     * @return \support\Response
-     * @throws BusinessException
-     */
-    public function update(Request $request)
-    {
-        $table = $request->input('table');
-        $column = $request->post('column');
-        $value = $request->post('value');
-        $data = $request->post('data');
-        $columns = $this->getSchema($table, 'columns');
-        foreach ($data as $col => $item) {
-            if (is_array($item)) {
-                $data[$col] = implode(',', $item);
-            }
-            if ($col === 'password') {
-                // 密码为空，则不更新密码
-                if ($item == '') {
-                    unset($data[$col]);
-                    continue;
-                }
-                $data[$col] = Util::passwordHash($item);
-            }
-        }
-        $datetime = date('Y-m-d H:i:s');
-        if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
-            $data['updated_at'] = $datetime;
-        }
-        var_export($data);
-        Util::checkTableName($table);
-        Db::connection('plugin.admin.mysql')->table($table)->where($column, $value)->update($data);
-        return $this->json(0);
-    }
-
-    /**
-     * 删除
-     *
-     * @param Request $request
-     * @return \support\Response
-     * @throws BusinessException
-     */
-    public function delete(Request $request)
-    {
-        $table = $request->input('table');
-        $column = $request->post('column');
-        $value = $request->post('value');
-        Util::checkTableName($table);
-        Db::connection('plugin.admin.mysql')->table($table)->where([$column => $value])->delete();
-        return $this->json(0);
-    }
-
-    /**
-     * 创建
+     * 创建表
      *
      * @param Request $request
      * @return \support\Response
@@ -273,13 +101,7 @@ class TableController extends Base
             $form_schema_map[$item['field']] = $item;
         }
         $form_schema_map = json_encode($form_schema_map, JSON_UNESCAPED_UNICODE);
-        $option = Db::connection('plugin.admin.mysql')->table('wa_options')->where('name', "table_form_schema_$table_name")->first();
-        if ($option) {
-            Db::connection('plugin.admin.mysql')->table('wa_options')->where('name', "table_form_schema_$table_name")->update(['value' => $form_schema_map]);
-        } else {
-            Db::connection('plugin.admin.mysql')->table('wa_options')->insert(['name' => "table_form_schema_$table_name", 'value' => $form_schema_map]);
-        }
-
+        $this->updateSchemaOption($table_name, $form_schema_map);
         return $this->json(0, 'ok');
     }
 
@@ -317,9 +139,13 @@ class TableController extends Base
                 //Db::statement("ALTER TABLE $table_name RENAME COLUMN {$column['old_field']} to $field");
             }
 
+            $old_column = $old_columns[$field] ?? [];
             // 类型更改
-            if (isset($old_columns[$field])) {
-                $this->modifyColumn($column, $table_name);
+            foreach ($old_column as $key => $value) {
+                if (isset($column[$key]) && $column[$key] != $value) {
+                    $this->modifyColumn($column, $table_name);
+                    break;
+                }
             }
         }
 
@@ -395,17 +221,169 @@ class TableController extends Base
             $form_schema_map[$item['field']] = $item;
         }
         $form_schema_map = json_encode($form_schema_map, JSON_UNESCAPED_UNICODE);
-        $option = Db::connection('plugin.admin.mysql')->table('wa_options')->where('name', "table_form_schema_$table_name")->first();
-        if ($option) {
-            Db::connection('plugin.admin.mysql')->table('wa_options')->where('name', "table_form_schema_$table_name")->update(['value' => $form_schema_map]);
-        } else {
-            Db::connection('plugin.admin.mysql')->table('wa_options')->insert(['name' => "table_form_schema_$table_name", 'value' => $form_schema_map]);
-        }
-        return $this->json(0,"table_form_schema_$table_name");
+        $option_name = $this->updateSchemaOption($table_name, $form_schema_map);
+
+        return $this->json(0,$option_name);
     }
 
     /**
-     * 摘要
+     * 查询记录
+     *
+     * @param Request $request
+     * @return \support\Response
+     */
+    public function select(Request $request)
+    {
+        $page = $request->get('page', 1);
+        $field = $request->get('field');
+        $order = $request->get('order', 'descend');
+        $table = $request->get('table');
+        $format = $request->get('format', 'normal');
+        $page_size = $request->get('pageSize', $format === 'tree' ? 1000 : 10);
+
+        if (!preg_match('/[a-zA-Z_0-9]+/', $table)) {
+            return $this->json(1, '表不存在');
+        }
+        $allow_column = Db::select("desc $table");
+        if (!$allow_column) {
+            return $this->json(2, '表不存在');
+        }
+        $allow_column = array_column($allow_column, 'Field', 'Field');
+        if (!in_array($field, $allow_column)) {
+            $field = current($allow_column);
+        }
+        $order = $order === 'ascend' ? 'asc' : 'desc';
+        $paginator = Db::connection('plugin.admin.mysql')->table($table);
+        foreach ($request->get() as $column => $value) {
+            if (!$value) {
+                continue;
+            }
+            if (isset($allow_column[$column])) {
+                if (is_array($value)) {
+                    if ($value[0] == 'undefined' || $value[1] == 'undefined') {
+                        continue;
+                    }
+                    $paginator = $paginator->whereBetween($column, $value);
+                } else {
+                    $paginator = $paginator->where($column, $value);
+                }
+            }
+        }
+        $paginator = $paginator->orderBy($field, $order)->paginate($page_size, '*', 'page', $page);
+
+        $items = $paginator->items();
+        if ($format == 'tree') {
+            $items_map = [];
+            foreach ($items as $item) {
+                $items_map[$item->id] = (array)$item;
+            }
+            $formatted_items = [];
+            foreach ($items_map as $item) {
+                if ($item['pid'] && isset($items_map[$item['pid']])) {
+                    $items_map[$item['pid']]['children'][] = $item;
+                }
+            }
+            foreach ($items_map as $item) {
+                if (!$item['pid']) {
+                    $formatted_items[] = $item;
+                }
+            }
+            $items = $formatted_items;
+        }
+
+        return $this->json(0, 'ok', [
+            'items' => $items,
+            'total' => $paginator->total()
+        ]);
+    }
+
+    /**
+     * 插入记录
+     *
+     * @param Request $request
+     * @return \support\Response
+     */
+    public function insert(Request $request)
+    {
+        $table = $request->input('table');
+        $data = $request->post('data');
+        $columns = $this->getSchema($table, 'columns');
+        foreach ($data as $col => $item) {
+            if (is_array($item)) {
+                $data[$col] = implode(',', $item);
+                continue;
+            }
+            if ($col === 'password') {
+                $data[$col] = Util::passwordHash($item);
+            }
+        }
+        $datetime = date('Y-m-d H:i:s');
+        if (isset($columns['created_at']) && !isset($data['created_at'])) {
+            $data['created_at'] = $datetime;
+        }
+        if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
+            $data['updated_at'] = $datetime;
+        }
+        $id = Db::connection('plugin.admin.mysql')->table($table)->insertGetId($data);
+        return $this->json(0, $id);
+    }
+
+    /**
+     * 更新记录
+     *
+     * @param Request $request
+     * @return \support\Response
+     * @throws BusinessException
+     */
+    public function update(Request $request)
+    {
+        $table = $request->input('table');
+        $column = $request->post('column');
+        $value = $request->post('value');
+        $data = $request->post('data');
+        $columns = $this->getSchema($table, 'columns');
+        foreach ($data as $col => $item) {
+            if (is_array($item)) {
+                $data[$col] = implode(',', $item);
+            }
+            if ($col === 'password') {
+                // 密码为空，则不更新密码
+                if ($item == '') {
+                    unset($data[$col]);
+                    continue;
+                }
+                $data[$col] = Util::passwordHash($item);
+            }
+        }
+        $datetime = date('Y-m-d H:i:s');
+        if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
+            $data['updated_at'] = $datetime;
+        }
+        var_export($data);
+        Util::checkTableName($table);
+        Db::connection('plugin.admin.mysql')->table($table)->where($column, $value)->update($data);
+        return $this->json(0);
+    }
+
+    /**
+     * 删除记录
+     *
+     * @param Request $request
+     * @return \support\Response
+     * @throws BusinessException
+     */
+    public function delete(Request $request)
+    {
+        $table = $request->input('table');
+        $column = $request->post('column');
+        $value = $request->post('value');
+        Util::checkTableName($table);
+        Db::connection('plugin.admin.mysql')->table($table)->where([$column => $value])->delete();
+        return $this->json(0);
+    }
+
+    /**
+     * 表摘要
      *
      * @param Request $request
      * @return \support\Response
@@ -415,7 +393,7 @@ class TableController extends Base
     {
         $table = $request->get('table');
         Util::checkTableName($table);
-        $schema = Db::connection('plugin.admin.mysql')->table('wa_options')->where('name', "table_form_schema_$table")->value('value');
+        $schema = Option::where('name', "table_form_schema_$table")->value('value');
         $form_schema_map = $schema ? json_decode($schema, true) : [];
 
         $data = $this->getSchema($table);
@@ -542,6 +520,8 @@ class TableController extends Base
             return $this->json(400, "$table_name 不允许删除");
         }
         Db::schema()->drop($table_name);
+        // 删除schema
+        Db::table('wa_options')->where('name', "table_form_schema_$table_name")->delete();
         return $this->json(0, 'ok');
     }
 
@@ -696,6 +676,36 @@ class TableController extends Base
     {
         $types = Util::methodControlMap();
         return $this->json(0, 'ok', $types);
+    }
+
+    /**
+     * 获取在options对用的name
+     *
+     * @param $table_name
+     * @return string
+     */
+    protected function getSchemaOptionName($table_name)
+    {
+        return "table_form_schema_$table_name";
+    }
+
+    /**
+     * 更新表的form schema信息
+     *
+     * @param $table_name
+     * @param $data
+     * @return string
+     */
+    protected function updateSchemaOption($table_name, $data)
+    {
+        $option_name = $this->getSchemaOptionName($table_name);
+        $option = Option::where('name', $option_name)->first();
+        if ($option) {
+            Option::where('name', $option_name)->update(['value' => $data]);
+        } else {
+            Option::insert(['name' => $option_name, 'value' => $data]);
+        }
+        return $option_name;
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace plugin\admin\app\controller;
 
+use plugin\admin\app\model\Option;
 use plugin\admin\app\Util;
 use support\Db;
 use support\Model;
@@ -18,68 +19,42 @@ trait Crud
 
     /**
      * 查询
+     *
      * @param Request $request
      * @return \support\Response
      */
     public function select(Request $request)
     {
-        $page = $request->get('page', 1);
-        $field = $request->get('field');
-        $order = $request->get('order', 'descend');
-        $format = $request->get('format', 'normal');
-        $page_size = $request->get('pageSize', $format === 'tree' ? 1000 : 10);
+        [$where, $format, $page_size, $field, $order] = $this->selectInput($request);
 
-        $table = $this->model->getTable();
-
-        $allow_column = Db::select("desc $table");
-        if (!$allow_column) {
-            return $this->json(2, '表不存在');
-        }
-        $allow_column = array_column($allow_column, 'Field', 'Field');
-        if (!in_array($field, $allow_column)) {
-            $field = current($allow_column);
-        }
-        $order = $order === 'ascend' ? 'asc' : 'desc';
-        $paginator = $this->model;
-        foreach ($request->get() as $column => $value) {
-            if (!$value) {
-                continue;
-            }
-            if (isset($allow_column[$column])) {
-                if (is_array($value)) {
-                    if ($value[0] == 'undefined' || $value[1] == 'undefined') {
-                        continue;
-                    }
-                    $paginator = $paginator->whereBetween($column, $value);
+        $model = $this->model;
+        foreach ($where as $column => $value) {
+            if (is_array($value)) {
+                if (in_array($value[0], ['>', '=', '<', '<>'])) {
+                    $model = $model->where($column, $value[0], $value[1]);
+                } elseif ($value[0] == 'in') {
+                    $model = $model->whereIn($column, $value[1]);
                 } else {
-                    $paginator = $paginator->where($column, $value);
+                    $model = $model->whereBetween($column, $value);
                 }
+            } else {
+                $model = $model->where($column, $value);
             }
         }
-        $paginator = $paginator->orderBy($field, $order)->paginate($page_size, '*', 'page', $page);
-
-        $items = $paginator->items();
-        if ($format == 'tree') {
-            $items_map = [];
-            foreach ($items as $item) {
-                $items_map[$item->id] = $item->toArray();
+        $model = $model->orderBy($field, $order);
+        if (in_array($format, ['select', 'tree', 'table_tree'])) {
+            $items = $model->get();
+            if ($format == 'select') {
+                return $this->formatSelect($items);
+            } elseif ($format == 'tree') {
+                return $this->formatTree($items);
             }
-            $formatted_items = [];
-            foreach ($items_map as $item) {
-                if ($item['pid'] && isset($items_map[$item['pid']])) {
-                    $items_map[$item['pid']]['children'][] = $item;
-                }
-            }
-            foreach ($items_map as $item) {
-                if (!$item['pid']) {
-                    $formatted_items[] = $item;
-                }
-            }
-            $items = $formatted_items;
+            return $this->formatTableTree($items);
         }
 
+        $paginator = $model->paginate($page_size);
         return $this->json(0, 'ok', [
-            'items' => $items,
+            'items' => $paginator->items(),
             'total' => $paginator->total()
         ]);
     }
@@ -93,7 +68,7 @@ trait Crud
     {
         $data = $request->post('data');
         $table = $this->model->getTable();
-        $allow_column = Db::select("desc $table");
+        $allow_column = Db::select("desc `$table`");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }
@@ -129,11 +104,10 @@ trait Crud
         $value = $request->post('value');
         $data = $request->post('data');
         $table = $this->model->getTable();
-        $allow_column = Db::select("desc $table");
+        $allow_column = Db::select("desc `$table`");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }
-        $columns = array_column($allow_column, 'Field', 'Field');
         foreach ($data as $col => $item) {
             if (is_array($item)) {
                 $data[$col] = implode(',', $item);
@@ -147,10 +121,6 @@ trait Crud
                 $data[$col] = Util::passwordHash($item);
             }
         }
-        $datetime = date('Y-m-d H:i:s');
-        if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
-            $data['updated_at'] = $datetime;
-        }
         $this->model->where($column, $value)->update($data);
         return $this->json(0);
     }
@@ -159,7 +129,7 @@ trait Crud
      * 删除
      * @param Request $request
      * @return \support\Response
-     * @throws \support\exception\BusinessException
+     * @throws \Support\Exception\BusinessException
      */
     public function delete(Request $request)
     {
@@ -173,13 +143,13 @@ trait Crud
      * 摘要
      * @param Request $request
      * @return \support\Response
-     * @throws \support\exception\BusinessException
+     * @throws \Support\Exception\BusinessException
      */
     public function schema(Request $request)
     {
         $table = $this->model->getTable();
         Util::checkTableName($table);
-        $schema = Db::connection('plugin.admin.mysql')->table('wa_options')->where('name', "table_form_schema_$table")->value('value');
+        $schema = Option::where('name', "table_form_schema_$table")->value('value');
         $form_schema_map = $schema ? json_decode($schema, true) : [];
 
         $data = $this->getSchema($table);
@@ -197,6 +167,13 @@ trait Crud
         ]);
     }
 
+    /**
+     * 按表获取摘要
+     *
+     * @param $table
+     * @param $section
+     * @return array|mixed
+     */
     protected function getSchema($table, $section = null)
     {
         $database = config('database.connections')['plugin.admin.mysql']['database'];
@@ -230,7 +207,7 @@ trait Crud
             ];
         }
         $table_schema = $section == 'table' || !$section ? Db::select("SELECT TABLE_COMMENT FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' and TABLE_NAME='$table'") : [];
-        $indexes = $section == 'keys' || !$section ? Db::select("SHOW INDEX FROM $table") : [];
+        $indexes = $section == 'keys' || !$section ? Db::select("SHOW INDEX FROM `$table`") : [];
         $keys = [];
         foreach ($indexes as $index) {
             $key_name = $index->Key_name;
@@ -274,6 +251,112 @@ trait Crud
             return $schema->CHARACTER_MAXIMUM_LENGTH;
         }
         return '';
+    }
+
+    /**
+     * @param Request $request
+     * @return array|\support\Response
+     */
+    protected function selectInput(Request $request)
+    {
+        $field = $request->get('field');
+        $order = $request->get('order', 'descend');
+        $format = $request->get('format', 'normal');
+        $page_size = $request->get('pageSize', $format === 'tree' ? 1000 : 10);
+        $order = $order === 'ascend' ? 'asc' : 'desc';
+        $where = $request->get();
+        $table = $this->model->getTable();
+
+        $allow_column = Db::select("desc `$table`");
+        if (!$allow_column) {
+            return $this->json(2, '表不存在');
+        }
+        $allow_column = array_column($allow_column, 'Field', 'Field');
+        if (!in_array($field, $allow_column)) {
+            $field = current($allow_column);
+        }
+        foreach ($where as $column => $value) {
+            if (!$value || !isset($allow_column[$column]) ||
+                (is_array($value) && ($value[0] == 'undefined' || $value[1] == 'undefined'))) {
+                unset($where[$column]);
+            }
+        }
+
+        return [$where, $format, $page_size, $field, $order];
+    }
+
+    /**
+     * 树
+     *
+     * @param $items
+     * @return \support\Response
+     */
+    protected function formatTree($items)
+    {
+        $items_map = [];
+        foreach ($items as $item) {
+            $items_map[$item->id] = [
+                'title' => $item->title ?? $item->name ?? $item->id,
+                'value' => (string)$item->id,
+                'key' => (string)$item->id,
+                'pid' => $item->pid,
+            ];
+        }
+        $formatted_items = [];
+        foreach ($items_map as $index => $item) {
+            if ($item['pid'] && isset($items_map[$item['pid']])) {
+                $items_map[$item['pid']]['children'][] = &$items_map[$index];
+            }
+        }
+        foreach ($items_map as $item) {
+            if (!$item['pid']) {
+                $formatted_items[] = $item;
+            }
+        }
+        return  $this->json(0, 'ok', $formatted_items);
+    }
+
+    /**
+     * 表格树
+     *
+     * @param $items
+     * @return \support\Response
+     */
+    protected function formatTableTree($items)
+    {
+        $items_map = [];
+        foreach ($items as $item) {
+            $items_map[$item->id] = $item->toArray();
+        }
+        $formatted_items = [];
+        foreach ($items_map as $item) {
+            if ($item['pid'] && isset($items_map[$item['pid']])) {
+                $items_map[$item['pid']]['children'][] = $item;
+            }
+        }
+        foreach ($items_map as $item) {
+            if (!$item['pid']) {
+                $formatted_items[] = $item;
+            }
+        }
+        return $this->json(0, 'ok', $formatted_items);
+    }
+
+    /**
+     * @param $items
+     * @return \support\Response
+     */
+    protected function formatSelect($items)
+    {
+        $formatted_items = [];
+        foreach ($items as $item) {
+            $formatted_items[] = [
+                'title' => $item->title ?? $item->name ?? $item->id,
+                'value' => $item->id,
+                'key' => $item->id,
+            ];
+        }
+        return  $this->json(0, 'ok', $formatted_items);
     }
 
     protected function json(int $code, string $msg = 'ok', array $data = [])

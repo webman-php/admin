@@ -13,7 +13,6 @@ namespace plugin\admin\app\model;
  * @property string $mobile 手机
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
- * @property string $status 状态
  * @property string $roles 角色
  */
 class Admin extends Base

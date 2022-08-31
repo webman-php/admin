@@ -20,9 +20,9 @@ use Webman\Http\Response;
 
 /**
  * Class Handler
- * @package support\exception
+ * @package Support\Exception
  */
-class Handler extends \support\exception\Handler
+class Handler extends \Support\Exception\Handler
 {
     public function render(Request $request, Throwable $exception): Response
     {
