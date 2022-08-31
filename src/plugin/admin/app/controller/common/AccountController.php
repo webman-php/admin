@@ -162,7 +162,7 @@ class AccountController extends Base
             }
         }
         if (isset($update_data['password'])) {
-            $update_data['password'] = Util::passwordHash($update_data['password'], );
+            $update_data['password'] = Util::passwordHash($update_data['password']);
         }
         Admin::where('id', admin_id())->update($update_data);
         return $this->json(0);
