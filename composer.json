@@ -9,7 +9,8 @@
     "illuminate/pagination": ">=7.30",
     "illuminate/events": ">=7.30",
     "intervention/image": "^2.7",
-    "webman/event": "^1.0"
+    "webman/event": "^1.0",
+    "gregwar/captcha": "^1.1.0"
   },
   "autoload": {
     "psr-4": {
