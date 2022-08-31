@@ -13,11 +13,9 @@
  */
 
 use plugin\admin\app\middleware\AccessControl;
-use Webman\Log\Middleware;
 
 return [
     '' => [
-        Middleware::class,
         AccessControl::class,
     ]
 ];
