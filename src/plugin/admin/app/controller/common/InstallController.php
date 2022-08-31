@@ -2,7 +2,6 @@
 
 namespace plugin\admin\app\controller\common;
 
-use Illuminate\Database\Capsule\Manager as Capsule;
 use plugin\admin\app\controller\Base;
 use plugin\admin\app\model\Admin;
 use plugin\admin\app\Util;
@@ -56,34 +55,16 @@ class InstallController extends Base
         $port = $request->post('port');
         $overwrite = $request->post('overwrite');
 
-        $capsule = new Capsule;
-        $capsule->addConnection([
-            'driver'      => 'mysql',
-            'host'        => $host,
-            'port'        => $port,
-            'database'    => $database,
-            'username'    => $user,
-            'password'    => $password,
-            'unix_socket' => '',
-            'charset'     => 'utf8mb4',
-            'collation'   => 'utf8mb4_general_ci',
-            'prefix'      => '',
-            'strict'      => true,
-            'options' => [
-                \PDO::ATTR_TIMEOUT => 5
-            ]
-        ], 'tmp');
-
-        $tables_to_install = [
-            'wa_admins',
-            'wa_admin_roles',
-            'wa_admin_rules',
-            'wa_options',
-            'wa_users',
-        ];
-
+        $dsn = "mysql:dbname=$database;host=$host;port=$port;";
         try {
-            $tables = $capsule->getConnection('tmp')->select('show tables');
+            $params = [
+                \PDO::MYSQL_ATTR_INIT_COMMAND => "set names utf8mb4", //设置编码
+                \PDO::ATTR_EMULATE_PREPARES   => false,
+                \PDO::ATTR_TIMEOUT => 5
+            ];
+            $db = new \PDO($dsn, $user, $password, $params);
+            $smt = $db->query("show tables");
+            $tables = $smt->fetchAll();
         } catch (\Throwable $e) {
             if (stripos($e, 'Access denied for user')) {
                 return $this->json(1, '数据库用户名或密码错误');
@@ -96,10 +77,18 @@ class InstallController extends Base
             }
             throw $e;
         }
+
+        $tables_to_install = [
+            'wa_admins',
+            'wa_admin_roles',
+            'wa_admin_rules',
+            'wa_options',
+            'wa_users',
+        ];
+
         if (!$overwrite) {
             $tables_exist = [];
             foreach ($tables as $table) {
-                unset($table->Table_type);
                 $tables_exist[] = current($table);
             }
             $tables_conflict = array_intersect($tables_to_install, $tables_exist);
@@ -114,12 +103,12 @@ class InstallController extends Base
         }
 
         $sql_query = file_get_contents($sql_file);
-        $sql_query = $this->removeRemarks($sql_query);
         $sql_query = $this->removeComments($sql_query);
         $sql_query = $this->splitSqlFile($sql_query, ';');
         foreach ($sql_query as $sql) {
-            $capsule->getConnection('tmp')->statement($sql);
+            $db->exec($sql);
         }
+
         $config_content = <<<EOF
 <?php
 return  [
@@ -184,51 +173,12 @@ EOF;
     /**
      * 去除sql文件中的注释
      *
-     * @param $output
-     * @return string
-     */
-    protected function removeComments($output)
-    {
-        $lines = explode("\n", $output);
-        $output = "";
-        $linecount = count($lines);
-        $in_comment = false;
-        for ($i = 0; $i < $linecount; $i++) {
-            if (preg_match("/^\/\*/", preg_quote($lines[$i]))) {
-                $in_comment = true;
-            }
-            if (!$in_comment) {
-                $output .= $lines[$i] . "\n";
-            }
-
-            if (preg_match("/\*\/$/", preg_quote($lines[$i]))) {
-                $in_comment = false;
-            }
-        }
-        unset($lines);
-        return $output;
-    }
-
-    /**
      * @param $sql
      * @return string
      */
-    protected function removeRemarks($sql)
+    protected function removeComments($sql)
     {
-        $lines = explode("\n", $sql);
-        $linecount = count($lines);
-        $output = "";
-        for ($i = 0; $i < $linecount; $i++) {
-            if (($i != ($linecount - 1)) || (strlen($lines[$i]) > 0)) {
-                if (isset($lines[$i][0]) && $lines[$i][0] != "#") {
-                    $output .= $lines[$i] . "\n";
-                } else {
-                    $output .= "\n";
-                }
-                $lines[$i] = "";
-            }
-        }
-        return $output;
+        return preg_replace("/(\n--[^\n]*)/","", $sql);
     }
 
     /**
