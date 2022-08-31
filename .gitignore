@@ -1,0 +1,7 @@
+/.idea
+/.vscode
+/vendor
+*.log
+.env
+src/plugin/admin/upload
+src/plugin/admin/config/database.php
