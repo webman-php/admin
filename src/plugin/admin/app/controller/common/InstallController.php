@@ -2,6 +2,8 @@
 
 namespace plugin\admin\app\controller\common;
 
+use Gregwar\Captcha\CaptchaBuilder;
+use Illuminate\Database\Capsule\Manager;
 use plugin\admin\app\controller\Base;
 use plugin\admin\app\model\Admin;
 use plugin\admin\app\Util;
@@ -22,19 +24,6 @@ class InstallController extends Base
     public $noNeedLogin = ['step1', 'step2'];
 
     /**
-     * @var Admin
-     */
-    protected $model = null;
-
-    /**
-     * 构造函数
-     */
-    public function __construct()
-    {
-        $this->model = new Admin;
-    }
-
-    /**
      * 设置数据库
      *
      * @param Request $request
@@ -44,8 +33,13 @@ class InstallController extends Base
     public function step1(Request $request)
     {
         $database_config_file = base_path() . '/plugin/admin/config/database.php';
+        clearstatcache();
         if (is_file($database_config_file)) {
             return $this->json(1, '管理后台已经安装！如需重新安装，请删除该插件数据库配置文件并重启');
+        }
+
+        if (!class_exists(CaptchaBuilder::class) || !class_exists(Manager::class)) {
+            return $this->json(1, '请先restart重启webman后再进行此页面的设置');
         }
 
         $user = $request->post('user');
