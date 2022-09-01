@@ -45,7 +45,7 @@ class AdminRoleController extends Base
         $value = $request->post('value');
         $data = $request->post('data');
         $table = $this->model->getTable();
-        $allow_column = Db::select("desc $table");
+        $allow_column = Util::db()->select("desc $table");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }

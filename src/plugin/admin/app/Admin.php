@@ -3,10 +3,39 @@ namespace plugin\admin\app;
 
 use plugin\admin\app\model\AdminRole;
 use plugin\admin\app\model\AdminRule;
+use support\exception\BusinessException;
 
 class Admin
 {
-    public static function canAccess($controller, $action, &$code = 0, &$msg = '')
+    /**
+     * 判断权限
+     * 如果没有权限则抛出异常
+     *
+     * @param string $controller
+     * @param string $action
+     * @return void
+     * @throws \ReflectionException
+     */
+    public static function access(string $controller, string $action)
+    {
+        $code = 0;
+        $msg = '';
+        if (!static::canAccess($controller, $action, $code, $msg)) {
+            throw new BusinessException($msg, $code);
+        }
+    }
+
+    /**
+     * 判断是否有权限
+     *
+     * @param string $controller
+     * @param string $action
+     * @param int $code
+     * @param string $msg
+     * @return bool
+     * @throws \ReflectionException
+     */
+    public static function canAccess(string $controller, string $action, int &$code = 0, string &$msg = '')
     {
         // 获取控制器鉴权信息
         $class = new \ReflectionClass($controller);

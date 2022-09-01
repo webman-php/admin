@@ -150,7 +150,7 @@ class AdminRuleController extends Base
     {
         $data = $request->post('data');
         $table = $this->model->getTable();
-        $allow_column = Db::select("desc $table");
+        $allow_column = Util::db()->select("desc $table");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }
@@ -322,7 +322,7 @@ class AdminRuleController extends Base
         try {
             $database = config('database.connections')['plugin.admin.mysql']['database'];
             //plugin.admin.mysql
-            foreach (Db::connection('plugin.admin.mysql')->select("select COLUMN_NAME,DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT from INFORMATION_SCHEMA.COLUMNS where table_name = '$table' and table_schema = '$database'") as $item) {
+            foreach (Util::db()->select("select COLUMN_NAME,DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT from INFORMATION_SCHEMA.COLUMNS where table_name = '$table' and table_schema = '$database'") as $item) {
                 if ($item->COLUMN_KEY === 'PRI') {
                     $pk = $item->COLUMN_NAME;
                     $item->COLUMN_COMMENT .= "(主键)";

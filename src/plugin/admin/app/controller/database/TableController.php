@@ -34,13 +34,13 @@ class TableController extends Base
             $field = 'TABLE_NAME';
         }
         $order = $order === 'ascend' ? 'asc' : 'desc';
-        $tables = Db::select("SELECT TABLE_NAME,TABLE_COMMENT,ENGINE,TABLE_ROWS,CREATE_TIME,UPDATE_TIME,TABLE_COLLATION FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' order by $field $order");
+        $tables = Util::db()->select("SELECT TABLE_NAME,TABLE_COMMENT,ENGINE,TABLE_ROWS,CREATE_TIME,UPDATE_TIME,TABLE_COLLATION FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' order by $field $order");
 
         if ($tables) {
             $table_names = array_column($tables, 'TABLE_NAME');
             $table_rows_count = [];
             foreach ($table_names as $table_name) {
-                $table_rows_count[$table_name] = Db::connection('plugin.admin.mysql')->table($table_name)->count();
+                $table_rows_count[$table_name] = Util::db()->table($table_name)->count();
             }
             foreach ($tables as $key => $table) {
                 $tables[$key]->TABLE_ROWS = $table_rows_count[$table->TABLE_NAME] ?? $table->TABLE_ROWS;
@@ -63,7 +63,7 @@ class TableController extends Base
         $table_comment = $data['table']['comment'];
         $columns = $data['columns'];
         $keys = $data['keys'];
-        Db::schema()->create($table_name, function (Blueprint $table) use ($columns) {
+        Util::db()->schema()->create($table_name, function (Blueprint $table) use ($columns) {
             $type_method_map = Util::methodControlMap();
             foreach ($columns as $column) {
                 if (!isset($column['type'])) {
@@ -79,10 +79,10 @@ class TableController extends Base
             $table->engine = 'InnoDB';
         });
         // @todo 防注入
-        Db::statement("ALTER TABLE `$table_name` COMMENT '$table_comment'");
+        Util::db()->statement("ALTER TABLE `$table_name` COMMENT '$table_comment'");
 
         // 索引
-        Db::schema()->table($table_name, function (Blueprint $table) use ($keys) {
+        Util::db()->schema()->table($table_name, function (Blueprint $table) use ($keys) {
             foreach ($keys as $key) {
                 $name = $key['name'];
                 $columns = $key['columns'];
@@ -123,7 +123,7 @@ class TableController extends Base
         // 改表名
         if ($table_name != $old_table_name) {
             Util::checkTableName($table_name);
-            Db::schema()->rename($old_table_name, $table_name);
+            Util::db()->schema()->rename($old_table_name, $table_name);
         }
 
         $old_columns = $this->getSchema($table_name, 'columns');
@@ -136,7 +136,7 @@ class TableController extends Base
 
             // 重命名的字段 mysql8才支持？
             if (isset($column['old_field']) && $column['old_field'] !== $field) {
-                //Db::statement("ALTER TABLE $table_name RENAME COLUMN {$column['old_field']} to $field");
+                //Util::db()->statement("ALTER TABLE $table_name RENAME COLUMN {$column['old_field']} to $field");
             }
 
             $old_column = $old_columns[$field] ?? [];
@@ -152,11 +152,11 @@ class TableController extends Base
         $table = $this->getSchema($table_name, 'table');
         // @todo $table_comment 防止SQL注入
         if ($table_comment !== $table['comment']) {
-            Db::statement("ALTER TABLE `$table_name` COMMENT '$table_comment'");
+            Util::db()->statement("ALTER TABLE `$table_name` COMMENT '$table_comment'");
         }
 
         $old_columns = $this->getSchema($table_name, 'columns');
-        Db::schema()->table($table_name, function (Blueprint $table) use ($columns, $old_columns, $keys, $table_name) {
+        Util::db()->schema()->table($table_name, function (Blueprint $table) use ($columns, $old_columns, $keys, $table_name) {
             foreach ($columns as $column) {
                 $field = $column['field'];
                 // 新字段
@@ -179,11 +179,11 @@ class TableController extends Base
         $drop_column_names = array_diff($old_columns_names, $exists_column_names);
         foreach ($drop_column_names as $drop_column_name) {
             //$table->dropColumn($drop_column_name); 无法使用
-            Db::statement("ALTER TABLE $table_name DROP COLUMN $drop_column_name");
+            Util::db()->statement("ALTER TABLE $table_name DROP COLUMN $drop_column_name");
         }
 
         $old_keys = $this->getSchema($table_name, 'keys');
-        Db::schema()->table($table_name, function (Blueprint $table) use ($keys, $old_keys, $table_name) {
+        Util::db()->schema()->table($table_name, function (Blueprint $table) use ($keys, $old_keys, $table_name) {
             foreach ($keys as $key) {
                 $key_name = $key['name'];
                 $old_key = $old_keys[$key_name] ?? [];
@@ -244,7 +244,7 @@ class TableController extends Base
         if (!preg_match('/[a-zA-Z_0-9]+/', $table)) {
             return $this->json(1, '表不存在');
         }
-        $allow_column = Db::select("desc $table");
+        $allow_column = Util::db()->select("desc $table");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }
@@ -253,7 +253,7 @@ class TableController extends Base
             $field = current($allow_column);
         }
         $order = $order === 'ascend' ? 'asc' : 'desc';
-        $paginator = Db::connection('plugin.admin.mysql')->table($table);
+        $paginator = Util::db()->table($table);
         foreach ($request->get() as $column => $value) {
             if (!$value) {
                 continue;
@@ -324,7 +324,7 @@ class TableController extends Base
         if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
             $data['updated_at'] = $datetime;
         }
-        $id = Db::connection('plugin.admin.mysql')->table($table)->insertGetId($data);
+        $id = Util::db()->table($table)->insertGetId($data);
         return $this->json(0, $id);
     }
 
@@ -361,7 +361,7 @@ class TableController extends Base
         }
         var_export($data);
         Util::checkTableName($table);
-        Db::connection('plugin.admin.mysql')->table($table)->where($column, $value)->update($data);
+        Util::db()->table($table)->where($column, $value)->update($data);
         return $this->json(0);
     }
 
@@ -378,7 +378,7 @@ class TableController extends Base
         $column = $request->post('column');
         $value = $request->post('value');
         Util::checkTableName($table);
-        Db::connection('plugin.admin.mysql')->table($table)->where([$column => $value])->delete();
+        Util::db()->table($table)->where([$column => $value])->delete();
         return $this->json(0);
     }
 
@@ -421,7 +421,7 @@ class TableController extends Base
     protected function getSchema($table, $section = null)
     {
         $database = config('database.connections')['plugin.admin.mysql']['database'];
-        $schema_raw = $section !== 'table' ? Db::select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table'") : [];
+        $schema_raw = $section !== 'table' ? Util::db()->select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table'") : [];
         $forms = [];
         $columns = [];
         foreach ($schema_raw as $item) {
@@ -450,8 +450,8 @@ class TableController extends Base
                 'control_args' => '',
             ];
         }
-        $table_schema = $section == 'table' || !$section ? Db::select("SELECT TABLE_COMMENT FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' and TABLE_NAME='$table'") : [];
-        $indexes = $section == 'keys' || !$section ? Db::select("SHOW INDEX FROM $table") : [];
+        $table_schema = $section == 'table' || !$section ? Util::db()->select("SELECT TABLE_COMMENT FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' and TABLE_NAME='$table'") : [];
+        $indexes = $section == 'keys' || !$section ? Util::db()->select("SHOW INDEX FROM $table") : [];
         $keys = [];
         foreach ($indexes as $index) {
             $key_name = $index->Key_name;
@@ -519,9 +519,9 @@ class TableController extends Base
         if (in_array($table_name, $table_not_allow_drop)) {
             return $this->json(400, "$table_name 不允许删除");
         }
-        Db::schema()->drop($table_name);
+        Util::db()->schema()->drop($table_name);
         // 删除schema
-        Db::table('wa_options')->where('name', "table_form_schema_$table_name")->delete();
+        Util::db()->table('wa_options')->where('name', "table_form_schema_$table_name")->delete();
         return $this->json(0, 'ok');
     }
 
@@ -663,7 +663,7 @@ class TableController extends Base
             $sql .= "COMMENT '$comment' ";
         }
 
-        Db::statement($sql);
+        Util::db()->statement($sql);
     }
 
     /**

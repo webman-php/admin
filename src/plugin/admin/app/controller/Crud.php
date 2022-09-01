@@ -68,7 +68,7 @@ trait Crud
     {
         $data = $request->post('data');
         $table = $this->model->getTable();
-        $allow_column = Db::select("desc `$table`");
+        $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }
@@ -104,7 +104,7 @@ trait Crud
         $value = $request->post('value');
         $data = $request->post('data');
         $table = $this->model->getTable();
-        $allow_column = Db::select("desc `$table`");
+        $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }
@@ -177,7 +177,7 @@ trait Crud
     protected function getSchema($table, $section = null)
     {
         $database = config('database.connections')['plugin.admin.mysql']['database'];
-        $schema_raw = $section !== 'table' ? Db::select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table'") : [];
+        $schema_raw = $section !== 'table' ? Util::db()->select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table'") : [];
         $forms = [];
         $columns = [];
         foreach ($schema_raw as $item) {
@@ -206,8 +206,8 @@ trait Crud
                 'control_args' => '',
             ];
         }
-        $table_schema = $section == 'table' || !$section ? Db::select("SELECT TABLE_COMMENT FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' and TABLE_NAME='$table'") : [];
-        $indexes = $section == 'keys' || !$section ? Db::select("SHOW INDEX FROM `$table`") : [];
+        $table_schema = $section == 'table' || !$section ? Util::db()->select("SELECT TABLE_COMMENT FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' and TABLE_NAME='$table'") : [];
+        $indexes = $section == 'keys' || !$section ? Util::db()->select("SHOW INDEX FROM `$table`") : [];
         $keys = [];
         foreach ($indexes as $index) {
             $key_name = $index->Key_name;
@@ -267,7 +267,7 @@ trait Crud
         $where = $request->get();
         $table = $this->model->getTable();
 
-        $allow_column = Db::select("desc `$table`");
+        $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }

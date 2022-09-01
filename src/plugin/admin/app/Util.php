@@ -2,6 +2,7 @@
 
 namespace plugin\admin\app;
 
+use support\Db;
 use Support\Exception\BusinessException;
 
 class Util
@@ -9,6 +10,11 @@ class Util
     static public function passwordHash($password, $algo = PASSWORD_DEFAULT)
     {
         return password_hash($password, $algo);
+    }
+
+    static function db()
+    {
+        return Db::connection('plugin.admin.mysql');
     }
 
     static public function passwordVerify($password, $hash)
