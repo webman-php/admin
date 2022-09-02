@@ -2,7 +2,6 @@
 
 namespace plugin\admin\app\model;
 
-use support\Model;
 
 /**
  * @property integer $id (主键)
@@ -11,7 +10,7 @@ use support\Model;
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  */
-class Option extends Model
+class Option extends Base
 {
     /**
      * The table associated with the model.

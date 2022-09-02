@@ -17,6 +17,11 @@ class Util
         return Db::connection('plugin.admin.mysql');
     }
 
+    static function schema()
+    {
+        return Db::schema('plugin.admin.mysql');
+    }
+
     static public function passwordVerify($password, $hash)
     {
         return password_verify($password, $hash);

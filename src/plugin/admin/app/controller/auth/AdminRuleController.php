@@ -349,12 +349,10 @@ EOF;
 
 namespace $namespace;
 
-use support\Model;
-
 /**
 $properties
  */
-class $class extends Model
+class $class extends Base
 {
     /**
      * The table associated with the model.

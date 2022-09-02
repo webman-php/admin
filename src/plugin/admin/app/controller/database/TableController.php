@@ -63,7 +63,7 @@ class TableController extends Base
         $table_comment = $data['table']['comment'];
         $columns = $data['columns'];
         $keys = $data['keys'];
-        Util::db()->schema()->create($table_name, function (Blueprint $table) use ($columns) {
+        Util::schema()->create($table_name, function (Blueprint $table) use ($columns) {
             $type_method_map = Util::methodControlMap();
             foreach ($columns as $column) {
                 if (!isset($column['type'])) {
@@ -82,7 +82,7 @@ class TableController extends Base
         Util::db()->statement("ALTER TABLE `$table_name` COMMENT '$table_comment'");
 
         // 索引
-        Util::db()->schema()->table($table_name, function (Blueprint $table) use ($keys) {
+        Util::schema()->table($table_name, function (Blueprint $table) use ($keys) {
             foreach ($keys as $key) {
                 $name = $key['name'];
                 $columns = $key['columns'];
@@ -123,7 +123,7 @@ class TableController extends Base
         // 改表名
         if ($table_name != $old_table_name) {
             Util::checkTableName($table_name);
-            Util::db()->schema()->rename($old_table_name, $table_name);
+            Util::schema()->rename($old_table_name, $table_name);
         }
 
         $old_columns = $this->getSchema($table_name, 'columns');
@@ -156,7 +156,7 @@ class TableController extends Base
         }
 
         $old_columns = $this->getSchema($table_name, 'columns');
-        Util::db()->schema()->table($table_name, function (Blueprint $table) use ($columns, $old_columns, $keys, $table_name) {
+        Util::schema()->table($table_name, function (Blueprint $table) use ($columns, $old_columns, $keys, $table_name) {
             foreach ($columns as $column) {
                 $field = $column['field'];
                 // 新字段
@@ -183,7 +183,7 @@ class TableController extends Base
         }
 
         $old_keys = $this->getSchema($table_name, 'keys');
-        Util::db()->schema()->table($table_name, function (Blueprint $table) use ($keys, $old_keys, $table_name) {
+        Util::schema()->table($table_name, function (Blueprint $table) use ($keys, $old_keys, $table_name) {
             foreach ($keys as $key) {
                 $key_name = $key['name'];
                 $old_key = $old_keys[$key_name] ?? [];
@@ -519,7 +519,7 @@ class TableController extends Base
         if (in_array($table_name, $table_not_allow_drop)) {
             return $this->json(400, "$table_name 不允许删除");
         }
-        Util::db()->schema()->drop($table_name);
+        Util::schema()->drop($table_name);
         // 删除schema
         Util::db()->table('wa_options')->where('name', "table_form_schema_$table_name")->delete();
         return $this->json(0, 'ok');
