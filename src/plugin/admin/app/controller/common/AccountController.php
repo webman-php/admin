@@ -165,6 +165,12 @@ class AccountController extends Base
             $update_data['password'] = Util::passwordHash($update_data['password']);
         }
         Admin::where('id', admin_id())->update($update_data);
+        $admin = admin();
+        unset($update_data['password']);
+        foreach ($update_data as $key => $value) {
+            $admin[$key] = $value;
+        }
+        $request->session()->set('admin', $admin);
         return $this->json(0);
     }
 
