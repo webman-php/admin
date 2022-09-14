@@ -20,7 +20,7 @@ return [
             [
                 'title' => '表详情',
                 'name' => 'tableview',
-                'path' => 'table/view/:id"',
+                'path' => 'table/view/:id',
                 'component' => '/database/table/View',
                 'hide_menu' => 1,
             ],

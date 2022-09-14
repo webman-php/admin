@@ -102,6 +102,10 @@ class InstallController extends Base
             $db->exec($sql);
         }
 
+        // 导入菜单
+        $menus = include base_path() . '/plugin/admin/config/menu.php';
+        $this->import($menus, $db);
+
         $config_content = <<<EOF
 <?php
 return  [
@@ -125,11 +129,6 @@ return  [
 EOF;
 
         file_put_contents($database_config_file, $config_content);
-
-
-        // 导入菜单
-        $menus = include base_path() . '/plugin/admin/config/menu.php';
-        $this->import($menus, $db);
 
         // 尝试reload
         if (function_exists('posix_kill')) {
@@ -191,20 +190,25 @@ EOF;
      */
     public function add(array $menu, \PDO $pdo)
     {
-        $allow_columns = ['title', 'name', 'path', 'component', 'icon', 'hide_menu', 'frame_src'];
+        $allow_columns = ['title', 'name', 'path', 'component', 'icon', 'hide_menu', 'frame_src', 'pid'];
         $data = [];
         foreach ($allow_columns as $column) {
             if (isset($menu[$column])) {
                 $data[$column] = $menu[$column];
             }
         }
+        $time = date('Y-m-d H:i:s');
+        $data['created_at'] = $data['updated_at'] = $time;
         $values = [];
         foreach ($data as $k => $v) {
-            $values[] = "$k=:$k";
+            $values[] = ":$k";
         }
         $sql = "insert into wa_admin_rules (" .implode(',', array_keys($data)). ") values (" . implode(',', $values) . ")";
         $smt = $pdo->prepare($sql);
-        $smt->execute($data);
+        foreach ($data as $key => $value) {
+            $smt->bindValue($key, $value);
+        }
+        $smt->execute();
         return $pdo->lastInsertId();
     }
 
