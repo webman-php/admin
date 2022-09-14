@@ -7,7 +7,6 @@ use plugin\admin\app\controller\Crud;
 use plugin\admin\app\model\AdminRole;
 use plugin\admin\app\model\AdminRule;
 use plugin\admin\app\Util;
-use support\Db;
 use support\Request;
 
 class AdminRuleController extends Base
@@ -73,7 +72,7 @@ class AdminRuleController extends Base
                     }
                     $name = "$class@$method_name";
                     $methods_in_files[$name] = $name;
-                    $title = Util::getCommentFirstLine($method->getDocComment()) ?? $method_name;
+                    $title = Util::getCommentFirstLine($method->getDocComment()) ?: $method_name;
                     $menu = $items[$name] ?? [];
                     if ($menu) {
                         if ($menu->title != $title) {
@@ -170,6 +169,9 @@ class AdminRuleController extends Base
         }
         if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
             $data['updated_at'] = $datetime;
+        }
+        if (!empty($data['frame_src'])) {
+            $data['component'] = '';
         }
         $id = $this->model->insertGetId($data);
         return $this->json(0, $id);

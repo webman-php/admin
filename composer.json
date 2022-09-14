@@ -10,7 +10,8 @@
     "illuminate/events": ">=7.30",
     "intervention/image": "^2.7",
     "webman/event": "^1.0",
-    "gregwar/captcha": "^1.1.0"
+    "gregwar/captcha": "^1.1.0",
+    "guzzlehttp/guzzle": "^7.5"
   },
   "autoload": {
     "psr-4": {

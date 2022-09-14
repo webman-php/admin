@@ -1,0 +1,1 @@
+import{R as n,C as a}from"./index.b826f11b.js";import{ao as m,ap as r,aq as e}from"./index.82c0877f.js";import{F as t}from"./index.75341559.js";var i=m(n),l=m(a);t.useInjectFormItemContext=r;t.ItemRest=e;t.install=function(o){return o.component(t.name,t),o.component(t.Item.name,t.Item),o.component(e.name,e),o};export{l as C,i as R};

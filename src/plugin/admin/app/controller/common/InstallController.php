@@ -49,14 +49,13 @@ class InstallController extends Base
         $port = $request->post('port');
         $overwrite = $request->post('overwrite');
 
-        $dsn = "mysql:dbname=$database;host=$host;port=$port;";
         try {
-            $params = [
-                \PDO::MYSQL_ATTR_INIT_COMMAND => "set names utf8mb4", //设置编码
-                \PDO::ATTR_EMULATE_PREPARES   => false,
-                \PDO::ATTR_TIMEOUT => 5
-            ];
-            $db = new \PDO($dsn, $user, $password, $params);
+            $db = $this->getPdo($host, $user, $password, $port);
+            $smt = $db->query("show databases like '$database'");
+            if (empty($smt->fetchAll())) {
+                $db->exec("create database $database");
+            }
+            $db->exec("use $database");
             $smt = $db->query("show tables");
             $tables = $smt->fetchAll();
         } catch (\Throwable $e) {
@@ -127,6 +126,11 @@ EOF;
 
         file_put_contents($database_config_file, $config_content);
 
+
+        // 导入菜单
+        $menus = include base_path() . '/plugin/admin/config/menu.php';
+        $this->import($menus, $db);
+
         // 尝试reload
         if (function_exists('posix_kill')) {
             set_error_handler(function () {});
@@ -155,13 +159,98 @@ EOF;
         if (Admin::first()) {
             return $this->json(1, '后台已经安装完毕，无法通过此页面创建管理员');
         }
-        $admin = new Admin;
-        $admin->username = $username;
-        $admin->password = Util::passwordHash($password);
-        $admin->nickname = '超级管理员';
-        $admin->roles = '1';
-        $admin->save();
+        if (!is_file($config_file = base_path() . '/plugin/admin/config/database.php')) {
+            return $this->json(1, '请先完成第一步数据库配置');
+        }
+        $config = include $config_file;
+        $connection = $config['connections']['mysql'];
+        $pdo = $this->getPdo($connection['host'], $connection['username'], $connection['password'], $connection['port'], $connection['database']);
+        $smt = $pdo->prepare("insert into `wa_admins` (`username`, `password`, `nickname`, `roles`, `created_at`, `updated_at`) values (:username, :password, :nickname, :roles, :created_at, :updated_at)");
+        $time = date('Y-m-d H:i:s');
+        $data = [
+            'username' => $username,
+            'password' => Util::passwordHash($password),
+            'nickname' => '超级管理员',
+            'roles' => '1',
+            'created_at' => $time,
+            'updated_at' => $time
+        ];
+        foreach ($data as $key => $value) {
+            $smt->bindValue($key, $value);
+        }
+        $smt->execute();
         return $this->json(0);
+    }
+
+    /**
+     * 添加菜单
+     *
+     * @param array $menu
+     * @param \PDO $pdo
+     * @return int
+     */
+    public function add(array $menu, \PDO $pdo)
+    {
+        $allow_columns = ['title', 'name', 'path', 'component', 'icon', 'hide_menu', 'frame_src'];
+        $data = [];
+        foreach ($allow_columns as $column) {
+            if (isset($menu[$column])) {
+                $data[$column] = $menu[$column];
+            }
+        }
+        $values = [];
+        foreach ($data as $k => $v) {
+            $values[] = "$k=:$k";
+        }
+        $sql = "insert into wa_admin_rules (" .implode(',', array_keys($data)). ") values (" . implode(',', $values) . ")";
+        $smt = $pdo->prepare($sql);
+        $smt->execute($data);
+        return $pdo->lastInsertId();
+    }
+
+    /**
+     * 导入菜单
+     *
+     * @param array $menu_tree
+     * @param \PDO $pdo
+     * @return void
+     */
+    public function import(array $menu_tree, \PDO $pdo)
+    {
+        if (is_numeric(key($menu_tree)) && !isset($menu_tree['name'])) {
+            foreach ($menu_tree as $item) {
+                $this->import($item, $pdo);
+            }
+            return;
+        }
+        $children = $menu_tree['children'] ?? [];
+        unset($menu_tree['children']);
+        $smt = $pdo->prepare("select * from wa_admin_rules where name=:name limit 1");
+        $smt->execute(['name' => $menu_tree['name']]);
+        $old_menu = $smt->fetch();
+        if ($old_menu) {
+            $pid = $old_menu['id'];
+            $params = [
+                'title' => $menu_tree['title'],
+                'path' => $menu_tree['path'],
+                'icon' => $menu_tree['icon'],
+                'name' => $menu_tree['name'],
+            ];
+            if (!isset($menu_tree['component'])) {
+                $sql = "update wa_admin_rules set title=:title, path=:path, icon=:icon where name=:name";
+            } else {
+                $sql = "update wa_admin_rules set title=:title, path=:path, icon=:icon, component=:component where name=:name";
+                $params['component'] = $menu_tree['component'];
+            }
+            $smt = $pdo->prepare($sql);
+            $smt->execute($params);
+        } else {
+            $pid = $this->add($menu_tree, $pdo);
+        }
+        foreach ($children as $menu) {
+            $menu['pid'] = $pid;
+            $this->import($menu, $pdo);
+        }
     }
 
     /**
@@ -221,6 +310,31 @@ EOF;
         }
 
         return $output;
+    }
+
+    /**
+     * 获取pdo连接
+     *
+     * @param $host
+     * @param $username
+     * @param $password
+     * @param $port
+     * @param $database
+     * @return \PDO
+     */
+    protected function getPdo($host, $username, $password, $port, $database = null)
+    {
+        $dsn = "mysql:host=$host;port=$port;";
+        if ($database) {
+            $dsn .= "dbname=$database";
+        }
+        $params = [
+            \PDO::MYSQL_ATTR_INIT_COMMAND => "set names utf8mb4",
+            \PDO::ATTR_EMULATE_PREPARES => false,
+            \PDO::ATTR_TIMEOUT => 5,
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+        ];
+        return new \PDO($dsn, $username, $password, $params);
     }
 
 }

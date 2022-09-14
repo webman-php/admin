@@ -1,10 +1,10 @@
 <?php
 namespace plugin\admin\app\middleware;
 
-use plugin\admin\app\Admin;
-use Webman\MiddlewareInterface;
-use Webman\Http\Response;
+use plugin\admin\api\Auth;
 use Webman\Http\Request;
+use Webman\Http\Response;
+use Webman\MiddlewareInterface;
 
 class AccessControl implements MiddlewareInterface
 {
@@ -15,7 +15,7 @@ class AccessControl implements MiddlewareInterface
 
         $code = 0;
         $msg = '';
-        if (!Admin::canAccess($controller, $action, $code, $msg)) {
+        if (!Auth::canAccess($controller, $action, $code, $msg)) {
             $response = json(['code' => $code, 'message' => $msg, 'type' => 'error']);
         } else {
             $response = $request->method() == 'OPTIONS' ? response('') : $handler($request);

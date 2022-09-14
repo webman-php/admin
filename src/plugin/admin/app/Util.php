@@ -4,6 +4,7 @@ namespace plugin\admin\app;
 
 use support\Db;
 use Support\Exception\BusinessException;
+use Throwable;
 
 class Util
 {
@@ -138,4 +139,21 @@ class Util
         ];
         return $map[$type] ?? $type;
     }
+
+    /**
+     * reload webman
+     *
+     * @return bool
+     */
+    public static function reloadWebman()
+    {
+        if (function_exists('posix_kill')) {
+            try {
+                posix_kill(posix_getppid(), SIGUSR1);
+                return true;
+            } catch (Throwable $e) {}
+        }
+        return false;
+    }
+
 }
