@@ -284,7 +284,7 @@ class AppController extends Base
     {
         // 下载zip
         $options = [
-            'base_uri' => config('app.plugin_login_host'),
+            'base_uri' => config('plugin.admin.app.plugin_market_host'),
             'timeout' => 30,
             'connect_timeout' => 5,
             'verify' => false,
