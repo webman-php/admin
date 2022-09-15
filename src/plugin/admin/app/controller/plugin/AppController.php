@@ -284,7 +284,7 @@ class AppController extends Base
     {
         // 下载zip
         $options = [
-            'base_uri' => 'http://127.0.0.1:8877',
+            'base_uri' => config('app.plugin_login_host'),
             'timeout' => 30,
             'connect_timeout' => 5,
             'verify' => false,
@@ -305,7 +305,6 @@ class AppController extends Base
     {
         // 下载zip
         $options = [
-            'base_uri' => 'http://127.0.0.1:8866',
             'timeout' => 30,
             'connect_timeout' => 5,
             'verify' => false,

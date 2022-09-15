@@ -18,5 +18,6 @@ return [
     'debug' => true,
     'request_class' => Request::class,
     'controller_suffix' => 'Controller',
+    'plugin_login_host' => 'https://www.workerman.net',
     'version' => '0.3.0'
 ];
