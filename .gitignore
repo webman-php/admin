@@ -5,3 +5,4 @@
 .env
 src/plugin/admin/public/upload
 src/plugin/admin/config/database.php
+src/plugin/admin.zip
