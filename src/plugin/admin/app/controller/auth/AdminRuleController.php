@@ -176,6 +176,39 @@ class AdminRuleController extends Base
         $id = $this->model->insertGetId($data);
         return $this->json(0, $id);
     }
+
+    /**
+     * 更新
+     * @param Request $request
+     * @return \support\Response
+     */
+    public function update(Request $request)
+    {
+        $column = $request->post('column');
+        $value = $request->post('value');
+        $data = $request->post('data');
+        $table = $this->model->getTable();
+        $allow_column = Util::db()->select("desc `$table`");
+        if (!$allow_column) {
+            return $this->json(2, '表不存在');
+        }
+        $row = $this->model->where($column, $value)->first();
+        if (!$row) {
+            return $this->json(2, '记录不存在');
+        }
+        foreach ($data as $col => $item) {
+            if (is_array($item)) {
+                $data[$col] = implode(',', $item);
+            }
+        }
+        if (!isset($data['pid'])) {
+            $data['pid'] = 0;
+        } elseif ($data['pid'] == $row['id']) {
+            return $this->json(2, '不能将自己设置为上级菜单');
+        }
+        $this->model->where($column, $value)->update($data);
+        return $this->json(0);
+    }
     
     /**
      * 删除

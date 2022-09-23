@@ -44,6 +44,9 @@ class MenuController extends Base
         }
         $formatted_items = [];
         foreach ($items_map as $index => $item) {
+            if (!empty($item['frame_src'])) {
+                $items_map[$index]['component'] = !empty($item['pid']) ? '' : 'LAYOUT';
+            }
             foreach (['title', 'icon', 'hide_menu', 'frame_src'] as $name) {
                 $value = $item[$name];
                 unset($items_map[$index][$name]);

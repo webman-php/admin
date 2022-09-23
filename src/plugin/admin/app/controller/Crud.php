@@ -329,9 +329,9 @@ trait Crud
             $items_map[$item->id] = $item->toArray();
         }
         $formatted_items = [];
-        foreach ($items_map as $item) {
+        foreach ($items_map as $index => $item) {
             if ($item['pid'] && isset($items_map[$item['pid']])) {
-                $items_map[$item['pid']]['children'][] = $item;
+                $items_map[$item['pid']]['children'][] = &$items_map[$index];
             }
         }
         foreach ($items_map as $item) {
