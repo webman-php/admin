@@ -170,9 +170,9 @@ class AdminRuleController extends Base
         if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
             $data['updated_at'] = $datetime;
         }
-        if (!empty($data['frame_src'])) {
-            $data['component'] = '';
-        }
+
+        $data['path'] = (empty($data['pid']) ? '/' : '') . ltrim($data['path'], '/');
+
         $id = $this->model->insertGetId($data);
         return $this->json(0, $id);
     }
@@ -206,6 +206,9 @@ class AdminRuleController extends Base
         } elseif ($data['pid'] == $row['id']) {
             return $this->json(2, '不能将自己设置为上级菜单');
         }
+
+        $data['path'] = (empty($data['pid']) ? '/' : '') . ltrim($data['path'], '/');
+
         $this->model->where($column, $value)->update($data);
         return $this->json(0);
     }
