@@ -276,7 +276,7 @@ trait Crud
             $field = current($allow_column);
         }
         foreach ($where as $column => $value) {
-            if (!$value || !isset($allow_column[$column]) ||
+            if ($value === '' || !isset($allow_column[$column]) ||
                 (is_array($value) && ($value[0] == 'undefined' || $value[1] == 'undefined'))) {
                 unset($where[$column]);
             }

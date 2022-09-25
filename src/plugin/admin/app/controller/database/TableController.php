@@ -255,7 +255,7 @@ class TableController extends Base
         $order = $order === 'ascend' ? 'asc' : 'desc';
         $paginator = Util::db()->table($table);
         foreach ($request->get() as $column => $value) {
-            if (!$value) {
+            if ($value === '') {
                 continue;
             }
             if (isset($allow_column[$column])) {
@@ -278,9 +278,9 @@ class TableController extends Base
                 $items_map[$item->id] = (array)$item;
             }
             $formatted_items = [];
-            foreach ($items_map as $item) {
+            foreach ($items_map as $index => $item) {
                 if ($item['pid'] && isset($items_map[$item['pid']])) {
-                    $items_map[$item['pid']]['children'][] = $item;
+                    $items_map[$item['pid']]['children'][] = &$items_map[$index];
                 }
             }
             foreach ($items_map as $item) {
