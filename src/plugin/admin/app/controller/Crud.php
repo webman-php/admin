@@ -351,9 +351,8 @@ trait Crud
         $formatted_items = [];
         foreach ($items as $item) {
             $formatted_items[] = [
-                'title' => $item->title ?? $item->name ?? $item->id,
-                'value' => $item->id,
-                'key' => $item->id,
+                'label' => $item->title ?? $item->name ?? $item->id,
+                'value' => $item->id
             ];
         }
         return  $this->json(0, 'ok', $formatted_items);
