@@ -19,5 +19,5 @@ return [
     'request_class' => Request::class,
     'controller_suffix' => 'Controller',
     'plugin_market_host' => 'https://www.workerman.net',
-    'version' => '0.3.1'
+    'version' => '0.3.2'
 ];
