@@ -3,7 +3,6 @@
 namespace plugin\admin\app\controller\plugin;
 
 use GuzzleHttp\Client;
-use plugin\admin\api\Auth;
 use plugin\admin\app\controller\Base;
 use plugin\admin\app\Util;
 use support\exception\BusinessException;
@@ -28,12 +27,13 @@ class AppController extends Base
     {
         $installed = [];
         clearstatcache();
-        foreach (glob(base_path() . '/plugin/*') as $dir) {
-            $name = ltrim(strrchr($dir, DIRECTORY_SEPARATOR), DIRECTORY_SEPARATOR);
-            if (is_dir($dir) && $version = $this->getPluginVersion($name)) {
-                $installed[$name] = $version;
+        $plugin_names = \array_diff(\scandir(base_path() . '/plugin/'), array('.', '..')) ?: [];
+        foreach ($plugin_names as $plugin_name) {
+            if (is_dir(base_path() . "/plugin/$plugin_name") && $version = $this->getPluginVersion($plugin_name)) {
+                $installed[$plugin_name] = $version;
             }
         }
+
         $client = $this->httpClient();
         $response = $client->get('/api/app/list', ['query' => $request->get()]);
         $content = $response->getBody()->getContents();
@@ -44,9 +44,11 @@ class AppController extends Base
             Log::error($msg);
             return $this->json(1, '获取数据出错');
         }
+        $disabled = is_phar();
         foreach ($data['result']['items'] as $key => $item) {
             $name = $item['name'];
             $data['result']['items'][$key]['installed'] = $installed[$name] ?? 0;
+            $data['result']['items'][$key]['disabled'] = $disabled;
         }
         return $this->json(0, 'ok', $data['result']);
     }

@@ -2,7 +2,7 @@
 
 namespace plugin\admin\app\controller\common;
 
-use Gregwar\Captcha\CaptchaBuilder;
+use Webman\Captcha\CaptchaBuilder;
 use plugin\admin\app\controller\Base;
 use plugin\admin\app\model\Admin;
 use plugin\admin\app\Util;
