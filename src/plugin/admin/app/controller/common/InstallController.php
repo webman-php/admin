@@ -155,15 +155,16 @@ EOF;
         if ($password != $password2) {
             return $this->json(1, '两次密码不一致');
         }
-        if (Admin::first()) {
-            return $this->json(1, '后台已经安装完毕，无法通过此页面创建管理员');
-        }
         if (!is_file($config_file = base_path() . '/plugin/admin/config/database.php')) {
             return $this->json(1, '请先完成第一步数据库配置');
         }
         $config = include $config_file;
         $connection = $config['connections']['mysql'];
         $pdo = $this->getPdo($connection['host'], $connection['username'], $connection['password'], $connection['port'], $connection['database']);
+        $smt = $pdo->query('select * from wa_admins limit 1');
+        if ($smt->fetchAll()) {
+            return $this->json(1, '后台已经安装完毕，无法通过此页面创建管理员');
+        }
         $smt = $pdo->prepare("insert into `wa_admins` (`username`, `password`, `nickname`, `roles`, `created_at`, `updated_at`) values (:username, :password, :nickname, :roles, :created_at, :updated_at)");
         $time = date('Y-m-d H:i:s');
         $data = [
