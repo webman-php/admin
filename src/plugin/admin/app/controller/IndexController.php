@@ -10,21 +10,21 @@ class IndexController
 {
 
     /**
-     * 无需登录的方法
+     * Methods without login
      * @var array
      */
     protected $noNeedLogin = ['index'];
 
 
     /**
-     * 后台主页
+     * Background Home
      *
      * @return \support\Response
      */
     public function index(Request $request)
     {
         if (!$request->queryString()) {
-            // 检查是否安装了admin
+            // Check if installedadmin
             $database_config_file = base_path() . '/plugin/admin/config/database.php';
             clearstatcache();
             if (!is_file($database_config_file)) {

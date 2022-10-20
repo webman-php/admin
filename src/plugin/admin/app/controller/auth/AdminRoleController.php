@@ -11,7 +11,7 @@ use support\Db;
 use support\Request;
 
 /**
- * 管理员角色设置
+ * Administrator role settings
  */
 class AdminRoleController extends Base
 {
@@ -21,12 +21,12 @@ class AdminRoleController extends Base
     protected $model = null;
 
     /**
-     * 增删改查
+     * Add, delete, modify and check
      */
     use Crud;
 
     /**
-     * 构造函数
+     * Constructor
      */
     public function __construct()
     {
@@ -34,7 +34,7 @@ class AdminRoleController extends Base
     }
 
     /**
-     * 更新
+     * renew
      *
      * @param Request $request
      * @return \support\Response
@@ -47,14 +47,14 @@ class AdminRoleController extends Base
         $table = $this->model->getTable();
         $allow_column = Util::db()->select("desc $table");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            return $this->json(2, 'table does not exist');
         }
 
         $data['rules'] = array_filter(array_unique((array)$data['rules']));
 
         $item = $this->model->where($column, $value)->first();
         if (!$item) {
-            return $this->json(1, '记录不存在');
+            return $this->json(1, 'Record does not exist');
         }
         if ($item->id == 1) {
             $data['rules'] = '*';
@@ -65,7 +65,7 @@ class AdminRoleController extends Base
                 $data[$col] = implode(',', $item);
             }
             if ($col === 'password') {
-                // 密码为空，则不更新密码
+                // If the password is empty, the password will not be updated
                 if ($item == '') {
                     unset($data[$col]);
                     continue;
@@ -79,7 +79,7 @@ class AdminRoleController extends Base
     }
 
     /**
-     * 删除
+     * delete
      * @param Request $request
      * @return \support\Response
      * @throws \Support\Exception\BusinessException
@@ -93,7 +93,7 @@ class AdminRoleController extends Base
             return $this->json(0);
         }
         if ($item->id == 1) {
-            return $this->json(1, '无法删除超级管理员角色');
+            return $this->json(1, 'Cannot delete super administrator role');
         }
         $this->model->where('id', $item->id)->delete();
         return $this->json(0);

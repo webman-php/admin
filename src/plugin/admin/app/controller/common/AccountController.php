@@ -12,18 +12,18 @@ use support\Request;
 use support\Response;
 
 /**
- * 管理员账户
+ * Administrator Account
  */
 class AccountController extends Base
 {
     /**
-     * 不需要登录的方法
+     * Methods that do not require login
      * @var string[]
      */
     public $noNeedLogin = ['login', 'logout', 'captcha'];
 
     /**
-     * 不需要鉴权的方法
+     * Methods that do not require authentication
      * @var string[]
      */
     public $noNeedAuth = ['info', 'getPermCode'];
@@ -34,7 +34,7 @@ class AccountController extends Base
     protected $model = null;
 
     /**
-     * 构造函数
+     * Constructor
      */
     public function __construct()
     {
@@ -42,7 +42,7 @@ class AccountController extends Base
     }
 
     /**
-     * 登录
+     * Log in
      *
      * @param Request $request
      * @return Response
@@ -51,18 +51,18 @@ class AccountController extends Base
     {
         $captcha = $request->post('captcha');
         if (strtolower($captcha) !== session('captcha-login')) {
-            return $this->json(1, '验证码错误');
+            return $this->json(1, 'Verification code error');
         }
         $request->session()->forget('captcha-login');
         $username = $request->post('username', '');
         $password = $request->post('password', '');
         if (!$username) {
-            return $this->json(1, '用户名不能为空');
+            return $this->json(1, 'Username can not be empty');
         }
         $this->checkLoginLimit($username);
         $admin = Admin::where('username', $username)->first();
         if (!$admin || !Util::passwordVerify($password, $admin->password)) {
-            return $this->json(1, '账户不存在或密码错误');
+            return $this->json(1, 'Account does not exist or password is incorrect');
         }
         $this->removeLoginLimit($username);
         $admin = $admin->toArray();
@@ -70,14 +70,14 @@ class AccountController extends Base
         unset($admin['password']);
         $admin['roles'] = $admin['roles'] ? explode(',', $admin['roles']) : [];
         $session->set('admin', $admin);
-        return $this->json(0, '登录成功', [
+        return $this->json(0, 'login successful', [
             'nickname' => $admin['nickname'],
             'token' => $request->sessionId(),
         ]);
     }
 
     /**
-     * 退出
+     * quit
      *
      * @param Request $request
      * @return Response
@@ -90,7 +90,7 @@ class AccountController extends Base
 
 
     /**
-     * 获取登录信息
+     * Get login information
      *
      * @param Request $request
      * @return Response
@@ -116,7 +116,7 @@ class AccountController extends Base
     }
 
     /**
-     * 验证码
+     * Verification Code
      * @param Request $request
      * @param $type
      * @return Response
@@ -131,7 +131,7 @@ class AccountController extends Base
     }
 
     /**
-     * 获取权限码(目前没作用)
+     * Get permission code (currently has no effect)
      * @return Response
      */
     public function getPermCode()
@@ -140,7 +140,7 @@ class AccountController extends Base
     }
 
     /**
-     * 更新
+     * renew
      *
      * @param Request $request
      * @return Response
@@ -175,7 +175,7 @@ class AccountController extends Base
     }
 
     /**
-     * 修改密码
+     * change Password
      *
      * @param Request $request
      * @return Response
@@ -185,10 +185,10 @@ class AccountController extends Base
         $hash = admin('password');
         $password = $request->post('password');
         if (!$password) {
-            return $this->json(2, '密码不能为空');
+            return $this->json(2, 'password can not be blank');
         }
         if (!Util::passwordVerify($request->post('old_password'), $hash)) {
-            return $this->json(1, '原始密码不正确');
+            return $this->json(1, 'Original password is incorrect');
         }
         $update_data = [
             'password' => Util::passwordHash($password)
@@ -198,7 +198,7 @@ class AccountController extends Base
     }
 
     /**
-     * 检查登录频率限制
+     * Check login frequency limit
      *
      * @param $username
      * @return void
@@ -228,13 +228,13 @@ class AccountController extends Base
         $limit_info['count']++;
         file_put_contents($limit_file, json_encode($limit_info));
         if ($limit_info['count'] >= 5) {
-            throw new BusinessException('登录失败次数过多，请5分钟后再试');
+            throw new BusinessException('Too many login failures, please try again in 5 minutes');
         }
     }
 
 
     /**
-     * 解除登录限制
+     * Remove login restrictions
      *
      * @param $username
      * @return void

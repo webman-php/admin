@@ -17,7 +17,7 @@ class AppController extends Base
     protected $noNeedAuth = ['schema', 'captcha'];
 
     /**
-     * 列表
+     * list
      *
      * @param Request $request
      * @return \support\Response
@@ -42,7 +42,7 @@ class AppController extends Base
             $msg = "/api/app/list return $content";
             echo "msg\r\n";
             Log::error($msg);
-            return $this->json(1, '获取数据出错');
+            return $this->json(1, 'Error getting data');
         }
         $disabled = is_phar();
         foreach ($data['result']['items'] as $key => $item) {
@@ -54,7 +54,7 @@ class AppController extends Base
     }
 
     /**
-     * 摘要
+     * Summary
      *
      * @param Request $request
      * @return \support\Response
@@ -69,7 +69,7 @@ class AppController extends Base
     }
 
     /**
-     * 安装
+     * Install
      *
      * @param Request $request
      * @return \support\Response
@@ -82,27 +82,27 @@ class AppController extends Base
         $installed_version = $this->getPluginVersion($name);
         $host = $request->host(true);
         if (!$name || !$version) {
-            return $this->json(1, '缺少参数');
+            return $this->json(1, 'Missing parameters');
         }
 
         $user = session('app-plugin-user');
         if (!$user) {
-            return $this->json(0, '请登录', [
+            return $this->json(0, 'please sign in', [
                 'code' => 401,
-                'message' => '请登录'
+                'message' => 'please sign in'
             ]);
         }
 
-        // 获取下载zip文件url
+        // Get download zip fileurl
         $data = $this->getDownloadUrl($name, $user['uid'], $host, $version);
         if ($data['code'] == -1) {
-            return $this->json(0, '请登录', [
+            return $this->json(0, 'please sign in', [
                 'code' => 401,
-                'message' => '请登录'
+                'message' => 'please sign in'
             ]);
         }
 
-        // 下载zip文件
+        // download zip file
         $base_path = base_path() . "/plugin/$name";
         $zip_file = "$base_path.zip";
         $extract_to = base_path() . '/plugin/';
@@ -112,14 +112,14 @@ class AppController extends Base
         if (!$has_zip_archive) {
             $cmd = $this->getUnzipCmd($zip_file, $extract_to);
             if (!$cmd) {
-                throw new BusinessException('请给php安装zip模块或者给系统安装unzip命令');
+                throw new BusinessException('Please install the zip module for php or install the unzip command for the system');
             }
             if (!function_exists('proc_open')) {
-                throw new BusinessException('请解除proc_open函数的禁用或者给php安装zip模块');
+                throw new BusinessException('Please unblock the proc_open function or install the zip module for php');
             }
         }
 
-        // 解压zip到plugin目录
+        // Extract the zip to the plugin directory
         if ($has_zip_archive) {
             $zip = new \ZipArchive;
             $zip->open($zip_file, \ZIPARCHIVE::CHECKCONS);
@@ -128,7 +128,7 @@ class AppController extends Base
         $context = null;
         $install_class = "\\plugin\\$name\\api\\Install";
         if ($installed_version) {
-            // 执行beforeUpdate
+            // implementbeforeUpdate
             if (class_exists($install_class) && method_exists($install_class, 'beforeUpdate')) {
                 $context = call_user_func([$install_class, 'beforeUpdate'], $installed_version, $version);
             }
@@ -144,12 +144,12 @@ class AppController extends Base
         unlink($zip_file);
 
         if ($installed_version) {
-            // 执行update更新
+            // Execute update update
             if (class_exists($install_class) && method_exists($install_class, 'update')) {
                 call_user_func([$install_class, 'update'], $installed_version, $version, $context);
             }
         } else {
-            // 执行install安装
+            // Execute install
             if (class_exists($install_class) && method_exists($install_class, 'install')) {
                 call_user_func([$install_class, 'install'], $version);
             }
@@ -161,7 +161,7 @@ class AppController extends Base
     }
 
     /**
-     * 卸载
+     * Uninstall
      *
      * @param Request $request
      * @return \support\Response
@@ -171,23 +171,23 @@ class AppController extends Base
         $name = $request->post('name');
         $version = $request->post('version');
         if (!$name || !preg_match('/^[a-zA-Z0-9_]+$/', $name)) {
-            return $this->json(1, '参数错误');
+            return $this->json(1, 'Parameter error');
         }
 
-        // 获得插件路径
+        // Get plugin path
         clearstatcache();
         $path = get_realpath(base_path() . "/plugin/$name");
         if (!$path || !is_dir($path)) {
-            return $this->json(1, '已经删除');
+            return $this->json(1, 'deleted');
         }
 
-        // 执行uninstall卸载
+        // Execute uninstall
         $install_class = "\\plugin\\$name\\api\\Install";
         if (class_exists($install_class) && method_exists($install_class, 'uninstall')) {
             call_user_func([$install_class, 'uninstall'], $version);
         }
 
-        // 删除目录
+        // delete directory
         clearstatcache();
         if (is_dir($path)) {
             $this->rmDir($path);
@@ -200,7 +200,7 @@ class AppController extends Base
     }
 
     /**
-     * 登录验证码
+     * Login verification code
      *
      * @param Request $request
      * @return \support\Response
@@ -219,7 +219,7 @@ class AppController extends Base
     }
 
     /**
-     * 登录
+     * Log in
      *
      * @param Request $request
      * @return \support\Response
@@ -241,7 +241,7 @@ class AppController extends Base
             $msg = "/api/user/login return $content";
             echo "msg\r\n";
             Log::error($msg);
-            return $this->json(1, '发生错误');
+            return $this->json(1, 'An error occurred');
         }
         if ($data['code'] != 0) {
             return $this->json($data['code'], $data['msg']);
@@ -253,7 +253,7 @@ class AppController extends Base
     }
 
     /**
-     * 获取zip下载url
+     * Get zip downloadurl
      *
      * @param $name
      * @param $uid
@@ -281,19 +281,19 @@ class AppController extends Base
         if (!$data) {
             $msg = "/api/app/download return $content";
             Log::error($msg);
-            throw new BusinessException('访问官方接口失败');
+            throw new BusinessException('Failed to access official interface');
         }
         if ($data['code'] && $data['code'] != -1) {
             throw new BusinessException($data['msg']);
         }
         if ($data['code'] == 0 && !isset($data['result']['url'])) {
-            throw new BusinessException('官方接口返回数据错误');
+            throw new BusinessException('The official interface returned data error');
         }
         return $data;
     }
 
     /**
-     * 下载zip
+     * downloadzip
      *
      * @param $url
      * @param $file
@@ -308,17 +308,17 @@ class AppController extends Base
         $body = $response->getBody();
         $status = $response->getStatusCode();
         if ($status == 404) {
-            throw new BusinessException('安装包不存在');
+            throw new BusinessException('The installation package does not exist');
         }
         $zip_content = $body->getContents();
         if (empty($zip_content)) {
-            throw new BusinessException('安装包不存在');
+            throw new BusinessException('The installation package does not exist');
         }
         file_put_contents($file, $zip_content);
     }
 
     /**
-     * 获取系统支持的解压命令
+     * Get the unzip command supported by the system
      *
      * @param $zip_file
      * @param $extract_to
@@ -337,7 +337,7 @@ class AppController extends Base
     }
 
     /**
-     * 使用解压命令解压
+     * Unzip using the unzip command
      *
      * @param $cmd
      * @return void
@@ -352,18 +352,18 @@ class AppController extends Base
         ];
         $handler = proc_open($cmd, $desc, $pipes);
         if (!is_resource($handler)) {
-            throw new BusinessException("解压zip时出错:proc_open调用失败");
+            throw new BusinessException("Error unpacking zip: proc_open call failed");
         }
         $err = fread($pipes[2], 1024);
         fclose($pipes[2]);
         proc_close($handler);
         if ($err) {
-            throw new BusinessException("解压zip时出错:$err");
+            throw new BusinessException("Error unzipping zip:$err");
         }
     }
 
     /**
-     * 获取本地插件版本
+     * Get local plugin version
      *
      * @param $name
      * @return array|mixed|null
@@ -378,7 +378,7 @@ class AppController extends Base
     }
 
     /**
-     * 删除目录
+     * delete directory
      *
      * @param $src
      * @return void
@@ -401,13 +401,13 @@ class AppController extends Base
     }
 
     /**
-     * 获取httpclient
+     * Obtainhttpclient
      *
      * @return Client
      */
     protected function httpClient()
     {
-        // 下载zip
+        // downloadzip
         $options = [
             'base_uri' => config('plugin.admin.app.plugin_market_host'),
             'timeout' => 30,
@@ -427,13 +427,13 @@ class AppController extends Base
     }
 
     /**
-     * 获取下载httpclient
+     * Get Downloadhttpclient
      *
      * @return Client
      */
     protected function downloadClient()
     {
-        // 下载zip
+        // downloadzip
         $options = [
             'timeout' => 30,
             'connect_timeout' => 5,
@@ -451,7 +451,7 @@ class AppController extends Base
     }
 
     /**
-     * 查找系统命令
+     * Find System Commands
      *
      * @param string $name
      * @param string|null $default

@@ -7,25 +7,25 @@ use support\Db;
 use support\Request;
 
 /**
- * 基础控制器
+ * Basic Controller
  */
 class Base
 {
 
     /**
-     * 无需登录的方法及鉴权
+     * Method and authentication without login
      * @var array
      */
     protected $noNeedLogin = [];
 
     /**
-     * 需要登录无需鉴权的方法
+     * Requires login without authentication method
      * @var array
      */
     protected $noNeedAuth = [];
 
     /**
-     * 返回格式化json数据
+     * return formatted json data
      *
      * @param int $code
      * @param string $msg

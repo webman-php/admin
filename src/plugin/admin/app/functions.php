@@ -4,7 +4,7 @@
  */
 
 /**
- * 当前登录管理员id
+ * Currently logged in administratorid
  *
  * @return mixed|null
  */
@@ -14,7 +14,7 @@ function admin_id()
 }
 
 /**
- * 当前管理员
+ * Current Admin
  *
  * @param null|array|string $fields
  * @return array|mixed|null
@@ -38,7 +38,7 @@ function admin($fields = null)
 }
 
 /**
- * 当前登录用户id
+ * Currently logged in userid
  *
  * @return mixed|null
  */
@@ -48,7 +48,7 @@ function user_id()
 }
 
 /**
- * 当前登录用户
+ * Currently logged in user
  *
  * @param null|array|string $fields
  * @return array|mixed|null

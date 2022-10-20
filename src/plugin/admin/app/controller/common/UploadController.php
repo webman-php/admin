@@ -9,13 +9,13 @@ use function base_path;
 use function json;
 
 /**
- * 上传
+ * upload
  */
 class UploadController extends Base
 {
 
     /**
-     * 上传文件
+     * upload files
      *
      * @param Request $request
      * @return \support\Response
@@ -24,7 +24,7 @@ class UploadController extends Base
     {
         $file = current($request->file());
         if (!$file || !$file->isValid()) {
-            return $this->json(1, '未找到文件');
+            return $this->json(1, 'File not found');
         }
         $img_exts = [
             'jpg',
@@ -39,11 +39,11 @@ class UploadController extends Base
         if ($data['code']) {
             return $this->json($data['code'], $data['message']);
         }
-        return json(['code' => 0, 'message' => '上传成功', 'url' => $data['data']['src']]);
+        return json(['code' => 0, 'message' => 'Upload successful', 'url' => $data['data']['src']]);
     }
 
     /**
-     * 上传头像
+     * Upload Avatar
      *
      * @param Request $request
      * @return \support\Response
@@ -55,7 +55,7 @@ class UploadController extends Base
         if ($file && $file->isValid()) {
             $ext = strtolower($file->getUploadExtension());
             if (!in_array($ext, ['jpg', 'jpeg', 'gif', 'png'])) {
-                return json(['code' => 2, 'msg' => '仅支持 jpg jpeg gif png格式']);
+                return json(['code' => 2, 'msg' => 'Only support jpg jpeg gif png format']);
             }
             $image = Image::make($file);
             $width = $image->width();
@@ -87,7 +87,7 @@ class UploadController extends Base
 
             return json([
                 'code' => 0,
-                'message' => '上传成功',
+                'message' => 'Upload successful',
                 'url' => "/app/admin/$relative_path/$name.$ext"
             ]);
         }
@@ -95,7 +95,7 @@ class UploadController extends Base
     }
 
     /**
-     * 上传图片
+     * upload image
      *
      * @param Request $request
      * @return \support\Response
@@ -122,18 +122,18 @@ class UploadController extends Base
             unlink($realpath);
             return json( [
                 'code'  => 500,
-                'message'  => '处理图片发生错误'
+                'message'  => 'Error processing image'
             ]);
         }
         return json( [
             'code'  => 0,
-            'message'  => '上传成功',
+            'message'  => 'Upload successful',
             'url'      => $data['data']['src']
         ]);
     }
 
     /**
-     * 获取上传数据
+     * Get upload data
      *
      * @param Request $request
      * @param $relative_dir
@@ -145,7 +145,7 @@ class UploadController extends Base
         $relative_dir = ltrim($relative_dir, '/');
         $file = current($request->file());
         if (!$file || !$file->isValid()) {
-            return ['code' => 400, 'message' => '未找到上传文件'];
+            return ['code' => 400, 'message' => 'Upload file not found'];
         }
 
         $base_dir = base_path() . '/plugin/admin/public/';
@@ -157,7 +157,7 @@ class UploadController extends Base
         $ext = strtolower($file->getUploadExtension());
         $ext_forbidden_map = ['php', 'php3', 'php5', 'css', 'js', 'html', 'htm', 'asp', 'jsp'];
         if (in_array($ext, $ext_forbidden_map)) {
-            return ['code' => 400, 'message' => '不支持该格式的文件上传'];
+            return ['code' => 400, 'message' => 'File upload in this format is not supported'];
         }
 
         $relative_path = $relative_dir . '/' . bin2hex(pack('Nn',time(), random_int(1, 65535))) . ".$ext";
@@ -167,7 +167,7 @@ class UploadController extends Base
         $file->move($full_path);
         return [
             'code' => 0,
-            'msg'  => '上传成功',
+            'msg'  => 'Upload successful',
             'data' => [
                 'src'      => "/app/admin/$relative_path",
                 'name'     => $file_name,
@@ -178,7 +178,7 @@ class UploadController extends Base
     }
 
     /**
-     * 格式化文件大小
+     * Format file size
      *
      * @param $file_size
      * @return string

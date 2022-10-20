@@ -13,18 +13,18 @@ use support\Response;
 use support\Db;
 
 /**
- * 安装
+ * Install
  */
 class InstallController extends Base
 {
     /**
-     * 不需要登录的方法
+     * Methods that do not require login
      * @var string[]
      */
     public $noNeedLogin = ['step1', 'step2'];
 
     /**
-     * 设置数据库
+     * Setup Database
      *
      * @param Request $request
      * @return Response
@@ -35,11 +35,11 @@ class InstallController extends Base
         $database_config_file = base_path() . '/plugin/admin/config/database.php';
         clearstatcache();
         if (is_file($database_config_file)) {
-            return $this->json(1, '管理后台已经安装！如需重新安装，请删除该插件数据库配置文件并重启');
+            return $this->json(1, 'The management background has been installed! If you need to reinstall, please delete the plugin database configuration file and restart');
         }
 
         if (!class_exists(CaptchaBuilder::class) || !class_exists(Manager::class)) {
-            return $this->json(1, '请先restart重启webman后再进行此页面的设置');
+            return $this->json(1, 'Please restart webman before setting this page');
         }
 
         $user = $request->post('user');
@@ -60,13 +60,13 @@ class InstallController extends Base
             $tables = $smt->fetchAll();
         } catch (\Throwable $e) {
             if (stripos($e, 'Access denied for user')) {
-                return $this->json(1, '数据库用户名或密码错误');
+                return $this->json(1, 'Incorrect database username or password');
             }
             if (stripos($e, 'Connection refused')) {
-                return $this->json(1, 'Connection refused. 请确认数据库IP端口是否正确，数据库已经启动');
+                return $this->json(1, 'Connection refused. Please confirm whether the database IP port is correct and the database has been started');
             }
             if (stripos($e, 'timed out')) {
-                return $this->json(1, '数据库连接超时，请确认数据库IP端口是否正确，安全组及防火墙已经放行端口');
+                return $this->json(1, 'The database connection timed out, please confirm whether the database IP port is correct, the security group and firewall have released the port');
             }
             throw $e;
         }
@@ -86,13 +86,13 @@ class InstallController extends Base
             }
             $tables_conflict = array_intersect($tables_to_install, $tables_exist);
             if ($tables_conflict) {
-                return $this->json(1, '以下表' . implode(',', $tables_conflict) . '已经存在，如需覆盖请选择强制覆盖');
+                return $this->json(1, 'The following table' . implode(',', $tables_conflict) . ' already exists, if you want to overwrite, please select Force Overwrite');
             }
         }
 
         $sql_file = base_path() . '/plugin/admin/webman-admin.sql';
         if (!is_file($sql_file)) {
-            return $this->json(1, '数据库SQL文件不存在');
+            return $this->json(1, 'Database SQL file does not exist');
         }
 
         $sql_query = file_get_contents($sql_file);
@@ -102,7 +102,7 @@ class InstallController extends Base
             $db->exec($sql);
         }
 
-        // 导入菜单
+        // Import menu
         $menus = include base_path() . '/plugin/admin/config/menu.php';
         $this->import($menus, $db);
 
@@ -130,7 +130,7 @@ EOF;
 
         file_put_contents($database_config_file, $config_content);
 
-        // 尝试reload
+        // tryreload
         if (function_exists('posix_kill')) {
             set_error_handler(function () {});
             posix_kill(posix_getppid(), SIGUSR1);
@@ -141,7 +141,7 @@ EOF;
     }
 
     /**
-     * 设置管理员
+     * Setup Administrator
      *
      * @param Request $request
      * @return Response
@@ -153,24 +153,24 @@ EOF;
         $password = $request->post('password');
         $password2 = $request->post('password2');
         if ($password != $password2) {
-            return $this->json(1, '两次密码不一致');
+            return $this->json(1, 'The two passwords do not match');
         }
         if (!is_file($config_file = base_path() . '/plugin/admin/config/database.php')) {
-            return $this->json(1, '请先完成第一步数据库配置');
+            return $this->json(1, 'Please complete the first step of database configuration');
         }
         $config = include $config_file;
         $connection = $config['connections']['mysql'];
         $pdo = $this->getPdo($connection['host'], $connection['username'], $connection['password'], $connection['port'], $connection['database']);
         $smt = $pdo->query('select * from wa_admins limit 1');
         if ($smt->fetchAll()) {
-            return $this->json(1, '后台已经安装完毕，无法通过此页面创建管理员');
+            return $this->json(1, 'The background has been installed, the administrator cannot be created through this page');
         }
         $smt = $pdo->prepare("insert into `wa_admins` (`username`, `password`, `nickname`, `roles`, `created_at`, `updated_at`) values (:username, :password, :nickname, :roles, :created_at, :updated_at)");
         $time = date('Y-m-d H:i:s');
         $data = [
             'username' => $username,
             'password' => Util::passwordHash($password),
-            'nickname' => '超级管理员',
+            'nickname' => 'Super Admin',
             'roles' => '1',
             'created_at' => $time,
             'updated_at' => $time
@@ -183,7 +183,7 @@ EOF;
     }
 
     /**
-     * 添加菜单
+     * Add menu
      *
      * @param array $menu
      * @param \PDO $pdo
@@ -214,7 +214,7 @@ EOF;
     }
 
     /**
-     * 导入菜单
+     * Import menu
      *
      * @param array $menu_tree
      * @param \PDO $pdo
@@ -259,7 +259,7 @@ EOF;
     }
 
     /**
-     * 去除sql文件中的注释
+     * Remove comments in sql file
      *
      * @param $sql
      * @return string
@@ -318,7 +318,7 @@ EOF;
     }
 
     /**
-     * 获取pdo连接
+     * Get pdo connection
      *
      * @param $host
      * @param $username
