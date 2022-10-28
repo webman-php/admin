@@ -4,11 +4,11 @@ namespace plugin\admin\app\model;
 
 
 /**
- * @property integer $id (主键)
+ * @property integer $id (primary key)
  * @property string $name 键
  * @property mixed $value 值
- * @property string $created_at 创建时间
- * @property string $updated_at 更新时间
+ * @property string $created_at creation time
+ * @property string $updated_at Update time
  */
 class Option extends Base
 {

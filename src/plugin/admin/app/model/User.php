@@ -3,26 +3,26 @@
 namespace plugin\admin\app\model;
 
 /**
- * @property integer $id 主键(主键)
- * @property string $username 用户名
- * @property string $nickname 昵称
- * @property string $password 密码
- * @property string $sex 性别
- * @property string $avatar 头像
- * @property string $email 邮箱
- * @property string $mobile 手机
- * @property integer $level 等级
- * @property string $birthday 生日
- * @property integer $money 余额
- * @property integer $score 积分
- * @property string $last_time 上次登录时间
- * @property string $last_ip 上次登录ip
- * @property string $join_time 注册时间
- * @property string $join_ip 注册ip
+ * @property integer $id primary key (primary key)
+ * @property string $username username
+ * @property string $nickname Nick name
+ * @property string $password password
+ * @property string $sex gender
+ * @property string $avatar avatar
+ * @property string $email Mail
+ * @property string $mobile cell phone
+ * @property integer $level grade
+ * @property string $birthday Birthday
+ * @property integer $money balance
+ * @property integer $score integral
+ * @property string $last_time Last Login Time
+ * @property string $last_ip Last Loginip
+ * @property string $join_time Registration time
+ * @property string $join_ip registerip
  * @property string $token token
- * @property string $created_at 创建时间
- * @property string $updated_at 更新时间
- * @property string $roles 更新时间
+ * @property string $created_at creation time
+ * @property string $updated_at Update time
+ * @property string $roles Update time
  */
 class User extends Base
 {

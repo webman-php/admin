@@ -8,7 +8,7 @@ use Webman\Http\Response;
 use Webman\MiddlewareInterface;
 
 /**
- * 对外提供的中间件
+ * Externally provided middleware
  */
 class Middleware implements MiddlewareInterface
 {

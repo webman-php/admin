@@ -8,7 +8,7 @@ use plugin\admin\app\model\User;
 use support\Request;
 
 /**
- * 用户管理
+ * User Management
  */
 class UserController extends Base
 {
@@ -18,12 +18,12 @@ class UserController extends Base
     protected $model = null;
 
     /**
-     * 增删改查
+     * Add, delete, modify and check
      */
     use Crud;
 
     /**
-     * 构造函数
+     * Constructor
      */
     public function __construct()
     {

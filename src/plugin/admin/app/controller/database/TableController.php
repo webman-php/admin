@@ -13,13 +13,13 @@ use Support\Request;
 class TableController extends Base
 {
     /**
-     * 不需要鉴权的方法
+     * Methods that do not require authentication
      * @var string[]
      */
     public $noNeedAuth = ['types'];
 
     /**
-     * 查询表
+     * Lookup table
      *
      * @param Request $request
      * @return \support\Response
@@ -51,7 +51,7 @@ class TableController extends Base
     }
 
     /**
-     * 创建表
+     * Create table
      *
      * @param Request $request
      * @return \support\Response
@@ -70,7 +70,7 @@ class TableController extends Base
                     throw new BusinessException("请为{$column['field']}选择类型");
                 }
                 if (!isset($type_method_map[$column['type']])) {
-                    throw new BusinessException("不支持的类型{$column['type']}");
+                    throw new BusinessException("unsupported type{$column['type']}");
                 }
                 $this->createColumn($column, $table);
             }
@@ -78,10 +78,10 @@ class TableController extends Base
             $table->collation = 'utf8mb4_general_ci';
             $table->engine = 'InnoDB';
         });
-        // @todo 防注入
+        // @todo Anti-injection
         Util::db()->statement("ALTER TABLE `$table_name` COMMENT '$table_comment'");
 
-        // 索引
+        // index
         Util::schema()->table($table_name, function (Blueprint $table) use ($keys) {
             foreach ($keys as $key) {
                 $name = $key['name'];
@@ -106,7 +106,7 @@ class TableController extends Base
     }
 
     /**
-     * 修改表
+     * Modify table
      *
      * @param Request $request
      * @return \support\Response
@@ -120,7 +120,7 @@ class TableController extends Base
         $table_comment = $data['table']['comment'];
         $columns = $data['columns'];
         $keys = $data['keys'] ?? [];
-        // 改表名
+        // Rename table
         if ($table_name != $old_table_name) {
             Util::checkTableName($table_name);
             Util::schema()->rename($old_table_name, $table_name);
@@ -130,17 +130,17 @@ class TableController extends Base
         $type_method_map = Util::methodControlMap();
         foreach ($columns as $column) {
             if (!isset($type_method_map[$column['type']])) {
-                throw new BusinessException("不支持的类型{$column['type']}");
+                throw new BusinessException("unsupported type{$column['type']}");
             }
             $field = $column['field'];
 
-            // 重命名的字段 mysql8才支持？
+            // Renamed fields are only supported by mysql8？
             if (isset($column['old_field']) && $column['old_field'] !== $field) {
                 //Util::db()->statement("ALTER TABLE $table_name RENAME COLUMN {$column['old_field']} to $field");
             }
 
             $old_column = $old_columns[$field] ?? [];
-            // 类型更改
+            // Type change
             foreach ($old_column as $key => $value) {
                 if (isset($column[$key]) && $column[$key] != $value) {
                     $this->modifyColumn($column, $table_name);
@@ -150,7 +150,7 @@ class TableController extends Base
         }
 
         $table = $this->getSchema($table_name, 'table');
-        // @todo $table_comment 防止SQL注入
+        // @todo $table_comment Prevent SQL Injection
         if ($table_comment !== $table['comment']) {
             Util::db()->statement("ALTER TABLE `$table_name` COMMENT '$table_comment'");
         }
@@ -159,12 +159,12 @@ class TableController extends Base
         Util::schema()->table($table_name, function (Blueprint $table) use ($columns, $old_columns, $keys, $table_name) {
             foreach ($columns as $column) {
                 $field = $column['field'];
-                // 新字段
+                // new field
                 if (!isset($old_columns[$field])) {
                     $this->createColumn($column, $table);
                 }
             }
-            // 更新索引名字
+            // Update index name
             foreach ($keys as $key) {
                 if (!empty($key['old_name']) && $key['old_name'] !== $key['name']) {
                     $table->renameIndex($key['old_name'], $key['name']);
@@ -172,13 +172,13 @@ class TableController extends Base
             }
         });
 
-        // 找到删除的字段
+        // Found deleted field
         $old_columns = $this->getSchema($table_name, 'columns');
         $exists_column_names = array_column($columns, 'field', 'field');
         $old_columns_names = array_column($old_columns, 'field');
         $drop_column_names = array_diff($old_columns_names, $exists_column_names);
         foreach ($drop_column_names as $drop_column_name) {
-            //$table->dropColumn($drop_column_name); 无法使用
+            //$table->dropColumn($drop_column_name); Not available
             Util::db()->statement("ALTER TABLE $table_name DROP COLUMN $drop_column_name");
         }
 
@@ -187,13 +187,13 @@ class TableController extends Base
             foreach ($keys as $key) {
                 $key_name = $key['name'];
                 $old_key = $old_keys[$key_name] ?? [];
-                // 如果索引有变动，则删除索引，重新建立索引
+                // If the index changes, delete the index and rebuild the index
                 if ($old_key && ($key['type'] != $old_key['type'] || $key['columns'] != $old_key['columns'])) {
                     $old_key = [];
                     unset($old_keys[$key_name]);
                     $table->dropIndex($key_name);
                 }
-                // 重新建立索引
+                // Rebuild Index
                 if (!$old_key) {
                     $name = $key['name'];
                     $columns = $key['columns'];
@@ -206,7 +206,7 @@ class TableController extends Base
                 }
             }
 
-            // 找到删除的索引
+            // Found deleted index
             $exists_key_names = array_column($keys, 'name', 'name');
             $old_keys_names = array_column($old_keys, 'name');
             $drop_keys_names = array_diff($old_keys_names, $exists_key_names);
@@ -227,7 +227,7 @@ class TableController extends Base
     }
 
     /**
-     * 查询记录
+     * Search record
      *
      * @param Request $request
      * @return \support\Response
@@ -242,11 +242,11 @@ class TableController extends Base
         $page_size = $request->get('pageSize', $format === 'tree' ? 1000 : 10);
 
         if (!preg_match('/[a-zA-Z_0-9]+/', $table)) {
-            return $this->json(1, '表不存在');
+            return $this->json(1, 'table does not exist');
         }
         $allow_column = Util::db()->select("desc $table");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            return $this->json(2, 'table does not exist');
         }
         $allow_column = array_column($allow_column, 'Field', 'Field');
         if (!in_array($field, $allow_column)) {
@@ -298,7 +298,7 @@ class TableController extends Base
     }
 
     /**
-     * 插入记录
+     * insert record
      *
      * @param Request $request
      * @return \support\Response
@@ -329,7 +329,7 @@ class TableController extends Base
     }
 
     /**
-     * 更新记录
+     * update record
      *
      * @param Request $request
      * @return \support\Response
@@ -347,7 +347,7 @@ class TableController extends Base
                 $data[$col] = implode(',', $item);
             }
             if ($col === 'password') {
-                // 密码为空，则不更新密码
+                // If the password is empty, the password will not be updated
                 if ($item == '') {
                     unset($data[$col]);
                     continue;
@@ -366,7 +366,7 @@ class TableController extends Base
     }
 
     /**
-     * 删除记录
+     * Delete Record
      *
      * @param Request $request
      * @return \support\Response
@@ -383,7 +383,7 @@ class TableController extends Base
     }
 
     /**
-     * 表摘要
+     * Table Summary
      *
      * @param Request $request
      * @return \support\Response
@@ -412,7 +412,7 @@ class TableController extends Base
     }
 
     /**
-     * 获取摘要
+     * Get Summary
      *
      * @param $table
      * @param $section
@@ -478,7 +478,7 @@ class TableController extends Base
     }
 
     /**
-     * 获取字段长度
+     * Get field length
      *
      * @param $schema
      * @return string
@@ -504,7 +504,7 @@ class TableController extends Base
     }
 
     /**
-     * 删除表
+     * delete table
      *
      * @param Request $request
      * @return \support\Response
@@ -517,16 +517,16 @@ class TableController extends Base
         }
         $table_not_allow_drop = ['wa_admins', 'wa_users', 'wa_options', 'wa_admin_roles', 'wa_admin_rules'];
         if (in_array($table_name, $table_not_allow_drop)) {
-            return $this->json(400, "$table_name 不允许删除");
+            return $this->json(400, "$table_name Delete not allowed");
         }
         Util::schema()->drop($table_name);
-        // 删除schema
+        // deleteschema
         Util::db()->table('wa_options')->where('name', "table_form_schema_$table_name")->delete();
         return $this->json(0, 'ok');
     }
 
     /**
-     * 创建字段
+     * Create Field
      *
      * @param $column
      * @param Blueprint $table
@@ -537,7 +537,7 @@ class TableController extends Base
         $method = $column['type'];
         $args = [$column['field']];
         if (stripos($method, 'int') !== false) {
-            // auto_increment 会自动成为主键
+            // auto_increment will automatically become the primary key
             if ($column['auto_increment']) {
                 $column['nullable'] = false;
                 $column['default'] = '';
@@ -582,7 +582,7 @@ class TableController extends Base
     }
 
     /**
-     * 更改字段
+     * Change Field
      *
      * @param $column
      * @param Blueprint $table
@@ -598,7 +598,7 @@ class TableController extends Base
         $auto_increment = $column['auto_increment'];
         $length = (int)$column['length'];
         $primary_key = $column['primary_key'];
-        // @todo 防止SQL注入
+        // @todo Prevent SQL Injection
         if (isset($column['old_field']) && $column['old_field'] !== $field) {
             $sql = "ALTER TABLE $table CHANGE COLUMN {$column['old_field']} $field ";
         } else {
@@ -630,7 +630,7 @@ class TableController extends Base
                     $sql .= $length ? "$method($length) " : "$method ";
                     break;
                 case 'enum':
-                    // @todo 防止SQL注入
+                    // @todo Prevent SQL Injection
                     $args = array_map('trim', explode(',', $column['length']));
                     $sql .= "enum('" . implode("','", $args) . "') ";
                     break;
@@ -667,7 +667,7 @@ class TableController extends Base
     }
 
     /**
-     * 字段类型列表
+     * Field Type List
      *
      * @param Request $request
      * @return \support\Response
@@ -679,7 +679,7 @@ class TableController extends Base
     }
 
     /**
-     * 获取在options对用的name
+     * Get used in optionsname
      *
      * @param $table_name
      * @return string
@@ -690,7 +690,7 @@ class TableController extends Base
     }
 
     /**
-     * 更新表的form schema信息
+     * Update table's form schema information
      *
      * @param $table_name
      * @param $data

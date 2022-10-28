@@ -18,7 +18,7 @@ trait Crud
 
 
     /**
-     * 查询
+     * Inquire
      *
      * @param Request $request
      * @return \support\Response
@@ -60,7 +60,7 @@ trait Crud
     }
 
     /**
-     * 添加
+     * Add to
      * @param Request $request
      * @return \support\Response
      */
@@ -70,7 +70,7 @@ trait Crud
         $table = $this->model->getTable();
         $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            return $this->json(2, 'table does not exist');
         }
         $columns = array_column($allow_column, 'Field', 'Field');
         foreach ($data as $col => $item) {
@@ -94,7 +94,7 @@ trait Crud
     }
 
     /**
-     * 更新
+     * renew
      * @param Request $request
      * @return \support\Response
      */
@@ -106,14 +106,14 @@ trait Crud
         $table = $this->model->getTable();
         $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            return $this->json(2, 'table does not exist');
         }
         foreach ($data as $col => $item) {
             if (is_array($item)) {
                 $data[$col] = implode(',', $item);
             }
             if ($col === 'password') {
-                // 密码为空，则不更新密码
+                // If the password is empty, the password will not be updated
                 if ($item == '') {
                     unset($data[$col]);
                     continue;
@@ -126,7 +126,7 @@ trait Crud
     }
 
     /**
-     * 删除
+     * delete
      * @param Request $request
      * @return \support\Response
      * @throws \Support\Exception\BusinessException
@@ -140,7 +140,7 @@ trait Crud
     }
 
     /**
-     * 摘要
+     * Summary
      * @param Request $request
      * @return \support\Response
      * @throws \Support\Exception\BusinessException
@@ -168,7 +168,7 @@ trait Crud
     }
 
     /**
-     * 按表获取摘要
+     * Get summary by table
      *
      * @param $table
      * @param $section
@@ -269,7 +269,7 @@ trait Crud
 
         $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            return $this->json(2, 'table does not exist');
         }
         $allow_column = array_column($allow_column, 'Field', 'Field');
         if (!in_array($field, $allow_column)) {
@@ -317,7 +317,7 @@ trait Crud
     }
 
     /**
-     * 表格树
+     * table tree
      *
      * @param $items
      * @return \support\Response

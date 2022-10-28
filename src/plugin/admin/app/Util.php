@@ -31,7 +31,7 @@ class Util
     static public function checkTableName($table)
     {
         if (!preg_match('/^[a-zA-Z_0-9]+$/', $table)) {
-            throw new BusinessException('表名不合法');
+            throw new BusinessException('The table name is invalid');
         }
         return true;
     }
@@ -71,7 +71,7 @@ class Util
     public static function methodControlMap()
     {
         return  [
-            //method=>[控件]
+            //method=>[Controls]
             'integer' => ['InputNumber'],
             'string' => ['Input'],
             'text' => ['InputTextArea'],

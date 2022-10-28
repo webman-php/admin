@@ -7,13 +7,13 @@ use support\exception\BusinessException;
 use function admin;
 
 /**
- * 对外提供的鉴权接口
+ * Authentication interface provided externally
  */
 class Auth
 {
     /**
-     * 判断权限
-     * 如果没有权限则抛出异常
+     * judgment authority
+     * Throw exception if no permission
      *
      * @param string $controller
      * @param string $action
@@ -30,7 +30,7 @@ class Auth
     }
 
     /**
-     * 判断是否有权限
+     * Determine whether there is permission
      *
      * @param string $controller
      * @param string $action
@@ -41,40 +41,40 @@ class Auth
      */
     public static function canAccess(string $controller, string $action, int &$code = 0, string &$msg = '')
     {
-        // 获取控制器鉴权信息
+        // Get controller authentication information
         $class = new \ReflectionClass($controller);
         $properties = $class->getDefaultProperties();
         $noNeedLogin = $properties['noNeedLogin'] ?? [];
         $noNeedAuth = $properties['noNeedAuth'] ?? [];
 
-        // 不需要登录
+        // No login required
         if (in_array($action, $noNeedLogin)) {
             return true;
         }
 
-        // 获取登录信息
+        // Get login information
         $admin = admin();
         if (!$admin) {
-            $msg = '请登录';
-            // 401是未登录固定的返回码
+            $msg = 'please sign in';
+            // 401is not logged in fixed return code
             $code = 401;
             return false;
         }
 
-        // 不需要鉴权
+        // No authentication required
         if (in_array($action, $noNeedAuth)) {
             return true;
         }
 
-        // 当前管理员无角色
+        // Current administrator has no role
         $roles = $admin['roles'];
         if (!$roles) {
-            $msg = '无权限';
+            $msg = 'No permission';
             $code = 2;
             return false;
         }
 
-        // 角色没有规则
+        // Role has no rules
         $rules = AdminRole::whereIn('id', $roles)->pluck('rules');
         $rule_ids = [];
         foreach ($rules as $rule_string) {
@@ -84,23 +84,23 @@ class Auth
             $rule_ids = array_merge($rule_ids, explode(',', $rule_string));
         }
         if (!$rule_ids) {
-            $msg = '无权限';
+            $msg = 'No permission';
             $code = 2;
             return false;
         }
 
-        // 超级管理员
+        // Super Admin
         if (in_array('*', $rule_ids)){
             return true;
         }
 
-        // 没有当前控制器的规则
+        // No rules for current controller
         $rule = AdminRule::where(function ($query) use ($controller, $action) {
             $query->where('name', "$controller@$action")->orWhere('name', $controller);
         })->whereIn('id', $rule_ids)->first();
 
         if (!$rule) {
-            $msg = '无权限';
+            $msg = 'No permission';
             $code = 2;
             return false;
         }

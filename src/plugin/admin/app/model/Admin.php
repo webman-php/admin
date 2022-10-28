@@ -4,16 +4,16 @@ namespace plugin\admin\app\model;
 
 
 /**
- * @property integer $id ID(主键)
- * @property string $username 用户名
- * @property string $nickname 昵称
- * @property string $password 密码
- * @property string $avatar 头像
- * @property string $email 邮箱
- * @property string $mobile 手机
- * @property string $created_at 创建时间
- * @property string $updated_at 更新时间
- * @property string $roles 角色
+ * @property integer $id ID(primary key)
+ * @property string $username username
+ * @property string $nickname Nick name
+ * @property string $password password
+ * @property string $avatar avatar
+ * @property string $email Mail
+ * @property string $mobile cell phone
+ * @property string $created_at creation time
+ * @property string $updated_at Update time
+ * @property string $roles Role
  */
 class Admin extends Base
 {

@@ -17,12 +17,12 @@ class AdminRuleController extends Base
     protected $model = null;
 
     /**
-     * 增删改查
+     * Add, delete, modify and check
      */
     use Crud;
 
     /**
-     * 构造函数
+     * Constructor
      */
     public function __construct()
     {
@@ -30,7 +30,7 @@ class AdminRuleController extends Base
     }
 
     /**
-     * 获取权限树
+     * Get permission tree
      *
      * @param Request $request
      * @return \support\Response
@@ -43,7 +43,7 @@ class AdminRuleController extends Base
     }
 
     /**
-     * 根据类同步规则到数据库
+     * According to class synchronization rules to database
      *
      * @return void
      */
@@ -91,7 +91,7 @@ class AdminRuleController extends Base
                 }
             }
         }
-        // 从数据库中删除已经不存在的方法
+        // Remove a method that no longer exists from the database
         $menu_names_to_del = array_diff($methods_in_db, $methods_in_files);
         if ($menu_names_to_del) {
             AdminRule::whereIn('name', $menu_names_to_del)->delete();
@@ -99,7 +99,7 @@ class AdminRuleController extends Base
     }
 
     /**
-     * 查询
+     * Inquire
      *
      * @param Request $request
      * @return \support\Response
@@ -141,7 +141,7 @@ class AdminRuleController extends Base
     }
 
     /**
-     * 添加
+     * Add to
      * @param Request $request
      * @return \support\Response
      */
@@ -151,11 +151,11 @@ class AdminRuleController extends Base
         $table = $this->model->getTable();
         $allow_column = Util::db()->select("desc $table");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            return $this->json(2, 'table does not exist');
         }
         $name = $data['name'];
         if ($this->model->where('name', $name)->first()) {
-            return $this->json(1, "菜单key $name 已经存在");
+            return $this->json(1, "Menu key $name already exists");
         }
         $columns = array_column($allow_column, 'Field', 'Field');
         foreach ($data as $col => $item) {
@@ -178,7 +178,7 @@ class AdminRuleController extends Base
     }
 
     /**
-     * 更新
+     * renew
      * @param Request $request
      * @return \support\Response
      */
@@ -190,11 +190,11 @@ class AdminRuleController extends Base
         $table = $this->model->getTable();
         $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            return $this->json(2, 'table does not exist');
         }
         $row = $this->model->where($column, $value)->first();
         if (!$row) {
-            return $this->json(2, '记录不存在');
+            return $this->json(2, 'Record does not exist');
         }
         foreach ($data as $col => $item) {
             if (is_array($item)) {
@@ -204,7 +204,7 @@ class AdminRuleController extends Base
         if (!isset($data['pid'])) {
             $data['pid'] = 0;
         } elseif ($data['pid'] == $row['id']) {
-            return $this->json(2, '不能将自己设置为上级菜单');
+            return $this->json(2, 'Cannot set yourself as parent menu');
         }
 
         $data['path'] = (empty($data['pid']) ? '/' : '') . ltrim($data['path'], '/');
@@ -214,7 +214,7 @@ class AdminRuleController extends Base
     }
     
     /**
-     * 删除
+     * delete
      * @param Request $request
      * @return \support\Response
      * @throws \Support\Exception\BusinessException
@@ -225,9 +225,9 @@ class AdminRuleController extends Base
         $value = $request->post('value');
         $item = $this->model->where($column, $value)->first();
         if (!$item) {
-            return $this->json(1, '记录不存在');
+            return $this->json(1, 'Record does not exist');
         }
-        // 子规则一起删除
+        // Sub-rules are deleted together
         $delete_ids = $children_ids = [$item['id']];
         while($children_ids) {
             $children_ids = $this->model->whereIn('pid', $children_ids)->pluck('id')->toArray();
@@ -238,7 +238,7 @@ class AdminRuleController extends Base
     }
 
     /**
-     * 一键生成菜单
+     * One-click menu generation
      *
      * @param Request $request
      * @return \support\Response
@@ -258,7 +258,7 @@ class AdminRuleController extends Base
         if ($pid) {
             $parent_menu = AdminRule::find($pid);
             if (!$parent_menu) {
-                return $this->json(1, '父菜单不存在');
+                return $this->json(1, 'Parent menu does not exist');
             }
             $path = $parent_menu['path'];
         }
@@ -283,20 +283,20 @@ class AdminRuleController extends Base
         $model_file = base_path() . "/plugin/admin/app/model/$model_class.php";
         if (!$overwrite) {
             if (is_file($controller_file)) {
-                return $this->json(1, substr($controller_file, strlen(base_path())) . '已经存在');
+                return $this->json(1, substr($controller_file, strlen(base_path())) . 'already exists');
             }
             if (is_file($model_file)) {
-                return $this->json(1, substr($model_file, strlen(base_path())) . '已经存在');
+                return $this->json(1, substr($model_file, strlen(base_path())) . 'already exists');
             }
         }
 
-        // 创建model
+        // createmodel
         $this->createModel($model_class, "plugin\\admin\\app\\model", $model_file, $table_name);
 
-        // 创建controller
+        // createcontroller
         $this->createController($controller_class, $controller_namespace, $controller_file, $model_class, $name);
 
-        // 菜单相关参数
+        // Menu related parameters
         $menu_path = str_replace('_', '', $table_basename);
         $suffix = substr($menu_path, -2);
         if ($suffix != 'ss' && $suffix != 'es') {
@@ -328,7 +328,7 @@ class AdminRuleController extends Base
             $rule_ids = array_merge($rule_ids, explode(',', $rule_string));
         }
 
-        // 不是超级管理员，则需要给当前管理员这个菜单的权限
+        // If you are not a super administrator, you need to give the current administrator permission to this menu
         if (!in_array('*', $rule_ids) && $roles){
             $role = AdminRole::find(current($roles));
             if ($role) {
@@ -341,7 +341,7 @@ class AdminRuleController extends Base
     }
 
     /**
-     * 创建model
+     * createmodel
      *
      * @param $class
      * @param $namespace
@@ -363,7 +363,7 @@ class AdminRuleController extends Base
             foreach (Util::db()->select("select COLUMN_NAME,DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT from INFORMATION_SCHEMA.COLUMNS where table_name = '$table' and table_schema = '$database'") as $item) {
                 if ($item->COLUMN_KEY === 'PRI') {
                     $pk = $item->COLUMN_NAME;
-                    $item->COLUMN_COMMENT .= "(主键)";
+                    $item->COLUMN_COMMENT .= "(primary key)";
                 }
                 $type = $this->getType($item->DATA_TYPE);
                 $properties .= " * @property $type \${$item->COLUMN_NAME} {$item->COLUMN_COMMENT}\n";
@@ -416,7 +416,7 @@ EOF;
     }
 
     /**
-     * 创建控制器
+     * Create Controller
      *
      * @param $controller_class
      * @param $namespace
@@ -444,7 +444,7 @@ use support\Request;
 class $controller_class extends Base
 {
     /**
-     * 开启增删改查 
+     * Enable CRUD 
      */
     use Crud;
     
@@ -454,7 +454,7 @@ class $controller_class extends Base
     protected \$model = null;
 
     /**
-     * 构造函数
+     * Constructor
      * 
      * @return void
      */
@@ -478,7 +478,7 @@ EOF;
     }
 
     /**
-     * 字段类型到php类型映射
+     * Field type to php type mapping
      *
      * @param string $type
      * @return string

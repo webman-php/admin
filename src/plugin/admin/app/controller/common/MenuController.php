@@ -11,7 +11,7 @@ use function admin;
 class MenuController extends Base
 {
     /**
-     * 不需要权限的方法
+     * methods that don't require permissions
      *
      * @var string[]
      */
@@ -23,7 +23,7 @@ class MenuController extends Base
     protected $model = null;
 
     /**
-     * 构造函数
+     * Constructor
      */
     public function __construct()
     {
@@ -31,7 +31,7 @@ class MenuController extends Base
     }
 
     /**
-     * 获取菜单
+     * Get menu
      *
      * @return \support\Response
      */
@@ -65,7 +65,7 @@ class MenuController extends Base
             }
         }
 
-        // 超级管理员权限为 *
+        // Super administrator privilege is *
         if (!in_array('*', $rules)) {
             $this->removeUncontain($formatted_items, 'id', $rules);
         }
@@ -78,7 +78,7 @@ class MenuController extends Base
     }
 
     /**
-     * 获取菜单树
+     * Get menu tree
      *
      * @return \support\Response
      */
@@ -112,7 +112,7 @@ class MenuController extends Base
             }
         }
 
-        // 超级管理员权限为 *
+        // Super administrator privilege is *
         if (!in_array('*', $rules)) {
             $this->removeUncontain($formatted_items, 'id', $rules);
         }
@@ -127,7 +127,7 @@ class MenuController extends Base
     }
 
     /**
-     * 移除不包含某些数据的数组
+     * Remove arrays that do not contain some data
      *
      * @param $array
      * @param $key
@@ -152,7 +152,7 @@ class MenuController extends Base
     }
 
     /**
-     * 判断数组是否包含某些数据
+     * Determine whether the array contains some data
      *
      * @param $array
      * @param $key
@@ -179,7 +179,7 @@ class MenuController extends Base
     }
 
     /**
-     * 递归删除某些key
+     * recursively delete somekey
      *
      * @param $array
      * @param $keys
@@ -199,7 +199,7 @@ class MenuController extends Base
     }
 
     /**
-     * 获取权限规则
+     * Get permission rules
      * @return array
      */
     protected function getRulesAndItems()
@@ -219,7 +219,7 @@ class MenuController extends Base
     }
 
     /**
-     * 递归重建数组下标
+     * Recursively rebuild array subscripts
      *
      * @return void
      */

@@ -7,13 +7,13 @@ use support\exception\BusinessException;
 use function admin;
 
 /**
- * 对外提供的菜单接口
+ * Externally provided menu interface
  */
 class Menu
 {
 
     /**
-     * 根据名字获得菜单
+     * Get menu by name
      *
      * @param $name
      * @return array
@@ -25,7 +25,7 @@ class Menu
     }
 
     /**
-     * 根据id获得菜单
+     * Get menu by id
      *
      * @param $id
      * @return array
@@ -36,7 +36,7 @@ class Menu
     }
 
     /**
-     * 添加菜单
+     * Add menu
      *
      * @param array $menu
      * @return int
@@ -55,7 +55,7 @@ class Menu
     }
 
     /**
-     * 导入菜单
+     * Import menu
      *
      * @param array $menu_tree
      * @return void
@@ -83,7 +83,7 @@ class Menu
     }
 
     /**
-     * 删除菜单
+     * Delete menu
      *
      * @param $name
      * @return void
@@ -94,7 +94,7 @@ class Menu
         if (!$item) {
             return;
         }
-        // 子规则一起删除
+        // Sub-rules are deleted together
         $delete_ids = $children_ids = [$item['id']];
         while($children_ids) {
             $children_ids = AdminRule::whereIn('pid', $children_ids)->pluck('id')->toArray();
@@ -105,7 +105,7 @@ class Menu
 
 
     /**
-     * 获取菜单中某个(些)字段的值
+     * Get the value of a field(s) in the menu
      *
      * @param $menus
      * @param $column

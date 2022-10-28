@@ -8,7 +8,7 @@ use plugin\admin\app\model\Admin;
 use support\Request;
 
 /**
- * 管理员设置
+ * Administrator Settings
  */
 class AdminController extends Base
 {
@@ -19,12 +19,12 @@ class AdminController extends Base
     protected $model = null;
 
     /**
-     * 增删改查
+     * Add, delete, modify and check
      */
     use Crud;
 
     /**
-     * 构造函数
+     * Constructor
      */
     public function __construct()
     {
@@ -32,7 +32,7 @@ class AdminController extends Base
     }
 
     /**
-     * 删除
+     * delete
      *
      * @param Request $request
      * @return \support\Response
@@ -43,7 +43,7 @@ class AdminController extends Base
         $column = $request->post('column');
         $value = $request->post('value');
         if ($value == admin_id()) {
-            return $this->json(1, '不能删除自己');
+            return $this->json(1, 'Cannot delete myself');
         }
         $this->model->where([$column => $value])->delete();
         return $this->json(0);

@@ -14,7 +14,7 @@ class Base extends Model
     protected $connection = 'plugin.admin.mysql';
 
     /**
-     * 格式化日期
+     * Format Date
      *
      * @param DateTimeInterface $date
      * @return string

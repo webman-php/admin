@@ -3,11 +3,11 @@
 namespace plugin\admin\app\model;
 
 /**
- * @property integer $id 主键(主键)
- * @property string $name 角色名
- * @property string $rules 规则
- * @property string $created_at 创建时间
- * @property string $updated_at 更新时间
+ * @property integer $id primary key (primary key)
+ * @property string $name character name
+ * @property string $rules rule
+ * @property string $created_at creation time
+ * @property string $updated_at Update time
  */
 class AdminRole extends Base
 {
