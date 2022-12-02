@@ -13,14 +13,14 @@ class Menu
 {
 
     /**
-     * 根据名字获得菜单
+     * 根据key获取菜单
      *
-     * @param $name
+     * @param $key
      * @return array
      */
-    public static function get($name)
+    public static function get($key)
     {
-        $menu = AdminRule::where('name', $name)->first();
+        $menu = AdminRule::where('key', $key)->first();
         return $menu ? $menu->toArray() : null;
     }
 
@@ -30,7 +30,7 @@ class Menu
      * @param $id
      * @return array
      */
-    public static function find($id)
+    public static function find($id): array
     {
         return AdminRule::find($id)->toArray();
     }
@@ -47,9 +47,6 @@ class Menu
         foreach ($menu as $key => $value) {
             $item->$key = $value;
         }
-        if (!empty($item->frame_src)) {
-            $item->component = '';
-        }
         $item->save();
         return $item->id;
     }
@@ -62,7 +59,7 @@ class Menu
      */
     public static function import(array $menu_tree)
     {
-        if (is_numeric(key($menu_tree)) && !isset($menu_tree['name'])) {
+        if (is_numeric(key($menu_tree)) && !isset($menu_tree['key'])) {
             foreach ($menu_tree as $item) {
                 static::import($item);
             }
@@ -70,9 +67,9 @@ class Menu
         }
         $children = $menu_tree['children'] ?? [];
         unset($menu_tree['children']);
-        if ($old_menu = Menu::get($menu_tree['name'])) {
+        if ($old_menu = Menu::get($menu_tree['key'])) {
             $pid = $old_menu['id'];
-            AdminRule::where('name', $menu_tree['name'])->update($menu_tree);
+            AdminRule::where('key', $menu_tree['key'])->update($menu_tree);
         } else {
             $pid = static::add($menu_tree);
         }
@@ -85,12 +82,12 @@ class Menu
     /**
      * 删除菜单
      *
-     * @param $name
+     * @param $key
      * @return void
      */
-    public static function delete($name)
+    public static function delete($key)
     {
-        $item = AdminRule::where('name', $name)->first();
+        $item = AdminRule::where('key', $key)->first();
         if (!$item) {
             return;
         }
@@ -107,14 +104,15 @@ class Menu
     /**
      * 获取菜单中某个(些)字段的值
      *
-     * @param $menus
-     * @param $column
+     * @param $menu
+     * @param null $column
+     * @param null $index
      * @return array|mixed
      */
     public static function column($menu, $column = null, $index = null)
     {
         $values = [];
-        if (is_numeric(key($menu)) && !isset($menu['name'])) {
+        if (is_numeric(key($menu)) && !isset($menu['key'])) {
             foreach ($menu as $item) {
                 $values = array_merge($values, static::column($item, $column, $index));
             }

@@ -2,9 +2,8 @@
 
 namespace plugin\admin\app\controller;
 
-use plugin\admin\app\Util;
-use support\Db;
 use support\Request;
+use support\Response;
 
 class IndexController
 {
@@ -15,23 +14,22 @@ class IndexController
      */
     protected $noNeedLogin = ['index'];
 
-
     /**
      * 后台主页
-     *
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        if (!$request->queryString()) {
-            // 检查是否安装了admin
-            $database_config_file = base_path() . '/plugin/admin/config/database.php';
-            clearstatcache();
-            if (!is_file($database_config_file)) {
-                return redirect('/app/admin?install#install');
-            }
+        clearstatcache();
+        if (!is_file(base_path('plugin/admin/config/database.php'))) {
+            return view('index/install');
         }
-        return response()->file(base_path() . '/plugin/admin/public/index.html');
+        $admin = admin();
+        if (!$admin) {
+            return view('account/login');
+        }
+        return view('index/index');
     }
 
 }

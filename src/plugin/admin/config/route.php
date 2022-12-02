@@ -12,7 +12,10 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-use plugin\admin\app\controller\common\AccountController;
+use plugin\admin\app\controller\AccountController;
 use Webman\Route;
 
-Route::any('/app/admin/common/account/captcha/{type}', [AccountController::class, 'captcha']);
+Route::any('/app/admin/account/captcha/{type}', [AccountController::class, 'captcha']);
+Route::any('/app/admin', function () {
+    return redirect('/app/admin/');
+});

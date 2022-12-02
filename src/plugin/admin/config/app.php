@@ -12,12 +12,9 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-use support\Request;
-
 return [
     'debug' => true,
-    'request_class' => Request::class,
     'controller_suffix' => 'Controller',
     'plugin_market_host' => 'https://www.workerman.net',
-    'version' => '0.3.3'
+    'version' => '0.4.0'
 ];

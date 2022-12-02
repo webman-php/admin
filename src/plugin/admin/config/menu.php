@@ -1,96 +1,104 @@
 <?php
 
-use plugin\queue\app\controller\redis\DelayController;
-use plugin\queue\app\controller\redis\FailedController;
-use plugin\queue\app\controller\redis\NormalController;
-
 return [
     [
         'title' => '数据库',
-        'name' => 'database',
-        'path' => '/database',
-        'icon' => 'ant-design:database-filled',
+        'key' => 'database',
+        'icon' => 'layui-icon-template-1',
+        'weight' => 1000,
+        'type' => 0,
         'children' => [
             [
                 'title' => '所有表',
-                'name' => 'plugin\\admin\\app\\controller\\database\\TableController',
-                'path' => 'table',
-                'component' => '/database/table/index'
-            ],
-            [
-                'title' => '表详情',
-                'name' => 'tableview',
-                'path' => 'table/view/:id',
-                'component' => '/database/table/View',
-                'hide_menu' => 1,
-            ],
+                'key' => 'plugin\\admin\\app\\controller\\TableController',
+                'href' => '/app/admin/table/index',
+                'type' => 1,
+                'weight' => 800,
+            ]
         ]
     ],
     [
         'title' => '权限管理',
-        'name' => 'auth',
-        'path' => '/auth',
-        'icon' => 'ant-design:setting-filled',
+        'key' => 'auth',
+        'icon' => 'layui-icon-vercode',
+        'weight' => 900,
+        'type' => 0,
         'children' => [
             [
                 'title' => '账户管理',
-                'name' => 'plugin\\admin\\app\\controller\\auth\\AdminController',
-                'path' => 'admin',
-                'component' => '/auth/admin/index'
+                'key' => 'plugin\\admin\\app\\controller\\AdminController',
+                'href' => '/app/admin/admin/index',
+                'type' => 1,
+                'weight' => 1000,
             ],
             [
                 'title' => '角色管理',
-                'name' => 'plugin\\admin\\app\\controller\\auth\\AdminRoleController',
-                'path' => 'admin-role',
-                'component' => '/auth/admin-role/index',
+                'key' => 'plugin\\admin\\app\\controller\\AdminRoleController',
+                'href' => '/app/admin/admin-role/index',
+                'type' => 1,
+                'weight' => 900,
             ],
             [
                 'title' => '菜单管理',
-                'name' => 'plugin\\admin\\app\\controller\\auth\\AdminRuleController',
-                'path' => 'admin-rule',
-                'component' => '/auth/admin-rule/index',
+                'key' => 'plugin\\admin\\app\\controller\\AdminRuleController',
+                'href' => '/app/admin/admin-rule/index',
+                'type' => 1,
+                'weight' => 800,
             ],
         ]
     ],
     [
         'title' => '会员管理',
-        'name' => 'user',
-        'path' => '/user',
-        'icon' => 'ant-design:smile-filled',
+        'key' => 'user',
+        'icon' => 'layui-icon-username',
+        'weight' => 800,
+        'type' => 0,
         'children' => [
             [
                 'title' => '用户',
-                'name' => 'plugin\\admin\\app\\controller\\user\\UserController',
-                'path' => 'user',
-                'component' => '/user/user/index'
+                'key' => 'plugin\\admin\\app\\controller\\UserController',
+                'href' => '/app/admin/user/index',
+                'type' => 1,
+                'weight' => 800,
             ]
         ]
     ],
     [
         'title' => '通用设置',
-        'name' => 'common',
-        'path' => '/common',
-        'icon' => 'ant-design:setting-filled',
+        'key' => 'common',
+        'icon' => 'layui-icon-set',
+        'weight' => 700,
+        'type' => 0,
         'children' => [
             [
                 'title' => '个人资料',
-                'name' => 'plugin\\admin\\app\\controller\\user\\AccountController',
-                'path' => 'account',
-                'component' => '/common/account/index'
+                'key' => 'plugin\\admin\\app\\controller\\AccountController',
+                'href' => '/app/admin/account/index',
+                'type' => 1,
+                'weight' => 800,
+            ],
+            [
+                'title' => '系统设置',
+                'key' => 'plugin\\admin\\app\\controller\\ConfigController',
+                'href' => '/app/admin/config/index',
+                'type' => 1,
+                'weight' => 700,
             ]
         ]
     ],
     [
         'title' => '插件管理',
-        'name' => 'plugin',
-        'path' => '/plugin',
-        'icon' => 'ant-design:appstore-filled',
+        'key' => 'plugin',
+        'icon' => 'layui-icon-app',
+        'weight' => 600,
+        'type' => 0,
         'children' => [
             [
                 'title' => '应用插件',
-                'name' => 'plugin\\admin\\app\\controller\\plugin\\AppController',
-                'path' => 'app',
-                'component' => '/plugin/App'
+                'key' => 'plugin\\admin\\app\\controller\\PluginController',
+                'href' => '/app/admin/plugin/app',
+                'weight' => 800,
+                'type' => 1,
             ]
         ]
     ],

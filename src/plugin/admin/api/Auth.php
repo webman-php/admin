@@ -14,7 +14,6 @@ class Auth
     /**
      * 判断权限
      * 如果没有权限则抛出异常
-     *
      * @param string $controller
      * @param string $action
      * @return void
@@ -31,7 +30,6 @@ class Auth
 
     /**
      * 判断是否有权限
-     *
      * @param string $controller
      * @param string $action
      * @param int $code
@@ -39,7 +37,7 @@ class Auth
      * @return bool
      * @throws \ReflectionException
      */
-    public static function canAccess(string $controller, string $action, int &$code = 0, string &$msg = '')
+    public static function canAccess(string $controller, string $action, int &$code = 0, string &$msg = ''): bool
     {
         // 获取控制器鉴权信息
         $class = new \ReflectionClass($controller);
@@ -94,9 +92,23 @@ class Auth
             return true;
         }
 
-        // 没有当前控制器的规则
+        // 如果action为index，规则里有任意一个以$controller开头的权限即可
+        if (strtolower($action) === 'index') {
+            $controller = str_replace('\\', '\\\\', $controller);
+            $rule = AdminRule::where(function ($query) use ($controller, $action) {
+                $query->where('key', 'like', "$controller@%")->orWhere('key', $controller);
+            })->whereIn('id', $rule_ids)->first();
+            if ($rule) {
+                return true;
+            }
+            $msg = '无权限';
+            $code = 2;
+            return false;
+        }
+
+        // 查询是否有当前控制器的规则
         $rule = AdminRule::where(function ($query) use ($controller, $action) {
-            $query->where('name', "$controller@$action")->orWhere('name', $controller);
+            $query->where('key', "$controller@$action")->orWhere('key', $controller);
         })->whereIn('id', $rule_ids)->first();
 
         if (!$rule) {

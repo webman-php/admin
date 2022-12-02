@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>新增页面</title>
+        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+    </head>
+    <body>
+
+        <form class="layui-form" action="">
+
+            <div class="mainBox">
+                <div class="main-container">
+                    <input type="hidden" name="table" value="<?=htmlspecialchars($table)?>">
+                    <?= $form->html(5)?>
+                </div>
+            </div>
+
+            <div class="bottom">
+                <div class="button-container">
+                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit=""
+                        lay-filter="save">
+                        提交
+                    </button>
+                    <button type="reset" class="pear-btn pear-btn-md">
+                        重置
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <script src="/app/admin/component/layui/layui.js"></script>
+        <script src="/app/admin/component/pear/pear.js"></script>
+        <script>
+
+            const INSERT_URL = "/app/admin/table/insert";
+
+            <?=$form->js(3)?>
+
+            layui.use(['form', 'jquery', 'popup'], function () {
+                //提交事件
+                layui.form.on('submit(save)', function (data) {
+                    layui.jquery.ajax({
+                        url: INSERT_URL,
+                        type: 'POST',
+                        dateType: 'json',
+                        data: data.field,
+                        success: function (res) {
+                            if (res.code) {
+                                return layui.popup.failure(res.msg);
+                            }
+                            return layui.popup.success('操作成功', function () {
+                                parent.refreshTable();
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        }
+                    });
+                    return false;
+                });
+            });
+
+        </script>
+
+    </body>
+</html>

@@ -2,15 +2,20 @@
 
 namespace plugin\admin\app\controller;
 
-use plugin\admin\app\Util;
-use support\Db;
-use support\Request;
+use support\Model;
+use support\Response;
+use function json;
 
 /**
  * 基础控制器
  */
 class Base
 {
+
+    /**
+     * @var Model
+     */
+    protected $model = null;
 
     /**
      * 无需登录的方法及鉴权
@@ -30,11 +35,11 @@ class Base
      * @param int $code
      * @param string $msg
      * @param array $data
-     * @return \support\Response
+     * @return Response
      */
-    protected function json(int $code, string $msg = 'ok', array $data = [])
+    protected function json(int $code, string $msg = 'ok', array $data = []): Response
     {
-        return json(['code' => $code, 'result' => $data, 'message' => $msg, 'type' => $code ? 'error' : 'success']);
+        return json(['code' => $code, 'data' => $data, 'msg' => $msg]);
     }
 
 }

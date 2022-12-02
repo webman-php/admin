@@ -28,7 +28,7 @@ class Handler extends \Support\Exception\Handler
     {
         $code = $exception->getCode();
         if ($request->expectsJson()) {
-            $json = ['code' => $code ? $code : 500, 'message' => $this->_debug ? $exception->getMessage() : 'Server internal error', 'type' => 'failed'];
+            $json = ['code' => $code ? $code : 500, 'msg' => $this->_debug ? $exception->getMessage() : 'Server internal error', 'type' => 'failed'];
             $this->_debug && $json['traces'] = (string)$exception;
             return new Response(200, ['Content-Type' => 'application/json'],
                 \json_encode($json, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));

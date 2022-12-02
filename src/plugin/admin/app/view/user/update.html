@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>更新页面</title>
+        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+    </head>
+    <body>
+
+        <form class="layui-form">
+
+            <div class="mainBox">
+                <div class="main-container">
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">用户名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="username" value="" required lay-verify="required" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">昵称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="nickname" value="" required lay-verify="required" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">密码</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="password" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-block">
+                            <div name="sex" id="sex" value="" ></div>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">头像</label>
+                        <div class="layui-input-block">
+                            <img style="max-width:90px;max-height:90px;" src=""/>
+                            <input type="text" style="display:none" name="avatar" value="" />
+                            <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="avatar">
+                                <i class="layui-icon">&#xe67c;</i>上传图片
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="email" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">手机</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="mobile" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">等级</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="level" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">生日</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="birthday" id="birthday" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">余额</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="money" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">积分</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="score" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">登录时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="last_time" id="last_time" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">登录ip</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="last_ip" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">注册时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="join_time" id="join_time" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">注册ip</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="join_ip" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">禁用</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" id="status" lay-filter="status" lay-skin="switch" />
+                            <input type="text" style="display:none" name="status" value="0" />
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="bottom">
+                <div class="button-container">
+                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="save">
+                        提交
+                    </button>
+                    <button type="reset" class="pear-btn pear-btn-md">
+                        重置
+                    </button>
+                </div>
+            </div>
+            
+        </form>
+
+        <script src="/app/admin/component/layui/layui.js"></script>
+        <script src="/app/admin/component/pear/pear.js"></script>
+        <script>
+
+            // 相关接口
+            const PRIMARY_KEY = 'id';
+            const SELECT_API = "/app/admin/user/select" + location.search;
+            const UPDATE_API = "/app/admin/user/update";
+
+            // 获取数据库记录
+            layui.use(['form', 'jquery', 'util'], function () {
+                let $ = layui.jquery;
+                $.ajax({
+                    url: SELECT_API,
+                    dataType: 'json',
+                    success: function (e) {
+                        
+                        // 给表单初始化数据
+                        layui.each(e.data[0], function (key, value) {
+                            let obj = $('*[name="'+key+'"]');
+                            if (key === 'password') {
+                                obj.attr('placeholder', '不更新密码请留空');
+                                return;
+                            }
+                            if (typeof obj[0] === 'undefined' || !obj[0].nodeName) return;
+                            if (obj[0].nodeName.toLowerCase() === 'textarea') {
+                                obj.html(layui.util.escape(value));
+                            } else {
+                                obj.attr('value', value);
+                            }
+                        });
+                        
+                        // 字段 性别 sex
+                        layui.use(['jquery', 'xmSelect'], function() {
+                            let value = layui.jquery('#sex').attr('value');
+                            let initValue = value ? value.split(',') : [];
+                            layui.xmSelect.render({
+                                el: '#sex',
+                                name: 'sex',
+                                initValue: initValue,
+                                data: [{"value":"男","name":"男"},{"value":"女","name":"女"}],
+                                model: {"icon":"hidden","label":{"type":"text"}},
+                                clickClose: 'true',
+                                radio: 'true',
+                            })
+                        });
+                        
+                        // 字段 头像 avatar
+                        layui.use(['upload', 'layer', 'jquery'], function() {
+                            let input = layui.jquery('#avatar').prev();
+                            input.prev().attr('src', input.val());
+                            layui.upload.render({
+                                elem: '#avatar',
+                                url: '/app/admin/upload/avatar',
+                                acceptMime: 'image/gif,image/jpeg,image/jpg,image/png',
+                                done: function (res) {
+                                    if (res.code > 0) return layui.layer.msg(res.msg);
+                                    this.item.prev().val(res.data.path).prev().attr('src', res.data.path);
+                                }
+                            });
+                        });
+                        
+                        // 字段 生日 birthday
+                        layui.use(['laydate'], function() {
+                            layui.laydate.render({
+                                elem: '#birthday',
+                            });
+                        })
+                        
+                        // 字段 登录时间 last_time
+                        layui.use(['laydate'], function() {
+                            layui.laydate.render({
+                                elem: '#last_time',
+                                type: 'datetime',
+                            });
+                        })
+                        
+                        // 字段 注册时间 join_time
+                        layui.use(['laydate'], function() {
+                            layui.laydate.render({
+                                elem: '#join_time',
+                                type: 'datetime',
+                            });
+                        })
+                        
+                        // 字段 禁用 status
+                        layui.use(['form', 'jquery'], function() {
+                            layui.jquery('#status').attr('checked', layui.jquery('input[name="status"]').val() != 0);
+                            layui.form.render();
+                            layui.form.on('switch(status)', function(data) {
+                                layui.jquery('input[name="status"]').val(this.checked ? 1 : 0);
+                            });
+                        })
+                        
+
+                    }
+                });
+            });
+
+            //提交事件
+            layui.use(['form', 'jquery', 'popup'], function () {
+                layui.form.on('submit(save)', function (data) {
+                    data.field[PRIMARY_KEY] = layui.url().search[PRIMARY_KEY];
+                    layui.jquery.ajax({
+                        url: UPDATE_API,
+                        type: 'POST',
+                        dateType: 'json',
+                        data: data.field,
+                        success: function (res) {
+                            if (res.code) {
+                                return layui.popup.failure(res.msg);
+                            }
+                            return layui.popup.success('操作成功', function () {
+                                parent.refreshTable();
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        }
+                    });
+                    return false;
+                });
+            });
+
+        </script>
+
+    </body>
+
+</html>

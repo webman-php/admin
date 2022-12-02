@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>一键菜单</title>
+        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+    </head>
+    <body>
+
+        <form class="layui-form" action="">
+
+            <div class="mainBox">
+                <div class="main-container">
+                    <input type="hidden" name="table" value="<?=htmlspecialchars($table)?>">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">菜单名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" value="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">图标</label>
+                        <div class="layui-input-block">
+                            <input name="icon" id="icon" value="" />
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上级菜单</label>
+                        <div class="layui-input-block">
+                            <div name="pid" id="pid"></div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">控制器</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="controller" value="" class="layui-input" placeholder="自动生成请留空">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">模型</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="model" value="" class="layui-input" placeholder="自动生成请留空">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">强制覆盖</label>
+                        <div class="layui-input-block">
+                            <input type="checkbox" name="overwrite" lay-skin="primary">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom">
+                <div class="button-container">
+                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit=""
+                        lay-filter="save">
+                        提交
+                    </button>
+                    <button type="reset" class="pear-btn pear-btn-md">
+                        重置
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <script src="/app/admin/component/layui/layui.js"></script>
+        <script src="/app/admin/component/pear/pear.js"></script>
+        <script>
+
+            let crud_api = "/app/admin/table/crud";
+
+            layui.use(['jquery', 'xmSelect'], function() {
+                layui.jquery.ajax({
+                    url: '/app/admin/admin-rule/select?format=tree&type=0,1',
+                    dataType: 'json',
+                    success: function (e) {
+                        let value = layui.jquery('#pid').attr('value');
+                        let initValue = value ? value.split(',') : [];
+                        layui.xmSelect.render({
+                            el: '#pid',
+                            name: 'pid',
+                            initValue: initValue,
+                            tips: '无',
+                            data: e.data,
+                            toolbar: {show: true, list: ["CLEAR"]},
+                            model: {"icon":"hidden","label":{"type":"text"}},
+                            clickClose: 'true',
+                            radio: 'true',
+                            tree: {show:true, strict:false, clickCheck:true, clickExpand:false},
+                        })
+                    }
+                });
+            });
+
+            layui.use(['iconPicker'], function() {
+                layui.iconPicker.render({
+                    elem: '#icon',
+                    type: 'fontClass',
+                    page: false
+                });
+            });
+
+            layui.use(['form', 'jquery', 'popup'], function () {
+                //提交事件
+                layui.form.on('submit(save)', function (data) {
+                    layui.jquery.ajax({
+                        url: crud_api,
+                        type: 'POST',
+                        dateType: 'json',
+                        data: data.field,
+                        success: function (res) {
+                            if (res.code) {
+                                return layui.popup.failure(res.msg);
+                            }
+                            return layui.popup.success('操作成功', function () {
+                                parent.refreshTable();
+                                parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            });
+                        }
+                    });
+                    return false;
+                });
+            });
+
+        </script>
+
+    </body>
+</html>

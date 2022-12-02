@@ -8,6 +8,12 @@ use Webman\MiddlewareInterface;
 
 class AccessControl implements MiddlewareInterface
 {
+    /**
+     * @param Request $request
+     * @param callable $handler
+     * @return Response
+     * @throws \ReflectionException
+     */
     public function process(Request $request, callable $handler): Response
     {
         $controller = $request->controller;
@@ -16,17 +22,28 @@ class AccessControl implements MiddlewareInterface
         $code = 0;
         $msg = '';
         if (!Auth::canAccess($controller, $action, $code, $msg)) {
-            $response = json(['code' => $code, 'message' => $msg, 'type' => 'error']);
+            if ($request->expectsJson()) {
+                $response = json(['code' => $code, 'msg' => $msg, 'type' => 'error']);
+            } else {
+                if ($code === 401) {
+                    $response = response(<<<EOF
+<script>
+    if (self !== top) {
+        parent.location.reload();
+    }
+</script>
+EOF
+                    );
+                } else {
+                    $response = view('error/403');
+                }
+            }
+
         } else {
             $response = $request->method() == 'OPTIONS' ? response('') : $handler($request);
         }
 
-        return $response->withHeaders([
-            'Access-Control-Allow-Credentials' => 'true',
-            'Access-Control-Allow-Origin' => $request->header('Origin', '*'),
-            'Access-Control-Allow-Methods' => '*',
-            'Access-Control-Allow-Headers' => '*',
-        ]);
+        return $response;
 
     }
 

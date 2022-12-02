@@ -2,13 +2,13 @@
 
 namespace plugin\admin\app\controller;
 
-use plugin\admin\app\model\Option;
-use plugin\admin\app\Util;
-use support\Db;
+use plugin\admin\app\common\Util;
+use support\exception\BusinessException;
 use support\Model;
 use support\Request;
+use support\Response;
 
-trait Crud
+class Crud extends Base
 {
 
     /**
@@ -19,14 +19,117 @@ trait Crud
 
     /**
      * 查询
-     *
      * @param Request $request
-     * @return \support\Response
+     * @return Response
+     * @throws BusinessException
      */
-    public function select(Request $request)
+    public function select(Request $request): Response
     {
         [$where, $format, $page_size, $field, $order] = $this->selectInput($request);
+        $query = $this->doSelect($where, $field, $order);
+        return $this->doFormat($query, $format, $page_size);
+    }
 
+    /**
+     * 添加
+     * @param Request $request
+     * @return Response
+     * @throws BusinessException
+     */
+    public function insert(Request $request): Response
+    {
+        $data = $this->insertInput($request);
+        $id = $this->doInsert($data);
+        return $this->json(0, 'ok', ['id' => $id]);
+    }
+
+    /**
+     * 更新
+     * @param Request $request
+     * @return Response
+     * @throws BusinessException
+     */
+    public function update(Request $request): Response
+    {
+        [$id, $data] = $this->updateInput($request);
+        $this->doUpdate($id, $data);
+        return $this->json(0);
+    }
+
+    /**
+     * 删除
+     * @param Request $request
+     * @return Response
+     */
+    public function delete(Request $request): Response
+    {
+        $ids = $this->deleteInput($request);
+        $this->doDelete($ids);
+        return $this->json(0);
+    }
+
+    /**
+     * 摘要
+     * @param Request $request
+     * @return Response
+     */
+    public function schema(Request $request): Response
+    {
+        $table = $this->model->getTable();
+        $data = Util::getSchema($table);
+
+        return $this->json(0, 'ok', [
+            'table' => $data['table'],
+            'columns' => array_values($data['columns']),
+            'forms' => array_values($data['forms']),
+            'keys' => array_values($data['keys']),
+        ]);
+    }
+
+
+    /**
+     * 查询前置
+     * @param Request $request
+     * @return array
+     * @throws BusinessException
+     */
+    protected function selectInput(Request $request): array
+    {
+        $field = $request->get('field');
+        $order = $request->get('order', 'asc');
+        $format = $request->get('format', 'normal');
+        $page_size = $request->get('limit', $format === 'tree' ? 1000 : 10);
+        $order = $order === 'asc' ? 'asc' : 'desc';
+        $where = $request->get();
+        $table = $this->model->getTable();
+
+        $allow_column = Util::db()->select("desc `$table`");
+        if (!$allow_column) {
+            throw new BusinessException('表不存在');
+        }
+        $allow_column = array_column($allow_column, 'Field', 'Field');
+        if (!in_array($field, $allow_column)) {
+            $field = null;
+        }
+        foreach ($where as $column => $value) {
+            if ($value === '' || !isset($allow_column[$column]) ||
+                (is_array($value) && (in_array($value[0], ['', 'undefined']) || in_array($value[1], ['', 'undefined'])))) {
+                unset($where[$column]);
+            }
+        }
+
+        return [$where, $format, $page_size, $field, $order];
+    }
+
+    /**
+     * 执行查询
+     * @param array $where
+     * @param string|null $field
+     * @param string $order
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|Model
+     */
+    protected function doSelect(array $where, string $field = null, string $order= 'desc')
+    {
         $model = $this->model;
         foreach ($where as $column => $value) {
             if (is_array($value)) {
@@ -41,9 +144,22 @@ trait Crud
                 $model = $model->where($column, $value);
             }
         }
-        $model = $model->orderBy($field, $order);
+        if ($field) {
+            $model = $model->orderBy($field, $order);
+        }
+        return $model;
+    }
+
+    /**
+     * @param $query
+     * @param $format
+     * @param $page_size
+     * @return Response
+     */
+    protected function doFormat($query, $format, $page_size): Response
+    {
         if (in_array($format, ['select', 'tree', 'table_tree'])) {
-            $items = $model->get();
+            $items = $query->get();
             if ($format == 'select') {
                 return $this->formatSelect($items);
             } elseif ($format == 'tree') {
@@ -51,254 +167,159 @@ trait Crud
             }
             return $this->formatTableTree($items);
         }
-
-        $paginator = $model->paginate($page_size);
-        return $this->json(0, 'ok', [
-            'items' => $paginator->items(),
-            'total' => $paginator->total()
-        ]);
+        $paginator = $query->paginate($page_size);
+        return json(['code' => 0, 'msg' => 'ok', 'count' => $paginator->total(), 'data' => $paginator->items()]);
     }
 
     /**
-     * 添加
+     * 插入前置方法
      * @param Request $request
-     * @return \support\Response
+     * @return array
+     * @throws BusinessException
      */
-    public function insert(Request $request)
+    protected function insertInput(Request $request): array
     {
-        $data = $request->post('data');
+        $data = $this->inputFilter($request->post());
+        $password_filed = 'password';
+        if (isset($data[$password_filed])) {
+            $data[$password_filed] = Util::passwordHash($data[$password_filed]);
+        }
+        return $data;
+    }
+
+    /**
+     * 执行插入
+     * @param array $data
+     * @return mixed|null
+     */
+    protected function doInsert(array $data)
+    {
+        $primary_key = $this->model->getKeyName();
+        $model_class = get_class($this->model);
+        $model = new $model_class;
+        foreach ($data as $key => $val) {
+            $model->{$key} = $val;
+        }
+        $model->save();
+        return $primary_key ? $model->$primary_key : null;
+    }
+
+    /**
+     * 更新前置方法
+     * @param Request $request
+     * @return array
+     * @throws BusinessException
+     */
+    protected function updateInput(Request $request): array
+    {
+        $primary_key = $this->model->getKeyName();
+        $id = $request->post($primary_key);
+        $data = $this->inputFilter($request->post());
+        $password_filed = 'password';
+        if (isset($data[$password_filed])) {
+            // 密码为空，则不更新密码
+            if ($data[$password_filed] === '') {
+                unset($data[$password_filed]);
+            } else {
+                $data[$password_filed] = Util::passwordHash($data[$password_filed]);
+            }
+        }
+        unset($data[$primary_key]);
+        return [$id, $data];
+    }
+
+    /**
+     * 执行更新
+     * @param $id
+     * @param $data
+     * @return void
+     * @throws BusinessException
+     */
+    protected function doUpdate($id, $data)
+    {
+        $model = $this->model->find($id);
+        if (!$model) {
+            throw new BusinessException('记录不存在', 2);
+        }
+        foreach ($data as $key => $val) {
+            $model->{$key} = $val;
+        }
+        $model->save();
+    }
+
+    /**
+     * 对用户输入表单过滤
+     * @param array $data
+     * @return array
+     * @throws BusinessException
+     */
+    protected function inputFilter(array $data)
+    {
         $table = $this->model->getTable();
         $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
-            return $this->json(2, '表不存在');
+            throw new BusinessException('表不存在', 2);
         }
-        $columns = array_column($allow_column, 'Field', 'Field');
+        $columns = array_column($allow_column, 'Type', 'Field');
         foreach ($data as $col => $item) {
-            if (is_array($item)) {
-                $data[$col] = implode(',', $item);
+            if (!isset($columns[$col])) {
+                unset($data[$col]);
                 continue;
             }
-            if ($col === 'password') {
-                $data[$col] = Util::passwordHash($item);
+            // 非字符串类型传空则为null
+            if ($item === '' && strpos(strtolower($columns[$col]), 'varchar') === false && strpos(strtolower($columns[$col]), 'text') === false) {
+                $data[$col] = null;
             }
-        }
-        $datetime = date('Y-m-d H:i:s');
-        if (isset($columns['created_at']) && !isset($data['created_at'])) {
-            $data['created_at'] = $datetime;
-        }
-        if (isset($columns['updated_at']) && !isset($data['updated_at'])) {
-            $data['updated_at'] = $datetime;
-        }
-        $id = $this->model->insertGetId($data);
-        return $this->json(0, $id);
-    }
-
-    /**
-     * 更新
-     * @param Request $request
-     * @return \support\Response
-     */
-    public function update(Request $request)
-    {
-        $column = $request->post('column');
-        $value = $request->post('value');
-        $data = $request->post('data');
-        $table = $this->model->getTable();
-        $allow_column = Util::db()->select("desc `$table`");
-        if (!$allow_column) {
-            return $this->json(2, '表不存在');
-        }
-        foreach ($data as $col => $item) {
             if (is_array($item)) {
                 $data[$col] = implode(',', $item);
             }
-            if ($col === 'password') {
-                // 密码为空，则不更新密码
-                if ($item == '') {
-                    unset($data[$col]);
-                    continue;
-                }
-                $data[$col] = Util::passwordHash($item);
-            }
         }
-        $this->model->where($column, $value)->update($data);
-        return $this->json(0);
+        if (empty($data['created_at'])) {
+            unset($data['created_at']);
+        }
+        if (empty($data['updated_at'])) {
+            unset($data['updated_at']);
+        }
+        return $data;
     }
 
     /**
-     * 删除
+     * 删除前置方法
      * @param Request $request
-     * @return \support\Response
-     * @throws \Support\Exception\BusinessException
+     * @return array
      */
-    public function delete(Request $request)
+    protected function deleteInput(Request $request): array
     {
-        $column = $request->post('column');
-        $value = $request->post('value');
-        $this->model->where([$column => $value])->delete();
-        return $this->json(0);
+        $primary_key = $this->model->getKeyName();
+        return (array)$request->post($primary_key, []);
     }
 
     /**
-     * 摘要
-     * @param Request $request
-     * @return \support\Response
-     * @throws \Support\Exception\BusinessException
+     * 执行删除
+     * @param array $ids
+     * @return void
      */
-    public function schema(Request $request)
+    protected function doDelete(array $ids)
     {
-        $table = $this->model->getTable();
-        Util::checkTableName($table);
-        $schema = Option::where('name', "table_form_schema_$table")->value('value');
-        $form_schema_map = $schema ? json_decode($schema, true) : [];
-
-        $data = $this->getSchema($table);
-        foreach ($data['forms'] as $field => $item) {
-            if (isset($form_schema_map[$field])) {
-                $data['forms'][$field] = $form_schema_map[$field];
-            }
+        if (!$ids) {
+            return;
         }
-
-        return $this->json(0, 'ok', [
-            'table' => $data['table'],
-            'columns' => array_values($data['columns']),
-            'forms' => array_values($data['forms']),
-            'keys' => array_values($data['keys']),
-        ]);
+        $primary_key = $this->model->getKeyName();
+        $this->model->whereIn($primary_key, $ids)->delete();
     }
 
     /**
-     * 按表获取摘要
-     *
-     * @param $table
-     * @param $section
-     * @return array|mixed
-     */
-    protected function getSchema($table, $section = null)
-    {
-        $database = config('database.connections')['plugin.admin.mysql']['database'];
-        $schema_raw = $section !== 'table' ? Util::db()->select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table'") : [];
-        $forms = [];
-        $columns = [];
-        foreach ($schema_raw as $item) {
-            $field = $item->COLUMN_NAME;
-            $columns[$field] = [
-                'field' => $field,
-                'type' => Util::typeToMethod($item->DATA_TYPE, (bool)strpos($item->COLUMN_TYPE, 'unsigned')),
-                'comment' => $item->COLUMN_COMMENT,
-                'default' => $item->COLUMN_DEFAULT,
-                'length' => $this->getLengthValue($item),
-                'nullable' => $item->IS_NULLABLE !== 'NO',
-                'primary_key' => $item->COLUMN_KEY === 'PRI',
-                'auto_increment' => strpos($item->EXTRA, 'auto_increment') !== false
-            ];
-
-            $forms[$field] = [
-                'field' => $field,
-                'comment' => $item->COLUMN_COMMENT,
-                'control' => Util::typeToControl($item->DATA_TYPE),
-                'form_show' => $item->COLUMN_KEY !== 'PRI',
-                'list_show' => true,
-                'enable_sort' => false,
-                'readonly' => $item->COLUMN_KEY === 'PRI',
-                'searchable' => false,
-                'search_type' => 'normal',
-                'control_args' => '',
-            ];
-        }
-        $table_schema = $section == 'table' || !$section ? Util::db()->select("SELECT TABLE_COMMENT FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' and TABLE_NAME='$table'") : [];
-        $indexes = $section == 'keys' || !$section ? Util::db()->select("SHOW INDEX FROM `$table`") : [];
-        $keys = [];
-        foreach ($indexes as $index) {
-            $key_name = $index->Key_name;
-            if ($key_name == 'PRIMARY') {
-                continue;
-            }
-            if (!isset($keys[$key_name])) {
-                $keys[$key_name] = [
-                    'name' => $key_name,
-                    'columns' => [],
-                    'type' => $index->Non_unique == 0 ? 'unique' : 'normal'
-                ];
-            }
-            $keys[$key_name]['columns'][] = $index->Column_name;
-        }
-
-        $data = [
-            'table' => ['name' => $table, 'comment' => $table_schema[0]->TABLE_COMMENT ?? ''],
-            'columns' => $columns,
-            'forms' => $forms,
-            'keys' => array_reverse($keys, true)
-        ];
-        return $section ? $data[$section] : $data;
-    }
-
-    protected function getLengthValue($schema)
-    {
-        $type = $schema->DATA_TYPE;
-        if (in_array($type, ['float', 'decimal', 'double'])) {
-            return "{$schema->NUMERIC_PRECISION},{$schema->NUMERIC_SCALE}";
-        }
-        if ($type === 'enum') {
-            return implode(',', array_map(function($item){
-                return trim($item, "'");
-            }, explode(',', substr($schema->COLUMN_TYPE, 5, -1))));
-        }
-        if (in_array($type, ['varchar', 'text', 'char'])) {
-            return $schema->CHARACTER_MAXIMUM_LENGTH;
-        }
-        if (in_array($type, ['time', 'datetime', 'timestamp'])) {
-            return $schema->CHARACTER_MAXIMUM_LENGTH;
-        }
-        return '';
-    }
-
-    /**
-     * @param Request $request
-     * @return array|\support\Response
-     */
-    protected function selectInput(Request $request)
-    {
-        $field = $request->get('field');
-        $order = $request->get('order', 'descend');
-        $format = $request->get('format', 'normal');
-        $page_size = $request->get('pageSize', $format === 'tree' ? 1000 : 10);
-        $order = $order === 'ascend' ? 'asc' : 'desc';
-        $where = $request->get();
-        $table = $this->model->getTable();
-
-        $allow_column = Util::db()->select("desc `$table`");
-        if (!$allow_column) {
-            return $this->json(2, '表不存在');
-        }
-        $allow_column = array_column($allow_column, 'Field', 'Field');
-        if (!in_array($field, $allow_column)) {
-            $field = current($allow_column);
-        }
-        foreach ($where as $column => $value) {
-            if ($value === '' || !isset($allow_column[$column]) ||
-                (is_array($value) && ($value[0] == 'undefined' || $value[1] == 'undefined'))) {
-                unset($where[$column]);
-            }
-        }
-
-        return [$where, $format, $page_size, $field, $order];
-    }
-
-    /**
-     * 树
-     *
+     * 格式化树
      * @param $items
-     * @return \support\Response
+     * @return Response
      */
-    protected function formatTree($items)
+    protected function formatTree($items): Response
     {
         $items_map = [];
         foreach ($items as $item) {
             $items_map[$item->id] = [
-                'title' => $item->title ?? $item->name ?? $item->id,
+                'name' => $item->title ?? $item->name ?? $item->id,
                 'value' => (string)$item->id,
-                'key' => (string)$item->id,
                 'pid' => $item->pid,
             ];
         }
@@ -317,12 +338,11 @@ trait Crud
     }
 
     /**
-     * 表格树
-     *
+     * 格式化表格树
      * @param $items
-     * @return \support\Response
+     * @return Response
      */
-    protected function formatTableTree($items)
+    protected function formatTableTree($items): Response
     {
         $items_map = [];
         foreach ($items as $item) {
@@ -343,24 +363,20 @@ trait Crud
     }
 
     /**
+     * 格式化下拉列表
      * @param $items
-     * @return \support\Response
+     * @return Response
      */
-    protected function formatSelect($items)
+    protected function formatSelect($items): Response
     {
         $formatted_items = [];
         foreach ($items as $item) {
             $formatted_items[] = [
-                'label' => $item->title ?? $item->name ?? $item->id,
+                'name' => $item->title ?? $item->name ?? $item->id,
                 'value' => $item->id
             ];
         }
         return  $this->json(0, 'ok', $formatted_items);
-    }
-
-    protected function json(int $code, string $msg = 'ok', array $data = [])
-    {
-        return json(['code' => $code, 'result' => $data, 'message' => $msg, 'type' => $code ? 'error' : 'success']);
     }
 
 }

@@ -21,7 +21,7 @@ class Middleware implements MiddlewareInterface
         $msg = '';
         if (!Auth::canAccess($controller, $action, $code, $msg)) {
             if ($request->expectsJson()) {
-                $response = json(['code' => $code, 'message' => $msg, 'type' => 'error']);
+                $response = json(['code' => $code, 'msg' => $msg, 'type' => 'error']);
             } else {
                 $response = \response($msg, $code);
             }
