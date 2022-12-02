@@ -43,9 +43,12 @@ class LayuiForm
      */
     protected function options($options)
     {
-        array_walk_recursive($options, function(&$item){
+        array_walk_recursive($options, function(&$item, $key){
             if (is_string($item)) {
                 $item = htmlspecialchars($item);
+                if ($key === 'url') {
+                    $item = str_replace('&amp;', '&', $item);
+                }
             }
         });
         $field = $options['field']??'';
