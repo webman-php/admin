@@ -96,7 +96,7 @@ return [
             [
                 'title' => '应用插件',
                 'key' => 'plugin\\admin\\app\\controller\\PluginController',
-                'href' => '/app/admin/plugin/app',
+                'href' => '/app/admin/plugin/index',
                 'weight' => 800,
                 'type' => 1,
             ]

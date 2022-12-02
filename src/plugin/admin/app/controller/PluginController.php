@@ -16,15 +16,15 @@ class PluginController extends Base
      * 不需要鉴权的方法
      * @var string[]
      */
-    protected $noNeedAuth = ['schema', 'captcha', 'app'];
+    protected $noNeedAuth = ['schema', 'captcha'];
 
     /**
      * @param Request $request
      * @return Response
      */
-    public function app(Request $request): Response
+    public function index(Request $request): Response
     {
-        return view('plugin/app');
+        return view('plugin/index');
     }
 
     /**
