@@ -37,13 +37,13 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
+            // 相关接口
             const SELECT_API = "/app/admin/table/show";
-            let drop_api = "/app/admin/table/drop";
-
-            let view_url = "/app/admin/table/view";
-            let create_url = "/app/admin/table/create";
-            let modify_url = "/app/admin/table/modify";
-            let crud_url = "/app/admin/table/crud";
+            const DROP_API = "/app/admin/table/drop";
+            const VIEW_URL = "/app/admin/table/view";
+            const CREATE_URL = "/app/admin/table/create";
+            const MODIFY_URL = "/app/admin/table/modify";
+            const CRUD_URL = "/app/admin/table/crud";
 
             layui.use(['table', 'form', 'jquery', 'common', 'popup'], function() {
                 let table = layui.table;
@@ -58,7 +58,7 @@
                         title: '表名',
                         field: 'TABLE_NAME',
                         templet: function (d) {
-                            return '<a class="tab-link" src="' + view_url + '?table=' + d.TABLE_NAME + '">' + d.TABLE_NAME + '</a>';
+                            return '<a class="tab-link" src="' + VIEW_URL + '?table=' + d.TABLE_NAME + '">' + d.TABLE_NAME + '</a>';
                         }
                     },
                     {
@@ -151,7 +151,7 @@
                         shade: 0.1,
                         maxmin: true,
                         area: [common.isModile()?'100%':'98%', common.isModile()?'100%':'95%'],
-                        content: create_url
+                        content: CREATE_URL
                     });
                 }
 
@@ -163,7 +163,7 @@
                         shade: 0.1,
                         maxmin: true,
                         area: [common.isModile()?'100%':'98%', common.isModile()?'100%':'95%'],
-                        content: modify_url + '?table=' + table
+                        content: MODIFY_URL + '?table=' + table
                     });
                 }
 
@@ -175,7 +175,7 @@
                         shade: 0.1,
                         maxmin: true,
                         area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'500px'],
-                        content: crud_url + '?table=' + table
+                        content: CRUD_URL + '?table=' + table
                     });
                 }
 
@@ -200,7 +200,7 @@
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
-                            url: drop_api,
+                            url: DROP_API,
                             data: {tables: tables},
                             dataType: 'json',
                             type: 'post',

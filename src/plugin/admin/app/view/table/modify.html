@@ -221,14 +221,14 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            let modify_api = '/app/admin/table/modify';
-            let schema_api = '/app/admin/table/schema';
-            let table_name = '<?=htmlspecialchars($table)?>';
+            const MODIFY_API = '/app/admin/table/modify';
+            const SCHEMA_API = '/app/admin/table/schema';
+            const TABLE_NAME = '<?=htmlspecialchars($table)?>';
 
             layui.use(['jquery'], function () {
                 let $ = layui.jquery;
                 $.ajax({
-                    url: schema_api + '?table=' + table_name,
+                    url: SCHEMA_API + '?table=' + TABLE_NAME,
                     dataType: 'json',
                     success: function (res) {
                         // 表信息
@@ -681,7 +681,7 @@
                     syncTableData();
                     let data = layui.form.val('create-table-form');
                     layui.jquery.ajax({
-                        url: modify_api,
+                        url: MODIFY_API,
                         type: 'POST',
                         dateType: 'json',
                         data: data,

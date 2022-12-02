@@ -12,8 +12,6 @@ use plugin\admin\app\model\Option;
 use Support\Exception\BusinessException;
 use Support\Request;
 use support\Response;
-use function config;
-use function json;
 
 class TableController extends Base
 {

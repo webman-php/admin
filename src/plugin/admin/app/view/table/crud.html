@@ -69,7 +69,7 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            let crud_api = "/app/admin/table/crud";
+            const CRUD_API = "/app/admin/table/crud";
 
             layui.use(['jquery', 'xmSelect'], function() {
                 layui.jquery.ajax({
@@ -106,7 +106,7 @@
                 //提交事件
                 layui.form.on('submit(save)', function (data) {
                     layui.jquery.ajax({
-                        url: crud_api,
+                        url: CRUD_API,
                         type: 'POST',
                         dateType: 'json',
                         data: data.field,

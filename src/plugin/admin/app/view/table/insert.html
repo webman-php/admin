@@ -34,7 +34,7 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            const INSERT_URL = "/app/admin/table/insert";
+            const INSERT_API = "/app/admin/table/insert";
 
             <?=$form->js(3)?>
 
@@ -42,7 +42,7 @@
                 //提交事件
                 layui.form.on('submit(save)', function (data) {
                     layui.jquery.ajax({
-                        url: INSERT_URL,
+                        url: INSERT_API,
                         type: 'POST',
                         dateType: 'json',
                         data: data.field,

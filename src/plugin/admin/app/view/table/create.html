@@ -116,8 +116,6 @@
 
                             </div>
 
-
-
                             <!-- 表单属性 -->
                             <div class="layui-tab-item">
 
@@ -219,7 +217,7 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            let create_api = '/app/admin/table/create';
+            const CREATE_API = '/app/admin/table/create';
 
             // 字段设置
             layui.use(['table', 'common', 'popup'], function () {
@@ -721,7 +719,7 @@
                     syncTableData();
                     let data = layui.form.val('create-table-form');
                     layui.jquery.ajax({
-                        url: create_api,
+                        url: CREATE_API,
                         type: 'POST',
                         dateType: 'json',
                         data: data,
@@ -738,8 +736,6 @@
                     return false;
                 });
             });
-
-
 
         </script>
 
