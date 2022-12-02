@@ -2,8 +2,6 @@
 
 namespace plugin\admin\app\controller;
 
-use Doctrine\Inflector\InflectorFactory;
-use plugin\admin\app\common\LayuiForm;
 use plugin\admin\app\common\Util;
 use plugin\admin\app\model\AdminRole;
 use plugin\admin\app\model\AdminRule;
@@ -27,7 +25,6 @@ class AdminRuleController extends Crud
      * @var AdminRule
      */
     protected $model = null;
-
 
     /**
      * 构造函数

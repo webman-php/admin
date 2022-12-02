@@ -454,7 +454,7 @@ EOF;
     }
 
     /**
-     * swtich组件
+     * switch组件
      * @param $options
      * @return void
      */

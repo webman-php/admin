@@ -2,8 +2,6 @@
 
 namespace plugin\admin\app\controller;
 
-use plugin\admin\app\controller\Base;
-use plugin\admin\app\controller\Crud;
 use plugin\admin\app\model\Admin;
 use support\exception\BusinessException;
 use support\Request;

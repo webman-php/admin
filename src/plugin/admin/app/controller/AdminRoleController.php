@@ -59,7 +59,7 @@ class AdminRoleController extends Crud
             return view("admin-role/update");
         }
         [$id, $data] = $this->updateInput($request);
-        // 管理员id为1的用户权限固定为*
+        // id为1的管理员权限固定为*
         if (isset($data['rules']) && $id == 1) {
             $data['rules'] = '*';
         }

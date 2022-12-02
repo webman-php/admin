@@ -95,7 +95,6 @@ class AccountController extends Crud
         return $this->json(0);
     }
 
-
     /**
      * 获取登录信息
      * @param Request $request
@@ -123,7 +122,6 @@ class AccountController extends Crud
 
     /**
      * 更新
-     *
      * @param Request $request
      * @return Response
      */
@@ -196,7 +194,6 @@ class AccountController extends Crud
 
     /**
      * 检查登录频率限制
-     *
      * @param $username
      * @return void
      * @throws BusinessException
@@ -228,7 +225,6 @@ class AccountController extends Crud
             throw new BusinessException('登录失败次数过多，请5分钟后再试');
         }
     }
-
 
     /**
      * 解除登录频率限制

@@ -2,6 +2,8 @@
 
 namespace plugin\admin\app\controller;
 
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use plugin\admin\app\common\Util;
 use support\exception\BusinessException;
 use support\Model;
@@ -15,7 +17,6 @@ class Crud extends Base
      * @var Model
      */
     protected $model = null;
-
 
     /**
      * 查询
@@ -126,7 +127,7 @@ class Crud extends Base
      * @param array $where
      * @param string|null $field
      * @param string $order
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Query\Builder|Model
+     * @return EloquentBuilder|QueryBuilder|Model
      */
     protected function doSelect(array $where, string $field = null, string $order= 'desc')
     {
@@ -253,7 +254,7 @@ class Crud extends Base
      * @return array
      * @throws BusinessException
      */
-    protected function inputFilter(array $data)
+    protected function inputFilter(array $data): array
     {
         $table = $this->model->getTable();
         $allow_column = Util::db()->select("desc `$table`");

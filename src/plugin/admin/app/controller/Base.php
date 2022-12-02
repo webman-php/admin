@@ -4,7 +4,6 @@ namespace plugin\admin\app\controller;
 
 use support\Model;
 use support\Response;
-use function json;
 
 /**
  * 基础控制器
