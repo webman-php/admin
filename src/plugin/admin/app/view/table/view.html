@@ -56,11 +56,11 @@
 
         <script>
 
-            let TABLE_NAME = '<?=htmlspecialchars($table)?>';
+            const TABLE_NAME = '<?=htmlspecialchars($table)?>';
             const SELECT_API = "/app/admin/table/select?table=" + TABLE_NAME;
             const UPDATE_API = "/app/admin/table/update";
             const DELETE_API = "/app/admin/table/delete";
-            let schema_api = "/app/admin/table/schema?table=" + TABLE_NAME;
+            const SCHEMA_API = "/app/admin/table/schema?table=" + TABLE_NAME;
             const INSERT_URL = "/app/admin/table/insert?table=" + TABLE_NAME;
             const UPDATE_URL = "/app/admin/table/update?table=" + TABLE_NAME;
             let PRIMARY_KEY = '<?=htmlspecialchars($primary_key)?>';
@@ -76,7 +76,7 @@
                 let apis = [];
                 let apiResults = {};
                 $.ajax({
-                    url: schema_api,
+                    url: SCHEMA_API,
                     dataType: 'json',
                     success: function (e) {
                         let forms = e.data.forms;
