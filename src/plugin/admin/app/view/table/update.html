@@ -43,6 +43,7 @@
 
             layui.use(['form', 'jquery', 'util'], function () {
                 let $ = layui.jquery;
+                let util = layui.util;
                 $.ajax({
                     url: SELECT_API,
                     dataType: 'json',
@@ -55,7 +56,7 @@
                             }
                             if (typeof obj[0] === 'undefined' || !obj[0].nodeName) return;
                             if (obj[0].nodeName.toLowerCase() === 'textarea') {
-                                obj.html(layui.util.escape(value));
+                                obj.html(util.escape(value));
                             } else {
                                 obj.attr('value', value);
                             }

@@ -783,11 +783,12 @@ EOF
             const UPDATE_URL = "$url_path_base/$template_path/update";
             $js
             // 表格渲染
-            layui.use(['table', 'form', 'jquery', 'common', 'popup'], function() {
+            layui.use(['table', 'form', 'jquery', 'common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.jquery;
                 let common = layui.common;
+                let util = layui.util;
                 $table_js
                 // 编辑或删除行事件
                 table.on('tool(data-table)', function(obj) {
@@ -1050,7 +1051,7 @@ EOF;
                             }
                             if (typeof obj[0] === 'undefined' || !obj[0].nodeName) return;
                             if (obj[0].nodeName.toLowerCase() === 'textarea') {
-                                obj.html(layui.util.escape(value));
+                                obj.val(layui.util.escape(value));
                             } else {
                                 obj.attr('value', value);
                             }

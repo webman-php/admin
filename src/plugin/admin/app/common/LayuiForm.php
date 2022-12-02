@@ -211,7 +211,7 @@ EOF;
 // 字段 {$options['label']} $field
 layui.use(['upload', 'layer', 'jquery', 'popup', 'util'], function() {
     let input = layui.jquery('#$id').prev();
-    input.prev().html(input.val());
+    input.prev().html(layui.util.escape(input.val()));
     layui.upload.render({
         elem: '#$id',$options_string
         done: function (res) {
@@ -745,7 +745,7 @@ EOF;
 				})
 			});
 			let checked = d[field] === 1 ? 'checked' : '';
-			return '<input type="checkbox" value="'+d[PRIMARY_KEY]+'" lay-filter="'+field+'" lay-skin="switch" lay-text="$lay_text" '+checked+'/>';
+			return '<input type="checkbox" value="'+util.escape(d[PRIMARY_KEY])+'" lay-filter="'+util.escape(field)+'" lay-skin="switch" lay-text="'+util.escape('$lay_text')+'" '+checked+'/>';
 		}
 EOF;
                     break;
@@ -754,7 +754,7 @@ EOF;
                     $templet = <<<EOF
 
 		templet: function (d) {
-			return '<i class="layui-icon ' + d['$field'] + '"></i>';
+			return '<i class="layui-icon ' + util.escape(d['$field']) + '"></i>';
 		}
 EOF;
                     break;
@@ -762,7 +762,7 @@ EOF;
                     $templet = <<<EOF
 
 		templet: function (d) {
-			return '<a href="' + d['$field'] + '" target="_blank">' + d['$field'] + '</a>';
+			return '<a href="' + encodeURI(d['$field']) + '" target="_blank">' + util.escape(d['$field']) + '</a>';
 		}
 EOF;
                     break;
@@ -770,7 +770,7 @@ EOF;
                     $templet = <<<EOF
 
 		templet: function (d) {
-			return '<img src="'+d.avatar+'" style="max-width:32px;max-height:32px;" alt="" />';
+			return '<img src="'+encodeURI(d['$field'])+'" style="max-width:32px;max-height:32px;" alt="" />'
 		}
 EOF;
                     break;
@@ -802,7 +802,7 @@ EOF;
 			layui.each((d[field] + '').split(','), function (k , v) {
 				items.push(apiResults[field][v] || v);
 			});
-			return items.join(',');
+			return util.escape(items.join(','));
 		}
 EOF;
 

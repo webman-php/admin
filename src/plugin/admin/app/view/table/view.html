@@ -56,8 +56,8 @@
 
         <script>
 
-            const TABLE_NAME = '<?=htmlspecialchars($table)?>';
-            const PRIMARY_KEY = '<?=htmlspecialchars($primary_key)?>';
+            const TABLE_NAME = "<?=htmlspecialchars($table)?>";
+            const PRIMARY_KEY = "<?=htmlspecialchars($primary_key)?>";
             const SELECT_API = "/app/admin/table/select?table=" + TABLE_NAME;
             const UPDATE_API = "/app/admin/table/update";
             const DELETE_API = "/app/admin/table/delete";
@@ -130,7 +130,7 @@
                                 };
                             } else if (control === 'uploadimage') {
                                 schema.templet = function (d) {
-                                    return '<img src="'+encodeURI(d[field])+'" style="max-width:32px;max-height:32px;" />'
+                                    return '<img src="'+encodeURI(d[field])+'" style="max-width:32px;max-height:32px;" />';
                                 };
                             } else if (['select', 'selectmulti', 'treeselect', 'treeselectmulti'].indexOf(control) !== -1) {
                                 let props = getProps(item.control_args);

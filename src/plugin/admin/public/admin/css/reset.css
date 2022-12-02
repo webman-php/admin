@@ -125,7 +125,7 @@ button {
     vertical-align: middle;
     position: relative;
 }
-.top-search-from .layui-input, .layui-select, .layui-textarea {
+.top-search-from .layui-input, .top-search-from .layui-select, .top-search-from .layui-textarea {
     width: 270px;
 }
 .top-search-from .item-inline .layui-form-item .layui-input-block {
