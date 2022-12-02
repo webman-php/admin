@@ -57,21 +57,22 @@
         <script>
 
             const TABLE_NAME = '<?=htmlspecialchars($table)?>';
+            const PRIMARY_KEY = '<?=htmlspecialchars($primary_key)?>';
             const SELECT_API = "/app/admin/table/select?table=" + TABLE_NAME;
             const UPDATE_API = "/app/admin/table/update";
             const DELETE_API = "/app/admin/table/delete";
             const SCHEMA_API = "/app/admin/table/schema?table=" + TABLE_NAME;
             const INSERT_URL = "/app/admin/table/insert?table=" + TABLE_NAME;
             const UPDATE_URL = "/app/admin/table/update?table=" + TABLE_NAME;
-            let PRIMARY_KEY = '<?=htmlspecialchars($primary_key)?>';
 
             <?=$form->js(3)?>
 
-            layui.use(['table', 'form', 'jquery','common', 'popup'], function() {
+            layui.use(['table', 'form', 'jquery','common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.jquery;
                 let common = layui.common;
+                let util = layui.util;
 
                 let apis = [];
                 let apiResults = {};
@@ -117,19 +118,19 @@
                                         })
                                     });
                                     let checked = d[field] === 1 ? 'checked' : '';
-                                    return '<input type="checkbox" value="'+d[PRIMARY_KEY]+'" lay-filter="'+field+'" lay-skin="switch" lay-text="'+layText+'" '+checked+'/>';
+                                    return '<input type="checkbox" value="'+util.escape(d[PRIMARY_KEY])+'" lay-filter="'+util.escape(field)+'" lay-skin="switch" lay-text="'+util.escape(layText)+'" '+checked+'/>';
                                 }
                             } else if (control === 'iconpicker') {
                                 schema.templet = function (d) {
-                                    return '<i class="layui-icon ' + d[field] + '"></i>';
+                                    return '<i class="layui-icon ' + util.escape(d[field]) + '"></i>';
                                 };
                             } else if (control === 'upload') {
                                 schema.templet = function (d) {
-                                    return '<a href="' + d[field] + '" target="_blank">' + d[field] + '</a>';
+                                    return '<a href="' + encodeURI(d[field]) + '" target="_blank">' + util.escape(d[field]) + '</a>';
                                 };
                             } else if (control === 'uploadimage') {
                                 schema.templet = function (d) {
-                                    return '<img src="'+d[field]+'" style="max-width:32px;max-height:32px;" />'
+                                    return '<img src="'+encodeURI(d[field])+'" style="max-width:32px;max-height:32px;" />'
                                 };
                             } else if (['select', 'selectmulti', 'treeselect', 'treeselectmulti'].indexOf(control) !== -1) {
                                 let props = getProps(item.control_args);
@@ -145,7 +146,7 @@
                                     layui.each((d[field] + '').split(','), function (k , v) {
                                         items.push(apiResults[field][v] || v);
                                     });
-                                    return items.join(',');
+                                    return util.escape(items.join(','));
                                 }
                             }
                             cols.push(schema);
