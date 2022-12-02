@@ -216,7 +216,7 @@ layui.use(['upload', 'layer', 'jquery', 'popup', 'util'], function() {
     let input = layui.jquery('#$id').prev();
     input.prev().html(layui.util.escape(input.val()));
     layui.upload.render({
-        elem: '#$id',$options_string
+        elem: "#$id",$options_string
         done: function (res) {
             if (res.code) return layui.popup.failure(res.msg);
             this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));
@@ -268,14 +268,14 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['upload', 'layer', 'jquery'], function() {
-    let input = layui.jquery('#$id').prev();
-    input.prev().attr('src', input.val());
+layui.use(["upload", "layer", "jquery"], function() {
+    let input = layui.jquery("#$id").prev();
+    input.prev().attr("src", input.val());
     layui.upload.render({
-        elem: '#$id',$options_string
+        elem: "#$id",$options_string
         done: function (res) {
             if (res.code > 0) return layui.layer.msg(res.msg);
-            this.item.prev().val(res.data.path).prev().attr('src', res.data.path);
+            this.item.prev().val(res.data.path).prev().attr("src", res.data.path);
         }
     });
 });
@@ -326,10 +326,10 @@ EOF;
 EOF;
         $this->jsContent .= <<<EOF
 
-// 字段 {$options['label']} $field
-layui.use(['laydate'], function() {
+// 字段 {$options["label"]} $field
+layui.use(["laydate"], function() {
     layui.laydate.render({
-        elem: '#$id',$options_string
+        elem: "#$id",$options_string
     });
 })
 
@@ -386,10 +386,10 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['laydate'], function() {
+layui.use(["laydate"], function() {
     layui.laydate.render({
-        elem: '#$id',
-        range: ['#$id_start', '#$id_end'],$options_string
+        elem: "#$id",
+        range: ["#$id_start", "#$id_end"],$options_string
     });
 })
 
@@ -441,10 +441,10 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['iconPicker'], function() {
+layui.use(["iconPicker"], function() {
     layui.iconPicker.render({
-        elem: '#$id',
-        type: 'fontClass',
+        elem: "#$id",
+        type: "fontClass",
         page: false,$options_string
     });
 });
@@ -483,10 +483,10 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['form', 'jquery'], function() {
-    layui.jquery('#$id').attr('checked', layui.jquery('input[name="$field"]').val() != 0);
+layui.use(["form", "jquery"], function() {
+    layui.jquery("#$id").attr("checked", layui.jquery('input[name="$field"]').val() != 0);
     layui.form.render();
-    layui.form.on('switch($field)', function(data) {
+    layui.form.on("switch($field)", function(data) {
         layui.jquery('input[name="$field"]').val(this.checked ? 1 : 0);
     });
 })
@@ -590,16 +590,16 @@ EOF;
             $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['jquery', 'xmSelect'], function() {
+layui.use(["jquery", "xmSelect"], function() {
     layui.jquery.ajax({
-        url: '$url',
-        dataType: 'json',
+        url: "$url",
+        dataType: "json",
         success: function (e) {
-            let value = layui.jquery('#$id').attr('value');
-            let initValue = value ? value.split(',') : [];
+            let value = layui.jquery("#$id").attr("value");
+            let initValue = value ? value.split(",") : [];
             layui.xmSelect.render({
-                el: '#$id',
-                name: '$field',
+                el: "#$id",
+                name: "$field",
                 initValue: initValue,
                 data: e.data, $options_string
             })
@@ -612,12 +612,12 @@ EOF;
             $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['jquery', 'xmSelect'], function() {
-    let value = layui.jquery('#$id').attr('value');
-    let initValue = value ? value.split(',') : [];
+layui.use(["jquery", "xmSelect"], function() {
+    let value = layui.jquery("#$id").attr("value");
+    let initValue = value ? value.split(",") : [];
     layui.xmSelect.render({
-        el: '#$id',
-        name: '$field',
+        el: "#$id",
+        name: "$field",
         initValue: initValue,$options_string
     })
 });
@@ -721,8 +721,8 @@ EOF;
             $field = $info['field'];
             $templet = '';
             $schema = <<<EOF
-title: '$title',
-		field: '$field',$hide_str$sort_str
+title: "$title",
+		field: "$field",$hide_str$sort_str
 EOF;
 
             $control = strtolower($info['control']);
@@ -733,8 +733,8 @@ EOF;
                     $templet = <<<EOF
 
 		templet: function (d) {
-			let field = '$field';
-			form.on('switch('+field+')', function (data) {
+			let field = "$field";
+			form.on("switch("+field+")", function (data) {
 				let load = layer.load();
 				let postData = {};
 				postData[field] = data.elem.checked ? 1 : 0;
@@ -744,10 +744,10 @@ EOF;
 					if (res.code) {
                         return layui.popup.failure(res.msg);
                     }
-					return layui.popup.success('操作成功');
+					return layui.popup.success("操作成功");
 				})
 			});
-			let checked = d[field] === 1 ? 'checked' : '';
+			let checked = d[field] === 1 ? "checked" : "";
 			return '<input type="checkbox" value="'+util.escape(d[PRIMARY_KEY])+'" lay-filter="'+util.escape(field)+'" lay-skin="switch" lay-text="'+util.escape('$lay_text')+'" '+checked+'/>';
 		}
 EOF;
@@ -799,13 +799,13 @@ EOF;
                 $templet = <<<EOF
 
 		templet: function (d) {
-			let field = '$field';
-			if (typeof d[field] == "undefined") return '';
+			let field = "$field";
+			if (typeof d[field] == "undefined") return "";
 			let items = [];
-			layui.each((d[field] + '').split(','), function (k , v) {
+			layui.each((d[field] + "").split(","), function (k , v) {
 				items.push(apiResults[field][v] || v);
 			});
-			return util.escape(items.join(','));
+			return util.escape(items.join(","));
 		}
 EOF;
 
@@ -824,7 +824,7 @@ EOF;
 // 表头参数
 let cols = [
 	{
-		type: 'checkbox'
+		type: "checkbox"
 	}$cols,{
 		title: "操作",
 		toolbar: "#table-bar",
@@ -863,19 +863,19 @@ $cols
 function render()
 {
     table.render({
-        elem: '#data-table',
+        elem: "#data-table",
         url: SELECT_API,
         page: true,
         cols: [cols],
-        skin: 'line',
-        size: 'lg',
-        toolbar: '#table-toolbar',
+        skin: "line",
+        size: "lg",
+        toolbar: "#table-toolbar",
         autoSort: false,
         defaultToolbar: [{
-            title: '刷新',
-            layEvent: 'refresh',
-            icon: 'layui-icon-refresh',
-        }, 'filter', 'print', 'exports']
+            title: "刷新",
+            layEvent: "refresh",
+            icon: "layui-icon-refresh",
+        }, "filter", "print", "exports"]
     });
 }
 
@@ -885,7 +885,7 @@ layui.each(apis, function (k, item) {
     let [field, url] = item;
     $.ajax({
         url: url,
-        dateType: 'json',
+        dateType: "json",
         success: function (res) {
             function travel(items) {
                 for (let k in items) {
@@ -916,19 +916,19 @@ EOF;
 $cols
 // 渲染表格
 table.render({
-    elem: '#data-table',
+    elem: "#data-table",
     url: SELECT_API,
     page: true,
     cols: [cols],
-    skin: 'line',
-    size: 'lg',
-    toolbar: '#table-toolbar',
+    skin: "line",
+    size: "lg",
+    toolbar: "#table-toolbar",
     autoSort: false,
     defaultToolbar: [{
-        title: '刷新',
-        layEvent: 'refresh',
-        icon: 'layui-icon-refresh',
-    }, 'filter', 'print', 'exports']
+        title: "刷新",
+        layEvent: "refresh",
+        icon: "layui-icon-refresh",
+    }, "filter", "print", "exports"]
 });
 
 $codes
