@@ -16,5 +16,5 @@ return [
     'debug' => true,
     'controller_suffix' => 'Controller',
     'plugin_market_host' => 'https://www.workerman.net',
-    'version' => '0.4.0'
+    'version' => '0.5.0'
 ];
