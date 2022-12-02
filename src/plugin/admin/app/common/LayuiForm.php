@@ -209,14 +209,14 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['upload', 'layer', 'jquery', 'popup'], function() {
+layui.use(['upload', 'layer', 'jquery', 'popup', 'util'], function() {
     let input = layui.jquery('#$id').prev();
     input.prev().html(input.val());
     layui.upload.render({
         elem: '#$id',$options_string
         done: function (res) {
             if (res.code) return layui.popup.failure(res.msg);
-            this.item.prev().val(res.data.path).prev().html(res.data.path);
+            this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));
         }
     });
 });
@@ -237,6 +237,7 @@ EOF;
         $id = $this->createId($field);
 
         unset($props['lay-verify']);
+        $props['field'] = $props['field'] ?? '__file__';
         $options_string = '';
         foreach ($props as $key => $item) {
             if (is_array($item)) {

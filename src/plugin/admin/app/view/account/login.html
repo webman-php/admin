@@ -38,7 +38,7 @@
             layui.use(['form', 'button', 'popup', 'layer', 'jquery'], function() {
                 var $ = layui.jquery, layer = layui.layer, form = layui.form;
                 function switchCaptcha() {
-                    $('.codeImage').attr("src", "/app/admin/plugin/captcha/login?v=" + new Date().getTime());
+                    $('.codeImage').attr("src", "/app/admin/account/captcha/login?v=" + new Date().getTime());
                 }
                 switchCaptcha();
                 // 登 录 提 交
