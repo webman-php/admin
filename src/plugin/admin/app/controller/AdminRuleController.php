@@ -126,8 +126,7 @@ class AdminRuleController extends Crud
                         continue;
                     }
                     $name = "$class@$method_name";
-
-                    echo $name,"\n";
+                    
                     $methods_in_files[$name] = $name;
                     $title = Util::getCommentFirstLine($method->getDocComment()) ?: $method_name;
                     $menu = $items[$name] ?? [];
