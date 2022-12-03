@@ -201,7 +201,7 @@ class TableController extends Base
         $keys = $data['keys'];
         $primary_key = null;
         $auto_increment_column = null;
-        $schema = Util::getSchema($table_name);
+        $schema = Util::getSchema($old_table_name);
         $old_columns = $schema['columns'];
         $old_primary_key = $schema['table']['primary_key'][0] ?? null;
 
