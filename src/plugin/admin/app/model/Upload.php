@@ -18,6 +18,7 @@ use plugin\admin\app\model\Base;
  * @property string $storage 存储位置
  * @property string $created_at 上传时间
  * @property string $category 类别
+ * @property string $updated_at 更新时间
  */
 class Upload extends Base
 {
@@ -35,12 +36,7 @@ class Upload extends Base
      */
     protected $primaryKey = 'id';
     
-    /**
-     * Indicates if the model should be timestamped.
-     *
-     * @var bool
-     */
-    public $timestamps = false;
+    
     
     
 }

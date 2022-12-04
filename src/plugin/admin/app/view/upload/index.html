@@ -21,6 +21,45 @@
                         </div>
                     </div>
                     
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">名字</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="name" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">管理员id</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="admin_id" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">扩展名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ext" value="" class="layui-input">
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上传时间</label>
+                        <div class="layui-input-block">
+                            <div class="layui-input-block" id="created_at">
+                                <input type="text" autocomplete="off" name="created_at[]" id="created_at-date-start" class="layui-input inline-block" placeholder="开始时间">
+                                -
+                                <input type="text" autocomplete="off" name="created_at[]" id="created_at-date-end" class="layui-input inline-block" placeholder="结束时间">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类别</label>
+                        <div class="layui-input-block">
+                            <div name="category" id="category" value="" ></div>
+                        </div>
+                    </div>
+                    
                     <div class="layui-form-item layui-inline">
                         <label class="layui-form-label"></label>
                         <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
@@ -73,6 +112,36 @@
             const DELETE_API = "/app/admin/upload/delete";
             const INSERT_URL = "/app/admin/upload/insert";
             const UPDATE_URL = "/app/admin/upload/update";
+            
+            // 字段 上传时间 created_at
+            layui.use(["laydate"], function() {
+                layui.laydate.render({
+                    elem: "#created_at",
+                    range: ["#created_at-date-start", "#created_at-date-end"],
+                    type: 'datetime',
+                });
+            })
+            
+            // 字段 类别 category
+            layui.use(["jquery", "xmSelect"], function() {
+                layui.jquery.ajax({
+                    url: "/app/admin/dict/get/upload",
+                    dataType: "json",
+                    success: function (e) {
+                        let value = layui.jquery("#category").attr("value");
+                        let initValue = value ? value.split(",") : [];
+                        layui.xmSelect.render({
+                            el: "#category",
+                            name: "category",
+                            initValue: initValue,
+                            data: e.data, 
+                            model: {"icon":"hidden","label":{"type":"text"}},
+                            clickClose: 'true',
+                            radio: 'true',
+                        })
+                    }
+                });
+            });
             
             // 表格渲染
             layui.use(['table', 'form', 'jquery', 'common', 'popup', 'util'], function() {
@@ -142,6 +211,10 @@
 							});
 							return util.escape(items.join(","));
 						}
+					},{
+						title: "更新时间",
+						field: "updated_at",
+						hide: true,
 					},{
 						title: "操作",
 						toolbar: "#table-bar",
