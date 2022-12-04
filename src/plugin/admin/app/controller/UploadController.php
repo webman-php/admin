@@ -58,10 +58,14 @@ class UploadController extends Crud
      * 更新
      * @param Request $request
      * @return Response
+     * @throws BusinessException
      */
     public function update(Request $request): Response
     {
-        return not_found();
+        if ($request->method() === 'GET') {
+            return view("upload/update");
+        }
+        return parent::update($request);
     }
 
     /**
