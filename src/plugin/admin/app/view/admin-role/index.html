@@ -86,49 +86,50 @@
             const UPDATE_URL = "/app/admin/admin-role/update";
             
             // 字段 创建时间 created_at
-            layui.use(['laydate'], function() {
+            layui.use(["laydate"], function() {
                 layui.laydate.render({
-                    elem: '#created_at',
-                    range: ['#created_at-date-start', '#created_at-date-end'],
+                    elem: "#created_at",
+                    range: ["#created_at-date-start", "#created_at-date-end"],
                 });
             })
             
             // 表格渲染
-            layui.use(['table', 'form', 'jquery', 'common', 'popup'], function() {
+            layui.use(['table', 'form', 'jquery', 'common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.jquery;
                 let common = layui.common;
+                let util = layui.util;
                 
 				// 表头参数
 				let cols = [
 					{
-						type: 'checkbox'
+						type: "checkbox"
 					},{
-						title: '主键',
-						field: 'id',
+						title: "主键",
+						field: "id",
 						hide: true,
 					},{
-						title: '角色名',
-						field: 'name',
+						title: "角色名",
+						field: "name",
 					},{
-						title: '权限',
-						field: 'rules',
+						title: "权限",
+						field: "rules",
 						templet: function (d) {
-							let field = 'rules';
-							if (typeof d[field] == "undefined") return '';
+							let field = "rules";
+							if (typeof d[field] == "undefined") return "";
 							let items = [];
-							layui.each((d[field] + '').split(','), function (k , v) {
+							layui.each((d[field] + "").split(","), function (k , v) {
 								items.push(apiResults[field][v] || v);
 							});
-							return items.join(',');
+							return util.escape(items.join(","));
 						}
 					},{
-						title: '创建时间',
-						field: 'created_at',
+						title: "创建时间",
+						field: "created_at",
 					},{
-						title: '更新时间',
-						field: 'updated_at',
+						title: "更新时间",
+						field: "updated_at",
 					},{
 						title: "操作",
 						toolbar: "#table-bar",
@@ -141,19 +142,19 @@
 				function render()
 				{
 				    table.render({
-				        elem: '#data-table',
+				        elem: "#data-table",
 				        url: SELECT_API,
 				        page: true,
 				        cols: [cols],
-				        skin: 'line',
-				        size: 'lg',
-				        toolbar: '#table-toolbar',
+				        skin: "line",
+				        size: "lg",
+				        toolbar: "#table-toolbar",
 				        autoSort: false,
 				        defaultToolbar: [{
-				            title: '刷新',
-				            layEvent: 'refresh',
-				            icon: 'layui-icon-refresh',
-				        }, 'filter', 'print', 'exports']
+				            title: "刷新",
+				            layEvent: "refresh",
+				            icon: "layui-icon-refresh",
+				        }, "filter", "print", "exports"]
 				    });
 				}
 				
@@ -167,7 +168,7 @@
 				    let [field, url] = item;
 				    $.ajax({
 				        url: url,
-				        dateType: 'json',
+				        dateType: "json",
 				        success: function (res) {
 				            function travel(items) {
 				                for (let k in items) {

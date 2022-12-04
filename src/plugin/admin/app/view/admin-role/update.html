@@ -69,27 +69,27 @@
                             }
                             if (typeof obj[0] === 'undefined' || !obj[0].nodeName) return;
                             if (obj[0].nodeName.toLowerCase() === 'textarea') {
-                                obj.html(layui.util.escape(value));
+                                obj.val(layui.util.escape(value));
                             } else {
                                 obj.attr('value', value);
                             }
                         });
                         
                         // 字段 权限 rules
-                        layui.use(['jquery', 'xmSelect'], function() {
+                        layui.use(["jquery", "xmSelect"], function() {
                             layui.jquery.ajax({
-                                url: '/app/admin/admin-rule/get?type=0,1,2',
-                                dataType: 'json',
+                                url: "/app/admin/admin-rule/get?type=0,1,2",
+                                dataType: "json",
                                 success: function (e) {
-                                    let value = layui.jquery('#rules').attr('value');
-                                    let initValue = value ? value.split(',') : [];
+                                    let value = layui.jquery("#rules").attr("value");
+                                    let initValue = value ? value.split(",") : [];
                                     layui.xmSelect.render({
-                                        el: '#rules',
-                                        name: 'rules',
+                                        el: "#rules",
+                                        name: "rules",
                                         initValue: initValue,
                                         data: e.data, 
-                                        tree: {show: true},
-                                        toolbar: {show: true,"list":["ALL","CLEAR","REVERSE"]},
+                                        tree: {"show":true},
+                                        toolbar: {"show":true,"list":["ALL","CLEAR","REVERSE"]},
                                     })
                                 }
                             });
