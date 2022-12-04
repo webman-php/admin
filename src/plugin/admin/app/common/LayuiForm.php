@@ -875,7 +875,10 @@ function render()
             title: "刷新",
             layEvent: "refresh",
             icon: "layui-icon-refresh",
-        }, "filter", "print", "exports"]
+        }, "filter", "print", "exports"],
+        done: function () {
+            layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
+        }
     });
 }
 
@@ -928,7 +931,10 @@ table.render({
         title: "刷新",
         layEvent: "refresh",
         icon: "layui-icon-refresh",
-    }, "filter", "print", "exports"]
+    }, "filter", "print", "exports"],
+    done: function () {
+        layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
+    }
 });
 
 $codes
