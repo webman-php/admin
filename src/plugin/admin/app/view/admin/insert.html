@@ -91,36 +91,37 @@
             const INSERT_API = "/app/admin/admin/insert";
             
             // 字段 头像 avatar
-            layui.use(['upload', 'layer', 'jquery'], function() {
-                let input = layui.jquery('#avatar').prev();
-                input.prev().attr('src', input.val());
+            layui.use(["upload", "layer", "jquery"], function() {
+                let input = layui.jquery("#avatar").prev();
+                input.prev().attr("src", input.val());
                 layui.upload.render({
-                    elem: '#avatar',
+                    elem: "#avatar",
                     url: '/app/admin/upload/avatar',
                     value: '/app/admin/avatar.png',
                     acceptMime: 'image/gif,image/jpeg,image/jpg,image/png',
+                    field: '__file__',
                     done: function (res) {
                         if (res.code > 0) return layui.layer.msg(res.msg);
-                        this.item.prev().val(res.data.path).prev().attr('src', res.data.path);
+                        this.item.prev().val(res.data.path).prev().attr("src", res.data.path);
                     }
                 });
             });
             
             // 字段 角色 roles
-            layui.use(['jquery', 'xmSelect'], function() {
+            layui.use(["jquery", "xmSelect"], function() {
                 layui.jquery.ajax({
-                    url: '/app/admin/admin-role/select?format=select',
-                    dataType: 'json',
+                    url: "/app/admin/admin-role/select?format=select",
+                    dataType: "json",
                     success: function (e) {
-                        let value = layui.jquery('#roles').attr('value');
-                        let initValue = value ? value.split(',') : [];
+                        let value = layui.jquery("#roles").attr("value");
+                        let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
-                            el: '#roles',
-                            name: 'roles',
+                            el: "#roles",
+                            name: "roles",
                             initValue: initValue,
                             data: e.data, 
-                            tree: {show: true},
-                            toolbar: {show: true,"list":["ALL","CLEAR","REVERSE"]},
+                            tree: {"show":true},
+                            toolbar: {"show":true,"list":["ALL","CLEAR","REVERSE"]},
                         })
                     }
                 });
