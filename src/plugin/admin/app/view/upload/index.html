@@ -158,14 +158,18 @@
 					},{
 						title: "主键",
 						field: "id",
+                        width: 80,
 						sort: true,
 					},{
 						title: "名字",
 						field: "name",
 					},{
-						title: "url",
+						title: "文件",
 						field: "url",
 						templet: function (d) {
+                            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].indexOf(d.ext.toLowerCase()) !== -1) {
+                                return '<img src="' + encodeURI(d['url']) + '" style="max-width:32px;max-height:32px;" />';
+                            }
 							return '<a href="' + encodeURI(d['url']) + '" target="_blank">' + util.escape(d['url']) + '</a>';
 						}
 					},{
@@ -179,9 +183,13 @@
 					},{
 						title: "文件大小",
 						field: "file_size",
+                        templet: function (d) {
+                            return formatSize(d.file_size);
+                        }
 					},{
 						title: "mime类型",
 						field: "mime_type",
+                        hide: true,
 					},{
 						title: "图片宽度",
 						field: "image_width",
@@ -393,6 +401,20 @@
                     table.reloadData('data-table', {
                         scrollPos: 'fixed'
                     });
+                }
+
+                // 格式化文件大小
+                let formatSize = function(value) {
+                    if(null == value || '' === value){
+                        return "0 Bytes";
+                    }
+                    let unitArr = ["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"];
+                    let index = 0;
+                    let srcSize = parseFloat(value);
+                    index = Math.floor(Math.log(srcSize) / Math.log(1024));
+                    let size =srcSize / Math.pow(1024, index);
+                    size = size.toFixed(2);
+                    return size + unitArr[index];
                 }
             })
 

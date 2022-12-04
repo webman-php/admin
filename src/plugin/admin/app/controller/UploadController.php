@@ -285,8 +285,8 @@ class UploadController extends Crud
         if($size == 0) {
             return("0 Bytes");
         }
-        $sizename = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
-        return round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizename[$i];
+        $size_name = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
+        return round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $size_name[$i];
     }
 
 }
