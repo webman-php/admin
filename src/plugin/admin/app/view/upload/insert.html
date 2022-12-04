@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>新增页面</title>
+        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+    </head>
+    <body>
+
+        <form class="layui-form" action="">
+
+            <div class="mainBox">
+                <div class="main-container">
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">类别</label>
+                        <div class="layui-input-block">
+                            <div name="category" id="category" value="" ></div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">url</label>
+                        <div class="layui-input-block">
+                            <span></span>
+                            <input type="text" style="display:none" name="url" value="" />
+                            <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="url">
+                                <i class="layui-icon">&#xe67c;</i>上传文件
+                            </button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </form>
+
+        <script src="/app/admin/component/layui/layui.js"></script>
+        <script src="/app/admin/component/pear/pear.js"></script>
+        <script>
+            
+            // 字段 url url
+            layui.use(['upload', 'layer', 'jquery', 'popup', 'util'], function() {
+                let input = layui.jquery('#url').prev();
+                input.prev().html(layui.util.escape(input.val()));
+                layui.upload.render({
+                    elem: "#url",
+                    accept: 'file',
+                    data: {category: function () {
+                        return layui.jquery('input[name="category"]').val();
+                    }},
+                    url: '/app/admin/upload/attachment',
+                    field: '__file__',
+                    done: function (res) {
+                        if (res.code) return layui.popup.failure(res.msg);
+                        parent.refreshTable();
+                        parent.layer.close(parent.layer.getFrameIndex(window.name));
+                    }
+                });
+            });
+            
+            // 字段 类别 category
+            layui.use(["jquery", "xmSelect"], function() {
+                layui.jquery.ajax({
+                    url: "/app/admin/dict/get/upload",
+                    dataType: "json",
+                    success: function (e) {
+                        let value = layui.jquery("#category").attr("value");
+                        let initValue = value ? value.split(",") : [];
+                        layui.xmSelect.render({
+                            el: "#category",
+                            name: "category",
+                            initValue: initValue,
+                            data: e.data, 
+                            model: {"icon":"hidden","label":{"type":"text"}},
+                            clickClose: 'true',
+                            radio: 'true',
+                        })
+                    }
+                });
+            });
+
+        </script>
+
+    </body>
+</html>

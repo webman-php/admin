@@ -4,15 +4,65 @@ namespace plugin\admin\app\controller;
 
 use Exception;
 use Intervention\Image\ImageManagerStatic as Image;
+use plugin\admin\app\controller\Base;
+use plugin\admin\app\controller\Crud;
+use plugin\admin\app\model\Upload;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
 
 /**
- * 上传
+ * 附件管理 
  */
-class UploadController extends Base
+class UploadController extends Crud
 {
+    /**
+     * 不需要鉴权的方法
+     */
+    public $noNeedAuth = ['file', 'image'];
+    
+    /**
+     * @var Upload
+     */
+    protected $model = null;
+
+    /**
+     * 构造函数
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->model = new Upload;
+    }
+    
+    /**
+     * 浏览
+     * @return Response
+     */
+    public function index(): Response
+    {
+        return view("upload/index");
+    }
+
+    /**
+     * 插入
+     * @param Request $request
+     * @return Response
+     */
+    public function insert(Request $request): Response
+    {
+        return view("upload/insert");
+    }
+
+    /**
+     * 更新
+     * @param Request $request
+     * @return Response
+     */
+    public function update(Request $request): Response
+    {
+        return not_found();
+    }
 
     /**
      * 上传文件
@@ -37,9 +87,44 @@ class UploadController extends Base
         }
         $data = $this->base($request, '/upload/files/'.date('Ymd'));
         return $this->json(0, '上传成功', [
-            'path' => $data['data']['path'],
-            'name' => $data['data']['name'],
-            'size' => $data['data']['size'],
+            'path' => $data['path'],
+            'name' => $data['name'],
+            'size' => $data['size'],
+        ]);
+    }
+
+    /**
+     * 上传附件
+     * @param Request $request
+     * @return Response
+     * @throws Exception
+     */
+    public function attachment(Request $request): Response
+    {
+        $file = current($request->file());
+        if (!$file || !$file->isValid()) {
+            return $this->json(1, '未找到文件');
+        }
+        $data = $this->base($request, '/upload/files/'.date('Ymd'));
+        $upload = new Upload;
+        $upload->admin_id = admin_id();
+        $upload->name = $data['name'];
+        [
+            $upload->url,
+            $upload->name,
+            $_,
+            $upload->file_size,
+            $upload->mime_type,
+            $upload->image_width,
+            $upload->image_height,
+            $upload->ext
+        ] = array_values($data);
+        $upload->category = $request->post('category');
+        $upload->save();
+        return $this->json(0, '上传成功', [
+            'path' => $data['path'],
+            'name' => $data['name'],
+            'size' => $data['size'],
         ]);
     }
 
@@ -105,7 +190,7 @@ class UploadController extends Base
     public function image(Request $request): Response
     {
         $data = $this->base($request, '/upload/img/'.date('Ymd'));
-        $realpath = $data['data']['realpath'];
+        $realpath = $data['realpath'];
         try {
             $img = Image::make($realpath);
             $max_height = 1170;
@@ -128,9 +213,9 @@ class UploadController extends Base
             'code'  => 0,
             'msg'  => '上传成功',
             'data' => [
-                'path' => $data['data']['path'],
-                'name' => $data['data']['name'],
-                'size' => $data['data']['size'],
+                'path' => $data['path'],
+                'name' => $data['name'],
+                'size' => $data['size'],
             ]
         ]);
     }
@@ -166,16 +251,22 @@ class UploadController extends Base
         $full_path = $base_dir . $relative_path;
         $file_size = $file->getSize();
         $file_name = $file->getUploadName();
+        $mime_type = $file->getUploadMimeType();
         $file->move($full_path);
+        $image_with = $image_height = 0;
+        if ($img_info = getimagesize($full_path)) {
+            [$image_with, $image_height] = $img_info;
+            $mime_type = $img_info['mime'];
+        }
         return [
-            'code' => 0,
-            'msg'  => '上传成功',
-            'data' => [
-                'path'     => "/app/admin/$relative_path",
-                'name'     => $file_name,
-                'realpath' => $full_path,
-                'size'     => $this->formatSize($file_size)
-            ]
+            'path'     => "/app/admin/$relative_path",
+            'name'     => $file_name,
+            'realpath' => $full_path,
+            'size'     => $file_size,
+            'mime_type' => $mime_type,
+            'image_with' => $image_with,
+            'image_height' => $image_height,
+            'ext' => $ext,
         ];
     }
 
@@ -184,7 +275,8 @@ class UploadController extends Base
      * @param $file_size
      * @return string
      */
-    protected function formatSize($file_size) {
+    protected function formatSize($file_size): string
+    {
         $size = sprintf("%u", $file_size);
         if($size == 0) {
             return("0 Bytes");
