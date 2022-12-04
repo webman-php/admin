@@ -37,7 +37,7 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">性别</label>
                         <div class="layui-input-block">
-                            <div name="sex" id="sex" value="男" ></div>
+                            <div name="sex" id="sex" value="1" ></div>
                         </div>
                     </div>
                     
@@ -155,64 +155,71 @@
             const INSERT_API = "/app/admin/user/insert";
             
             // 字段 性别 sex
-            layui.use(['jquery', 'xmSelect'], function() {
-                let value = layui.jquery('#sex').attr('value');
-                let initValue = value ? value.split(',') : [];
-                layui.xmSelect.render({
-                    el: '#sex',
-                    name: 'sex',
-                    initValue: initValue,
-                    data: [{"value":"男","name":"男"},{"value":"女","name":"女"}],
-                    value: '男',
-                    model: {"icon":"hidden","label":{"type":"text"}},
-                    clickClose: true,
-                    radio: true,
-                })
+            layui.use(["jquery", "xmSelect"], function() {
+                layui.jquery.ajax({
+                    url: "/app/admin/dict/get/sex",
+                    dataType: "json",
+                    success: function (e) {
+                        let value = layui.jquery("#sex").attr("value");
+                        let initValue = value ? value.split(",") : [];
+                        layui.xmSelect.render({
+                            el: "#sex",
+                            name: "sex",
+                            initValue: initValue,
+                            data: e.data, 
+                            value: '1',
+                            model: {"icon":"hidden","label":{"type":"text"}},
+                            clickClose: 'true',
+                            radio: 'true',
+                        })
+                    }
+                });
             });
             
             // 字段 头像 avatar
-            layui.use(['upload', 'layer', 'jquery'], function() {
-                let input = layui.jquery('#avatar').prev();
-                input.prev().attr('src', input.val());
+            layui.use(["upload", "layer", "jquery"], function() {
+                let input = layui.jquery("#avatar").prev();
+                input.prev().attr("src", input.val());
                 layui.upload.render({
-                    elem: '#avatar',
+                    elem: "#avatar",
                     url: '/app/admin/upload/avatar',
                     acceptMime: 'image/gif,image/jpeg,image/jpg,image/png',
+                    field: '__file__',
                     done: function (res) {
                         if (res.code > 0) return layui.layer.msg(res.msg);
-                        this.item.prev().val(res.data.path).prev().attr('src', res.data.path);
+                        this.item.prev().val(res.data.path).prev().attr("src", res.data.path);
                     }
                 });
             });
             
             // 字段 生日 birthday
-            layui.use(['laydate'], function() {
+            layui.use(["laydate"], function() {
                 layui.laydate.render({
-                    elem: '#birthday',
+                    elem: "#birthday",
                 });
             })
             
             // 字段 登录时间 last_time
-            layui.use(['laydate'], function() {
+            layui.use(["laydate"], function() {
                 layui.laydate.render({
-                    elem: '#last_time',
+                    elem: "#last_time",
                     type: 'datetime',
                 });
             })
             
             // 字段 注册时间 join_time
-            layui.use(['laydate'], function() {
+            layui.use(["laydate"], function() {
                 layui.laydate.render({
-                    elem: '#join_time',
+                    elem: "#join_time",
                     type: 'datetime',
                 });
             })
             
             // 字段 禁用 status
-            layui.use(['form', 'jquery'], function() {
-                layui.jquery('#status').attr('checked', layui.jquery('input[name="status"]').val() != 0);
+            layui.use(["form", "jquery"], function() {
+                layui.jquery("#status").attr("checked", layui.jquery('input[name="status"]').val() != 0);
                 layui.form.render();
-                layui.form.on('switch(status)', function(data) {
+                layui.form.on("switch(status)", function(data) {
                     layui.jquery('input[name="status"]').val(this.checked ? 1 : 0);
                 });
             })

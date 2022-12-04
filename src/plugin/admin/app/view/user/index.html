@@ -178,149 +178,156 @@
             const UPDATE_URL = "/app/admin/user/update";
             
             // 字段 性别 sex
-            layui.use(['jquery', 'xmSelect'], function() {
-                let value = layui.jquery('#sex').attr('value');
-                let initValue = value ? value.split(',') : [];
-                layui.xmSelect.render({
-                    el: '#sex',
-                    name: 'sex',
-                    initValue: initValue,
-                    data: [{"value":"男","name":"男"},{"value":"女","name":"女"}],
-                    model: {"icon":"hidden","label":{"type":"text"}},
-                    clickClose: true,
-                    radio: true,
-                })
+            layui.use(["jquery", "xmSelect"], function() {
+                layui.jquery.ajax({
+                    url: "/app/admin/dict/get/sex",
+                    dataType: "json",
+                    success: function (e) {
+                        let value = layui.jquery("#sex").attr("value");
+                        let initValue = value ? value.split(",") : [];
+                        layui.xmSelect.render({
+                            el: "#sex",
+                            name: "sex",
+                            initValue: initValue,
+                            data: e.data, 
+                            model: {"icon":"hidden","label":{"type":"text"}},
+                            clickClose: 'true',
+                            radio: 'true',
+                        })
+                    }
+                });
             });
             
             // 字段 生日 birthday
-            layui.use(['laydate'], function() {
+            layui.use(["laydate"], function() {
                 layui.laydate.render({
-                    elem: '#birthday',
-                    range: ['#birthday-date-start', '#birthday-date-end'],
+                    elem: "#birthday",
+                    range: ["#birthday-date-start", "#birthday-date-end"],
                 });
             })
             
             // 字段 登录时间 last_time
-            layui.use(['laydate'], function() {
+            layui.use(["laydate"], function() {
                 layui.laydate.render({
-                    elem: '#last_time',
-                    range: ['#last_time-date-start', '#last_time-date-end'],
+                    elem: "#last_time",
+                    range: ["#last_time-date-start", "#last_time-date-end"],
                     type: 'datetime',
                 });
             })
             
             // 字段 注册时间 join_time
-            layui.use(['laydate'], function() {
+            layui.use(["laydate"], function() {
                 layui.laydate.render({
-                    elem: '#join_time',
-                    range: ['#join_time-date-start', '#join_time-date-end'],
+                    elem: "#join_time",
+                    range: ["#join_time-date-start", "#join_time-date-end"],
                     type: 'datetime',
                 });
             })
             
             // 表格渲染
-            layui.use(['table', 'form', 'jquery', 'common', 'popup'], function() {
+            layui.use(['table', 'form', 'jquery', 'common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.jquery;
                 let common = layui.common;
+                let util = layui.util;
                 
 				// 表头参数
 				let cols = [
 					{
-						type: 'checkbox'
+						type: "checkbox"
 					},{
-						title: '主键',
-						field: 'id',
+						title: "主键",
+						field: "id",
 						sort: true,
 					},{
-						title: '用户名',
-						field: 'username',
+						title: "用户名",
+						field: "username",
 					},{
-						title: '昵称',
-						field: 'nickname',
+						title: "昵称",
+						field: "nickname",
 					},{
-						title: '密码',
-						field: 'password',
+						title: "密码",
+						field: "password",
 						hide: true,
 					},{
-						title: '性别',
-						field: 'sex',
+						title: "性别",
+						field: "sex",
 						templet: function (d) {
-							let field = 'sex';
-							if (typeof d[field] == "undefined") return '';
+							let field = "sex";
+							if (typeof d[field] == "undefined") return "";
 							let items = [];
-							layui.each((d[field] + '').split(','), function (k , v) {
+							layui.each((d[field] + "").split(","), function (k , v) {
 								items.push(apiResults[field][v] || v);
 							});
-							return items.join(',');
+							return util.escape(items.join(","));
 						}
 					},{
-						title: '头像',
-						field: 'avatar',
+						title: "头像",
+						field: "avatar",
 						templet: function (d) {
-							return '<img src="'+d.avatar+'" style="max-width:32px;max-height:32px;" alt="" />';
+							return '<img src="'+encodeURI(d['avatar'])+'" style="max-width:32px;max-height:32px;" alt="" />'
 						}
 					},{
-						title: '邮箱',
-						field: 'email',
+						title: "邮箱",
+						field: "email",
 					},{
-						title: '手机',
-						field: 'mobile',
+						title: "手机",
+						field: "mobile",
 					},{
-						title: '等级',
-						field: 'level',
+						title: "等级",
+						field: "level",
 						hide: true,
 					},{
-						title: '生日',
-						field: 'birthday',
+						title: "生日",
+						field: "birthday",
 						hide: true,
 					},{
-						title: '余额',
-						field: 'money',
+						title: "余额",
+						field: "money",
 						hide: true,
 					},{
-						title: '积分',
-						field: 'score',
+						title: "积分",
+						field: "score",
 						hide: true,
 					},{
-						title: '登录时间',
-						field: 'last_time',
+						title: "登录时间",
+						field: "last_time",
 						hide: true,
 					},{
-						title: '登录ip',
-						field: 'last_ip',
+						title: "登录ip",
+						field: "last_ip",
 						hide: true,
 					},{
-						title: '注册时间',
-						field: 'join_time',
+						title: "注册时间",
+						field: "join_time",
 						hide: true,
 					},{
-						title: '注册ip',
-						field: 'join_ip',
+						title: "注册ip",
+						field: "join_ip",
 						hide: true,
 					},{
-						title: 'token',
-						field: 'token',
+						title: "token",
+						field: "token",
 						hide: true,
 					},{
-						title: '创建时间',
-						field: 'created_at',
+						title: "创建时间",
+						field: "created_at",
 						hide: true,
 					},{
-						title: '更新时间',
-						field: 'updated_at',
+						title: "更新时间",
+						field: "updated_at",
 						hide: true,
 					},{
-						title: '角色',
-						field: 'role',
+						title: "角色",
+						field: "role",
 						hide: true,
 					},{
-						title: '禁用',
-						field: 'status',
+						title: "禁用",
+						field: "status",
 						templet: function (d) {
-							let field = 'status';
-							form.on('switch('+field+')', function (data) {
+							let field = "status";
+							form.on("switch("+field+")", function (data) {
 								let load = layer.load();
 								let postData = {};
 								postData[field] = data.elem.checked ? 1 : 0;
@@ -330,11 +337,11 @@
 									if (res.code) {
 				                        return layui.popup.failure(res.msg);
 				                    }
-									return layui.popup.success('操作成功');
+									return layui.popup.success("操作成功");
 								})
 							});
-							let checked = d[field] === 1 ? 'checked' : '';
-							return '<input type="checkbox" value="'+d[PRIMARY_KEY]+'" lay-filter="'+field+'" lay-skin="switch" lay-text="" '+checked+'/>';
+							let checked = d[field] === 1 ? "checked" : "";
+							return '<input type="checkbox" value="'+util.escape(d[PRIMARY_KEY])+'" lay-filter="'+util.escape(field)+'" lay-skin="switch" lay-text="'+util.escape('')+'" '+checked+'/>';
 						}
 					},{
 						title: "操作",
@@ -345,25 +352,58 @@
 				];
 				
 				// 渲染表格
-				table.render({
-				    elem: '#data-table',
-				    url: SELECT_API,
-				    page: true,
-				    cols: [cols],
-				    skin: 'line',
-				    size: 'lg',
-				    toolbar: '#table-toolbar',
-				    autoSort: false,
-				    defaultToolbar: [{
-				        title: '刷新',
-				        layEvent: 'refresh',
-				        icon: 'layui-icon-refresh',
-				    }, 'filter', 'print', 'exports']
-				});
+				function render()
+				{
+				    table.render({
+				        elem: "#data-table",
+				        url: SELECT_API,
+				        page: true,
+				        cols: [cols],
+				        skin: "line",
+				        size: "lg",
+				        toolbar: "#table-toolbar",
+				        autoSort: false,
+				        defaultToolbar: [{
+				            title: "刷新",
+				            layEvent: "refresh",
+				            icon: "layui-icon-refresh",
+				        }, "filter", "print", "exports"]
+				    });
+				}
 				
 				// 获取表格中下拉或树形组件数据
+				let apis = [];
+				apis.push(['sex', '/app/admin/dict/get/sex']);
 				let apiResults = {};
-				apiResults['sex'] = {"男":"男","女":"女"};
+				apiResults['sex'] = [];
+				let count = apis.length;
+				layui.each(apis, function (k, item) {
+				    let [field, url] = item;
+				    $.ajax({
+				        url: url,
+				        dateType: "json",
+				        success: function (res) {
+				            function travel(items) {
+				                for (let k in items) {
+				                    let item = items[k];
+				                    apiResults[field][item.value] = item.name;
+				                    if (item.children) {
+				                        travel(item.children);
+				                    }
+				                }
+				            }
+				            travel(res.data);
+				        },
+				        complete: function () {
+				            if (--count === 0) {
+				                render();
+				            }
+				        }
+				    });
+				});
+				if (!count) {
+				    render();
+				}
 				
                 // 编辑或删除行事件
                 table.on('tool(data-table)', function(obj) {
