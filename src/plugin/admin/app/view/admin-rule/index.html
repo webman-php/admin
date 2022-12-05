@@ -74,12 +74,13 @@
             let PRIMARY_KEY = 'id';
 
             // 表格渲染
-            layui.use(['table', 'treetable', 'form', 'common', 'popup'], function() {
+            layui.use(['table', 'treetable', 'form', 'common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
                 let common = layui.common;
                 let treeTable = layui.treetable;
+                let util = layui.util;
 
                 // 表格头部列数据
                 let cols = [
@@ -92,7 +93,7 @@
                         title: '图标',
                         field: 'icon',
                         templet: function (d) {
-                            return '<i class="layui-icon ' + d['icon'] + '"></i>';
+                            return '<i class="layui-icon ' + util.escape(d['icon']) + '"></i>';
                         }
                     },{
                         title: '主键',
@@ -112,7 +113,7 @@
                             layui.each((d[field] + '').split(','), function (k , v) {
                                 items.push(apiResults[field][v] || v);
                             });
-                            return items.join(',');
+                            return util.escape(items.join(','));
                         }
                     },{
                         title: '创建时间',
@@ -122,9 +123,6 @@
                         title: '更新时间',
                         field: 'updated_at',
                         hide: true,
-                        templet: function (d) {
-                            return '<i class="layui-icon ' + d['updated_at'] + '"></i>';
-                        }
                     },{
                         title: 'url',
                         field: 'href',
@@ -136,7 +134,7 @@
                             let field = 'type';
                             let value = apiResults['type'][d['type']] || d['type'];
                             let css = {'目录':'layui-bg-blue', '菜单': 'layui-bg-green', '权限': 'layui-bg-orange'}[value];
-                            return '<span class="layui-badge '+css+'">'+value+'</span>';
+                            return '<span class="layui-badge '+css+'">'+util.escape(value)+'</span>';
                         }
                     },{
                         title: '排序',
