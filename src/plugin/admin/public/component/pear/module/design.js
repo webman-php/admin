@@ -132,8 +132,21 @@ layui.define(['layer', 'form'], function(exports) {
 				form.render();
 				setHtml(html);
 				layui.use(['upload', 'jquery'], function() {
-					let input = layui.jquery('#' + key).prev();
+					let input = layui.$('#' + key).prev();
 					input.prev().html(layui.util.escape(input.val()));
+					layui.$("#attachment-choose-" + key).on('click', function() {
+						parent.layer.open({
+							type: 2,
+							title: "选择附件",
+							content: "/app/admin/upload/attachment",
+							area: ["95%", "90%"],
+							success: function (layero, index) {
+								parent.layui.$("#layui-layer" + index).data("callback", function (data) {
+									input.val(data.url).prev().html(layui.util.escape(data.url));
+								});
+							}
+						});
+					});
 					layui.upload.render({
 						elem: "#" + key,
 						url: "/app/admin/upload/file",
@@ -147,8 +160,21 @@ layui.define(['layer', 'form'], function(exports) {
 				if (module.indexOf('upload') === -1) module.push('upload');
 				if (module.indexOf('util') === -1) module.push('util');
 				js += '    // 上传文件\n' +
-					'    let input = layui.jquery("#'+key+'").prev();\n' +
+					'    let input = layui.$("#'+key+'").prev();\n' +
 					'    input.prev().html(layui.util.escape(input.val()));\n' +
+					'    layui.$("#attachment-choose-'+key+'").on("click", function() {\n' +
+					'      parent.layer.open({\n' +
+					'        type: 2,\n' +
+					'        title: "选择附件",\n' +
+					'        content: "/app/admin/upload/attachment",\n' +
+					'        area: ["95%", "90%"],\n' +
+					'        success: function (layero, index) {\n' +
+					'          parent.layui.$("#layui-layer" + index).data("callback", function (data) {\n' +
+					'            input.val(data.url).prev().html(layui.util.escape(data.url));\n' +
+					'          });\n' +
+					'        }\n' +
+					'	   });\n' +
+					'    });\n' +
 					'    layui.upload.render({\n' +
 					'       elem: "#' + key + '",\n' +
 					'       url: "/app/admin/upload/file",\n' +
@@ -166,8 +192,21 @@ layui.define(['layer', 'form'], function(exports) {
 				form.render();
 				setHtml(html);
 				layui.use(['upload', 'jquery'], function() {
-					let input = layui.jquery('#' + key).prev();
+					let input = layui.$('#' + key).prev();
 					input.prev().attr('src', input.val());
+					layui.$('#attachment-choose-' + key).on('click', function() {
+						parent.layer.open({
+							type: 2,
+							title: '选择附件',
+							content: '/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp',
+							area: ["95%", "90%"],
+							success: function (layero, index) {
+								parent.layui.$("#layui-layer" + index).data("callback", function (data) {
+									input.val(data.url).prev().attr("src", data.url);
+								});
+							}
+						});
+					});
 					layui.upload.render({
 						elem: "#" + key,
 						url: "/app/admin/upload/image",
@@ -180,8 +219,21 @@ layui.define(['layer', 'form'], function(exports) {
 				});
 				if (module.indexOf('upload') === -1) module.push('upload');
 				js += '    // 上传图片\n' +
-					'    let input = layui.jquery("#'+key+'").prev();\n' +
+					'    let input = layui.$("#'+key+'").prev();\n' +
 					'    input.prev().attr(\'src\', input.val());\n' +
+					'    layui.$("#attachment-choose-'+key+'").on("click", function() {\n' +
+					'      parent.layer.open({\n' +
+					'        type: 2,\n' +
+					'        title: "选择附件",\n' +
+					'        content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",\n' +
+					'        area: ["95%", "90%"],\n' +
+					'        success: function (layero, index) {\n' +
+					'          parent.layui.$("#layui-layer" + index).data("callback", function (data) {\n' +
+					'            input.val(data.url).prev().attr("src", data.url);\n' +
+					'          });\n' +
+					'        }\n' +
+					'	   });\n' +
+					'    });\n' +
 					'    layui.upload.render({\n' +
 					'       elem: "#' + key + '",\n' +
 					'       url: "/app/admin/upload/image",\n' +
@@ -283,7 +335,10 @@ layui.define(['layer', 'form'], function(exports) {
 			'      <span></span>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'">\n' +
-			'      <i class="layui-icon">&#xe67c;</i>上传文件\n' +
+			'        <i class="layui-icon">&#xe67c;</i>上传文件\n' +
+			'      </button>\n' +
+			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'">\n' +
+			'	     <i class="layui-icon">&#xe649;</i>选择附件\n' +
 			'      </button>\n' +
 			'    </div>\n' +
 			'  </div>\n';
@@ -297,8 +352,11 @@ layui.define(['layer', 'form'], function(exports) {
 			'      <img style="max-width:90px;max-height:90px;" src=""/>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'">\n' +
-			'      <i class="layui-icon">&#xe67c;</i>上传图片\n' +
+			'        <i class="layui-icon">&#xe67c;</i>上传图片\n' +
 		    '      </button>\n' +
+			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'">\n' +
+			'	     <i class="layui-icon">&#xe649;</i>选择附件\n' +
+			'      </button>\n' +
 			'    </div>\n' +
 			'  </div>\n';
 		return html;

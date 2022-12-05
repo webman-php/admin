@@ -187,7 +187,7 @@
                     parent.layer.open({
                         type: 2,
                         title: '选择附件',
-                        content: '/app/admin/upload/attachment',
+                        content: '/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp',
                         area: ["95%", "90%"],
                         success: function (layero, index) {
                             parent.layui.$("#layui-layer" + index).data("callback", function (data) {
