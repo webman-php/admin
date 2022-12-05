@@ -153,7 +153,7 @@ layui.define(['layer', 'form'], function(exports) {
 						accept: "file",
 						field: "__file__",
 						done: function (res) {
-							this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));
+							this.item.prev().val(res.data.url).prev().html(layui.util.escape(res.data.url));
 						}
 					});
 				});
@@ -183,7 +183,7 @@ layui.define(['layer', 'form'], function(exports) {
 					'       accept: "file",\n' +
 					'       field: "__file__",\n' +
 					'       done: function (res) {\n' +
-					'         this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));\n' +
+					'         this.item.prev().val(res.data.url).prev().html(layui.util.escape(res.data.url));\n' +
 					'       }\n' +
 					'    });\n';
 				$('.js-show').text(jscode())
@@ -215,7 +215,7 @@ layui.define(['layer', 'form'], function(exports) {
 						acceptMime: "image/gif,image/jpeg,image/jpg,image/png",
 						field: "__file__",
 						done: function (res) {
-							this.item.prev().val(res.data.path).prev().attr('src', res.data.path);
+							this.item.prev().val(res.data.url).prev().attr('src', res.data.url);
 						}
 					});
 				});
@@ -243,7 +243,7 @@ layui.define(['layer', 'form'], function(exports) {
 					'        acceptMime: "image/gif,image/jpeg,image/jpg,image/png",\n' +
 					'        field: "__file__",\n' +
 					'        done: function (res) {\n' +
-					'          this.item.prev().val(res.data.path).prev().attr(\'src\', res.data.path);\n' +
+					'          this.item.prev().val(res.data.url).prev().attr(\'src\', res.data.url);\n' +
 					'        }\n' +
 					'     });\n' +
 					'   });\n';
@@ -333,16 +333,18 @@ layui.define(['layer', 'form'], function(exports) {
 	}
 
 	function upload(size) {
+		let uploadWords = size === "block" ? "上传文件" : "上传";
+		let selectWords = size === "block" ? "选择附件" : "选择";
 		var html = '  <div class="layui-form-item">\n' +
 			'    <label class="layui-form-label">上传文件</label>\n' +
 			'    <div class="layui-input-' + size + '">\n' +
 			'      <span></span>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'">\n' +
-			'        <i class="layui-icon">&#xe67c;</i>上传文件\n' +
+			'        <i class="layui-icon">&#xe67c;</i>'+uploadWords+'\n' +
 			'      </button>\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'">\n' +
-			'	     <i class="layui-icon">&#xe649;</i>选择附件\n' +
+			'	     <i class="layui-icon">&#xe649;</i>'+selectWords+'\n' +
 			'      </button>\n' +
 			'    </div>\n' +
 			'  </div>\n';
@@ -350,16 +352,18 @@ layui.define(['layer', 'form'], function(exports) {
 	}
 
 	function uploadImg(size) {
+		let uploadWords = size === "block" ? "上传文件" : "上传";
+		let selectWords = size === "block" ? "选择附件" : "选择";
 		var html = '  <div class="layui-form-item">\n' +
 			'    <label class="layui-form-label">上传图片</label>\n' +
 			'    <div class="layui-input-' + size + '">\n' +
 			'      <img style="max-width:90px;max-height:90px;" src=""/>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'">\n' +
-			'        <i class="layui-icon">&#xe67c;</i>上传图片\n' +
+			'        <i class="layui-icon">&#xe67c;</i>'+uploadWords+'\n' +
 		    '      </button>\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'">\n' +
-			'	     <i class="layui-icon">&#xe649;</i>选择附件\n' +
+			'	     <i class="layui-icon">&#xe649;</i>'+selectWords+'\n' +
 			'      </button>\n' +
 			'    </div>\n' +
 			'  </div>\n';
