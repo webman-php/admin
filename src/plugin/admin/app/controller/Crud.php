@@ -134,7 +134,7 @@ class Crud extends Base
         $model = $this->model;
         foreach ($where as $column => $value) {
             if (is_array($value)) {
-                if (in_array($value[0], ['>', '=', '<', '<>'])) {
+                if (in_array($value[0], ['>', '=', '<', '<>', 'like'])) {
                     $model = $model->where($column, $value[0], $value[1]);
                 } elseif ($value[0] == 'in') {
                     $model = $model->whereIn($column, $value[1]);

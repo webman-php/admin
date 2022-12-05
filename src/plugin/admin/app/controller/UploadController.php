@@ -56,6 +56,9 @@ class UploadController extends Crud
         if (!empty($where['ext']) && is_string($where['ext'])) {
             $where['ext'] = ['in', explode(',', $where['ext'])];
         }
+        if (!empty($where['name']) && is_string($where['name'])) {
+            $where['name'] = ['like', "%{$where['name']}%"];
+        }
         $query = $this->doSelect($where, $field, $order);
         return $this->doFormat($query, $format, $page_size);
     }
