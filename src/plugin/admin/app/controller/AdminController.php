@@ -33,7 +33,7 @@ class AdminController extends Crud
      */
     public function index(): Response
     {
-        return view("admin/index");
+        return view('admin/index');
     }
 
     /**
@@ -47,7 +47,7 @@ class AdminController extends Crud
         if ($request->method() === 'POST') {
             return parent::insert($request);
         }
-        return view("admin/insert");
+        return view('admin/insert');
     }
 
     /**
@@ -61,7 +61,7 @@ class AdminController extends Crud
         if ($request->method() === 'POST') {
             return parent::update($request);
         }
-        return view("admin/update");
+        return view('admin/update');
     }
 
     /**

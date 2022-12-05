@@ -41,7 +41,7 @@ class UploadController extends Crud
      */
     public function index(): Response
     {
-        return view("upload/index");
+        return view('upload/index');
     }
 
     /**
@@ -67,7 +67,7 @@ class UploadController extends Crud
      */
     public function insert(Request $request): Response
     {
-        return view("upload/insert");
+        return view('upload/insert');
     }
 
     /**
@@ -79,7 +79,7 @@ class UploadController extends Crud
     public function update(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view("upload/update");
+            return view('upload/update');
         }
         return parent::update($request);
     }

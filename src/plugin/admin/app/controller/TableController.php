@@ -27,7 +27,7 @@ class TableController extends Base
      */
     public function index(): Response
     {
-        return view("table/index");
+        return view('table/index');
     }
 
     /**
@@ -652,7 +652,7 @@ class $controller_class extends Crud
      */
     public function index(): Response
     {
-        return view("$template_path/index");
+        return view('$template_path/index');
     }
 
     /**
@@ -666,7 +666,7 @@ class $controller_class extends Crud
         if (\$request->method() === 'POST') {
             return parent::insert(\$request);
         }
-        return view("$template_path/insert");
+        return view('$template_path/insert');
     }
 
     /**
@@ -680,7 +680,7 @@ class $controller_class extends Crud
         if (\$request->method() === 'POST') {
             return parent::update(\$request);
         }
-        return view("$template_path/update");
+        return view('$template_path/update');
     }
 
 }

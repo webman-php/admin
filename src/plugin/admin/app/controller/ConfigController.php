@@ -25,7 +25,7 @@ class ConfigController extends Base
      */
     public function index(): Response
     {
-        return view("config/index");
+        return view('config/index');
     }
 
     /**

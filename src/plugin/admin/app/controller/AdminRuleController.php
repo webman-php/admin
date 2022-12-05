@@ -40,7 +40,7 @@ class AdminRuleController extends Crud
      */
     public function index(): Response
     {
-        return view("admin-rule/index");
+        return view('admin-rule/index');
     }
 
     /**
@@ -183,7 +183,7 @@ class AdminRuleController extends Crud
     public function insert(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view("admin-rule/insert");
+            return view('admin-rule/insert');
         }
         $data = $this->insertInput($request);
         $key = $data['key'] ?? '';
@@ -204,7 +204,7 @@ class AdminRuleController extends Crud
     public function update(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view("admin-rule/update");
+            return view('admin-rule/update');
         }
         [$id, $data] = $this->updateInput($request);
         if (!$row = $this->model->find($id)) {

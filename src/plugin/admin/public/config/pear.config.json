@@ -20,7 +20,7 @@
 		"preload": false,
 		"max": "30",
 		"index": {
-			"id": "10",
+			"id": "1",
 			"href": "/app/admin/table/index",
 			"title": "首页"
 		}

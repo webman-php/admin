@@ -23,7 +23,7 @@ class DictController extends Base
      */
     public function index(): Response
     {
-        return view("dict/index");
+        return view('dict/index');
     }
 
     /**
@@ -47,7 +47,7 @@ class DictController extends Base
             $option->save();
             return $this->json(0);
         }
-        return view("dict/insert");
+        return view('dict/insert');
     }
 
     /**
@@ -69,7 +69,7 @@ class DictController extends Base
             $option->value = $format_values;
             $option->save();
         }
-        return view("dict/update");
+        return view('dict/update');
     }
 
     /**

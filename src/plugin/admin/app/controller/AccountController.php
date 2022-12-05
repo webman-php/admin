@@ -46,7 +46,7 @@ class AccountController extends Crud
      */
     public function index()
     {
-        return view("account/index");
+        return view('account/index');
     }
 
     /**

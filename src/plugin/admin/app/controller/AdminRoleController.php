@@ -31,7 +31,7 @@ class AdminRoleController extends Crud
      */
     public function index()
     {
-        return view("admin-role/index");
+        return view('admin-role/index');
     }
 
     /**
@@ -44,7 +44,7 @@ class AdminRoleController extends Crud
         if ($request->method() === 'POST') {
             return parent::insert($request);
         }
-        return view("admin-role/insert");
+        return view('admin-role/insert');
     }
 
     /**
@@ -56,7 +56,7 @@ class AdminRoleController extends Crud
     public function update(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view("admin-role/update");
+            return view('admin-role/update');
         }
         [$id, $data] = $this->updateInput($request);
         // id为1的管理员权限固定为*
