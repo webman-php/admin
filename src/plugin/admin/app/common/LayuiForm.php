@@ -235,7 +235,7 @@ layui.use(['upload', 'layer', 'popup', 'util'], function() {
         elem: "#$id",$options_string
         done: function (res) {
             if (res.code) return layui.popup.failure(res.msg);
-            this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));
+            this.item.prev().val(res.data.url).prev().html(layui.util.escape(res.data.url));
         }
     });
 });
@@ -307,7 +307,7 @@ layui.use(["upload", "layer"], function() {
         elem: "#$id",$options_string
         done: function (res) {
             if (res.code > 0) return layui.layer.msg(res.msg);
-            this.item.prev().val(res.data.path).prev().attr("src", res.data.path);
+            this.item.prev().val(res.data.url).prev().attr("src", res.data.url);
         }
     });
 });

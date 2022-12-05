@@ -203,7 +203,7 @@
                     field: '__file__',
                     done: function (res) {
                         if (res.code > 0) return layui.layer.msg(res.msg);
-                        this.item.prev().val(res.data.path).prev().attr("src", res.data.path);
+                        this.item.prev().val(res.data.url).prev().attr("src", res.data.url);
                     }
                 });
             });

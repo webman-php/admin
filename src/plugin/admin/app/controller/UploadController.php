@@ -107,7 +107,7 @@ class UploadController extends Crud
         }
         $data = $this->base($request, '/upload/files/'.date('Ymd'));
         return $this->json(0, '上传成功', [
-            'path' => $data['path'],
+            'url' => $data['url'],
             'name' => $data['name'],
             'size' => $data['size'],
         ]);
@@ -145,7 +145,7 @@ class UploadController extends Crud
         $upload->category = $request->post('category');
         $upload->save();
         return $this->json(0, '上传成功', [
-            'path' => $data['path'],
+            'url' => $data['url'],
             'name' => $data['name'],
             'size' => $data['size'],
         ]);
@@ -197,7 +197,7 @@ class UploadController extends Crud
                 'code' => 0,
                 'msg' => '上传成功',
                 'data' => [
-                    'path' => "/app/admin/$relative_path/$name.$ext"
+                    'url' => "/app/admin/$relative_path/$name.$ext"
                 ]
             ]);
         }
@@ -236,7 +236,7 @@ class UploadController extends Crud
             'code'  => 0,
             'msg'  => '上传成功',
             'data' => [
-                'path' => $data['path'],
+                'url' => $data['url'],
                 'name' => $data['name'],
                 'size' => $data['size'],
             ]
@@ -282,7 +282,7 @@ class UploadController extends Crud
             $mime_type = $img_info['mime'];
         }
         return [
-            'path'     => "/app/admin/$relative_path",
+            'url'     => "/app/admin/$relative_path",
             'name'     => $file_name,
             'realpath' => $full_path,
             'size'     => $file_size,

@@ -71,7 +71,7 @@
                                 field: '__file__',
                                 done: function (res) {
                                     if (res.code) return layui.popup.failure(res.msg);
-                                    this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));
+                                    this.item.prev().val(res.data.url).prev().html(layui.util.escape(res.data.url));
                                 }
                             });
                         });

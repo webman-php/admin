@@ -200,7 +200,7 @@
                         if (res.code) {
                             return layui.popup.failure(res.msg);
                         }
-                        this.item.prev().val(res.data.path).prev().attr('src', res.data.path);
+                        this.item.prev().val(res.data.url).prev().attr('src', res.data.url);
                     }
                 });
 
