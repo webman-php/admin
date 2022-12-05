@@ -93,6 +93,9 @@ button {
     background-color: #36b368 !important;
 }
 
+a {
+    cursor: pointer;
+}
 
 /** 左侧菜单 Start **/
 
