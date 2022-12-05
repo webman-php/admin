@@ -215,7 +215,7 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(['upload', 'layer', 'jquery', 'popup', 'util'], function() {
+layui.use(['upload', 'layer', 'popup', 'util'], function() {
     let input = layui.$('#$id').prev();
     input.prev().html(layui.util.escape(input.val()));
     layui.$("#attachment-choose-$id").on('click', function() {

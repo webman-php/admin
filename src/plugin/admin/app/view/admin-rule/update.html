@@ -88,8 +88,8 @@
             const UPDATE_API = "/app/admin/admin-rule/update";
 
             // 获取行数据
-            layui.use(['form', 'jquery', 'util'], function () {
-                let $ = layui.jquery;
+            layui.use(['form', 'util'], function () {
+                let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,
                     dataType: 'json',
@@ -121,11 +121,11 @@
 
                         // 获取上级菜单
                         layui.use(['jquery', 'xmSelect'], function() {
-                            layui.jquery.ajax({
+                            layui.$.ajax({
                                 url: '/app/admin/admin-rule/select?format=tree&type=0,1',
                                 dataType: 'json',
                                 success: function (e) {
-                                    let value = layui.jquery('#pid').attr('value');
+                                    let value = layui.$('#pid').attr('value');
                                     let initValue = value ? value.split(',') : [];
                                     layui.xmSelect.render({
                                         el: '#pid',
@@ -145,7 +145,7 @@
 
                         // 菜单类型下拉选择
                         layui.use(['jquery', 'xmSelect'], function() {
-                            let value = layui.jquery('#type').attr('value');
+                            let value = layui.$('#type').attr('value');
                             let initValue = value ? value.split(',') : [];
                             layui.xmSelect.render({
                                 el: '#type',
@@ -164,10 +164,10 @@
             });
 
             // 提交事件
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 layui.form.on('submit(save)', function (data) {
                     data.field[PRIMARY_KEY] = layui.url().search[PRIMARY_KEY];
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: UPDATE_API,
                         type: 'POST',
                         dateType: 'json',

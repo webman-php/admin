@@ -781,10 +781,10 @@ EOF
             const UPDATE_URL = "$url_path_base/$template_path/update";
             $js
             // 表格渲染
-            layui.use(['table', 'form', 'jquery', 'common', 'popup', 'util'], function() {
+            layui.use(['table', 'form', 'common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
-                let $ = layui.jquery;
+                let $ = layui.$;
                 let common = layui.common;
                 let util = layui.util;
                 $table_js
@@ -958,9 +958,9 @@ EOF;
             const INSERT_API = "$url_path_base/$template_path/insert";
             $js
             //提交事件
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 layui.form.on('submit(save)', function (data) {
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: INSERT_API,
                         type: 'POST',
                         dateType: 'json',
@@ -1033,8 +1033,8 @@ EOF;
             const UPDATE_API = "$url_path_base/$template_path/update";
 
             // 获取数据库记录
-            layui.use(['form', 'jquery', 'util'], function () {
-                let $ = layui.jquery;
+            layui.use(['form', 'util'], function () {
+                let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,
                     dataType: 'json',
@@ -1061,10 +1061,10 @@ EOF;
             });
 
             //提交事件
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 layui.form.on('submit(save)', function (data) {
                     data.field[PRIMARY_KEY] = layui.url().search[PRIMARY_KEY];
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: UPDATE_API,
                         type: 'POST',
                         dateType: 'json',

@@ -35,8 +35,8 @@
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
-            layui.use(['form', 'button', 'popup', 'layer', 'jquery'], function() {
-                var $ = layui.jquery, layer = layui.layer, form = layui.form;
+            layui.use(['form', 'button', 'popup', 'layer'], function() {
+                var $ = layui.$, layer = layui.layer, form = layui.form;
                 function switchCaptcha() {
                     $('.codeImage').attr("src", "/app/admin/account/captcha/login?v=" + new Date().getTime());
                 }

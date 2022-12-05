@@ -124,11 +124,11 @@
             
             // 字段 类别 category
             layui.use(["jquery", "xmSelect"], function() {
-                layui.jquery.ajax({
+                layui.$.ajax({
                     url: "/app/admin/dict/get/upload",
                     dataType: "json",
                     success: function (e) {
-                        let value = layui.jquery("#category").attr("value");
+                        let value = layui.$("#category").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
                             el: "#category",
@@ -144,10 +144,10 @@
             });
             
             // 表格渲染
-            layui.use(['table', 'form', 'jquery', 'common', 'popup', 'util'], function() {
+            layui.use(['table', 'form', 'common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
-                let $ = layui.jquery;
+                let $ = layui.$;
                 let common = layui.common;
                 let util = layui.util;
                 

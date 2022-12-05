@@ -91,8 +91,8 @@
             const INSERT_API = "/app/admin/admin/insert";
             
             // 字段 头像 avatar
-            layui.use(["upload", "layer", "jquery"], function() {
-                let input = layui.jquery("#avatar").prev();
+            layui.use(["upload", "layer"], function() {
+                let input = layui.$("#avatar").prev();
                 input.prev().attr("src", input.val());
                 layui.upload.render({
                     elem: "#avatar",
@@ -109,11 +109,11 @@
             
             // 字段 角色 roles
             layui.use(["jquery", "xmSelect"], function() {
-                layui.jquery.ajax({
+                layui.$.ajax({
                     url: "/app/admin/admin-role/select?format=select",
                     dataType: "json",
                     success: function (e) {
-                        let value = layui.jquery("#roles").attr("value");
+                        let value = layui.$("#roles").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
                             el: "#roles",
@@ -128,9 +128,9 @@
             });
             
             //提交事件
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 layui.form.on('submit(save)', function (data) {
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: INSERT_API,
                         type: 'POST',
                         dateType: 'json',

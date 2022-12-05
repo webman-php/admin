@@ -226,7 +226,7 @@
             const TABLE_NAME = '<?=htmlspecialchars($table)?>';
 
             layui.use(['jquery'], function () {
-                let $ = layui.jquery;
+                let $ = layui.$;
                 $.ajax({
                     url: SCHEMA_API + '?table=' + TABLE_NAME,
                     dataType: 'json',
@@ -640,7 +640,7 @@
 
                             window.keyColumnMultiSelectRender = function () {
                                 layui.use(['jquery', 'xmSelect', 'table'], function () {
-                                    let $ = layui.jquery;
+                                    let $ = layui.$;
                                     let table = layui.table;
                                     let columnData = table.getData('column-table');
                                     let data = [];
@@ -675,12 +675,12 @@
 
 
 
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 //提交事件
                 layui.form.on('submit(save)', function () {
                     syncTableData();
                     let data = layui.form.val('create-table-form');
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: MODIFY_API,
                         type: 'POST',
                         dateType: 'json',

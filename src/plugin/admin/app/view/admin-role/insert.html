@@ -53,11 +53,11 @@
             
             // 字段 权限 rules
             layui.use(["jquery", "xmSelect"], function() {
-                layui.jquery.ajax({
+                layui.$.ajax({
                     url: "/app/admin/admin-rule/get?type=0,1,2",
                     dataType: "json",
                     success: function (e) {
-                        let value = layui.jquery("#rules").attr("value");
+                        let value = layui.$("#rules").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
                             el: "#rules",
@@ -72,9 +72,9 @@
             });
             
             //提交事件
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 layui.form.on('submit(save)', function (data) {
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: INSERT_API,
                         type: 'POST',
                         dateType: 'json',

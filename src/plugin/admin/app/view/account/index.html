@@ -106,9 +106,9 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 let form = layui.form;
-                let $ = layui.jquery;
+                let $ = layui.$;
                 $.ajax({
                     url: '/app/admin/account/info',
                     dataType: 'json',

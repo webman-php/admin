@@ -159,11 +159,11 @@
             
             // 字段 性别 sex
             layui.use(["jquery", "xmSelect"], function() {
-                layui.jquery.ajax({
+                layui.$.ajax({
                     url: "/app/admin/dict/get/sex",
                     dataType: "json",
                     success: function (e) {
-                        let value = layui.jquery("#sex").attr("value");
+                        let value = layui.$("#sex").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
                             el: "#sex",
@@ -180,10 +180,10 @@
             });
             
             // 字段 头像 avatar
-            layui.use(["upload", "layer", "jquery"], function() {
-                let input = layui.jquery("#avatar").prev();
+            layui.use(["upload", "layer"], function() {
+                let input = layui.$("#avatar").prev();
                 input.prev().attr("src", input.val());
-                layui.jquery('#attachment-choose-avatar').on('click', function() {
+                layui.$('#attachment-choose-avatar').on('click', function() {
                     parent.layer.open({
                         type: 2,
                         title: '选择附件',
@@ -232,18 +232,18 @@
             })
             
             // 字段 禁用 status
-            layui.use(["form", "jquery"], function() {
-                layui.jquery("#status").attr("checked", layui.jquery('input[name="status"]').val() != 0);
+            layui.use(["form"], function() {
+                layui.$("#status").attr("checked", layui.$('input[name="status"]').val() != 0);
                 layui.form.render();
                 layui.form.on("switch(status)", function(data) {
-                    layui.jquery('input[name="status"]').val(this.checked ? 1 : 0);
+                    layui.$('input[name="status"]').val(this.checked ? 1 : 0);
                 });
             })
             
             //提交事件
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 layui.form.on('submit(save)', function (data) {
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: INSERT_API,
                         type: 'POST',
                         dateType: 'json',

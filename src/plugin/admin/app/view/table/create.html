@@ -684,7 +684,7 @@
 
                 window.keyColumnMultiSelectRender = function () {
                     layui.use(['jquery', 'xmSelect', 'table'], function () {
-                        let $ = layui.jquery;
+                        let $ = layui.$;
                         let table = layui.table;
                         let columnData = table.getData('column-table');
                         let data = [];
@@ -713,12 +713,12 @@
                 keyColumnMultiSelectRender();
             });
 
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 //提交事件
                 layui.form.on('submit(save)', function () {
                     syncTableData();
                     let data = layui.form.val('create-table-form');
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: CREATE_API,
                         type: 'POST',
                         dateType: 'json',

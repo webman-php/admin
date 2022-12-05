@@ -97,11 +97,11 @@
 
             // 上级菜单
             layui.use(['jquery', 'xmSelect'], function() {
-                layui.jquery.ajax({
+                layui.$.ajax({
                     url: '/app/admin/admin-rule/select?format=tree&type=0,1',
                     dataType: 'json',
                     success: function (e) {
-                        let value = layui.jquery('#pid').attr('value');
+                        let value = layui.$('#pid').attr('value');
                         let initValue = value ? value.split(',') : [];
                         layui.xmSelect.render({
                             el: '#pid',
@@ -122,7 +122,7 @@
 
             // 菜单类型下拉列表
             layui.use(['jquery', 'xmSelect'], function() {
-                let value = layui.jquery('#type').attr('value');
+                let value = layui.$('#type').attr('value');
                 let initValue = value ? value.split(',') : [];
                 layui.xmSelect.render({
                     el: '#type',
@@ -137,9 +137,9 @@
             });
 
             // 表单提交事件
-            layui.use(['form', 'jquery', 'popup'], function () {
+            layui.use(['form', 'popup'], function () {
                 layui.form.on('submit(save)', function (data) {
-                    layui.jquery.ajax({
+                    layui.$.ajax({
                         url: INSERT_URL,
                         type: 'POST',
                         dateType: 'json',

@@ -41,14 +41,14 @@
         <script>
             
             // 字段 url url
-            layui.use(['upload', 'layer', 'jquery', 'popup', 'util'], function() {
-                let input = layui.jquery('#url').prev();
+            layui.use(['upload', 'layer', 'popup', 'util'], function() {
+                let input = layui.$('#url').prev();
                 input.prev().html(layui.util.escape(input.val()));
                 layui.upload.render({
                     elem: "#url",
                     accept: 'file',
                     data: {category: function () {
-                        return layui.jquery('input[name="category"]').val();
+                        return layui.$('input[name="category"]').val();
                     }},
                     url: '/app/admin/upload/attachment',
                     field: '__file__',
@@ -62,11 +62,11 @@
             
             // 字段 类别 category
             layui.use(["jquery", "xmSelect"], function() {
-                layui.jquery.ajax({
+                layui.$.ajax({
                     url: "/app/admin/dict/get/upload",
                     dataType: "json",
                     success: function (e) {
-                        let value = layui.jquery("#category").attr("value");
+                        let value = layui.$("#category").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
                             el: "#category",
