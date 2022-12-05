@@ -131,7 +131,7 @@ layui.define(['layer', 'form'], function(exports) {
 				$('form').append(html);
 				form.render();
 				setHtml(html);
-				layui.use(['upload', 'jquery'], function() {
+				layui.use(['upload'], function() {
 					let input = layui.$('#' + key).prev();
 					input.prev().html(layui.util.escape(input.val()));
 					layui.$("#attachment-choose-" + key).on('click', function() {
@@ -160,19 +160,21 @@ layui.define(['layer', 'form'], function(exports) {
 				if (module.indexOf('upload') === -1) module.push('upload');
 				if (module.indexOf('util') === -1) module.push('util');
 				js += '    // 上传文件\n' +
-					'    let input = layui.$("#'+key+'").prev();\n' +
-					'    input.prev().html(layui.util.escape(input.val()));\n' +
-					'    layui.$("#attachment-choose-'+key+'").on("click", function() {\n' +
-					'      parent.layer.open({\n' +
-					'        type: 2,\n' +
-					'        title: "选择附件",\n' +
-					'        content: "/app/admin/upload/attachment",\n' +
-					'        area: ["95%", "90%"],\n' +
-					'        success: function (layero, index) {\n' +
-					'          parent.layui.$("#layui-layer" + index).data("callback", function (data) {\n' +
-					'            input.val(data.url).prev().html(layui.util.escape(data.url));\n' +
-					'          });\n' +
-					'        }\n' +
+					'    layui.use([\'upload\'], function() {\n' +
+					'      let input = layui.$("#'+key+'").prev();\n' +
+					'      input.prev().html(layui.util.escape(input.val()));\n' +
+					'      layui.$("#attachment-choose-'+key+'").on("click", function() {\n' +
+					'        parent.layer.open({\n' +
+					'          type: 2,\n' +
+					'          title: "选择附件",\n' +
+					'          content: "/app/admin/upload/attachment",\n' +
+					'          area: ["95%", "90%"],\n' +
+					'          success: function (layero, index) {\n' +
+					'            parent.layui.$("#layui-layer" + index).data("callback", function (data) {\n' +
+					'              input.val(data.url).prev().html(layui.util.escape(data.url));\n' +
+					'            });\n' +
+					'          }\n' +
+					'        });\n' +
 					'      });\n' +
 					'    });\n' +
 					'    layui.upload.render({\n' +
@@ -191,7 +193,7 @@ layui.define(['layer', 'form'], function(exports) {
 				$('form').append(html);
 				form.render();
 				setHtml(html);
-				layui.use(['upload', 'jquery'], function() {
+				layui.use(['upload'], function() {
 					let input = layui.$('#' + key).prev();
 					input.prev().attr('src', input.val());
 					layui.$('#attachment-choose-' + key).on('click', function() {
@@ -219,30 +221,32 @@ layui.define(['layer', 'form'], function(exports) {
 				});
 				if (module.indexOf('upload') === -1) module.push('upload');
 				js += '    // 上传图片\n' +
-					'    let input = layui.$("#'+key+'").prev();\n' +
-					'    input.prev().attr(\'src\', input.val());\n' +
-					'    layui.$("#attachment-choose-'+key+'").on("click", function() {\n' +
-					'      parent.layer.open({\n' +
-					'        type: 2,\n' +
-					'        title: "选择附件",\n' +
-					'        content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",\n' +
-					'        area: ["95%", "90%"],\n' +
-					'        success: function (layero, index) {\n' +
-					'          parent.layui.$("#layui-layer" + index).data("callback", function (data) {\n' +
-					'            input.val(data.url).prev().attr("src", data.url);\n' +
-					'          });\n' +
-					'        }\n' +
+					'    layui.use([\'upload\'], function() {\n' +
+					'      let input = layui.$("#'+key+'").prev();\n' +
+					'      input.prev().attr(\'src\', input.val());\n' +
+					'      layui.$("#attachment-choose-'+key+'").on("click", function() {\n' +
+					'        parent.layer.open({\n' +
+					'          type: 2,\n' +
+					'          title: "选择附件",\n' +
+					'          content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",\n' +
+					'          area: ["95%", "90%"],\n' +
+					'          success: function (layero, index) {\n' +
+					'            parent.layui.$("#layui-layer" + index).data("callback", function (data) {\n' +
+					'              input.val(data.url).prev().attr("src", data.url);\n' +
+					'            });\n' +
+					'          }\n' +
+					'        });\n' +
 					'      });\n' +
-					'    });\n' +
-					'    layui.upload.render({\n' +
-					'       elem: "#' + key + '",\n' +
-					'       url: "/app/admin/upload/image",\n' +
-					'       acceptMime: "image/gif,image/jpeg,image/jpg,image/png",\n' +
-					'       field: "__file__",\n' +
-					'       done: function (res) {\n' +
-					'         this.item.prev().val(res.data.path).prev().attr(\'src\', res.data.path);\n' +
-					'       }\n' +
-					'    });\n';
+					'      layui.upload.render({\n' +
+					'        elem: "#' + key + '",\n' +
+					'        url: "/app/admin/upload/image",\n' +
+					'        acceptMime: "image/gif,image/jpeg,image/jpg,image/png",\n' +
+					'        field: "__file__",\n' +
+					'        done: function (res) {\n' +
+					'          this.item.prev().val(res.data.path).prev().attr(\'src\', res.data.path);\n' +
+					'        }\n' +
+					'     });\n' +
+					'   });\n';
 				$('.js-show').text(jscode())
 				return;
 			case 'submit':
