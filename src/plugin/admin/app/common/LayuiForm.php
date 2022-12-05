@@ -216,9 +216,9 @@ EOF;
 
 // 字段 {$options['label']} $field
 layui.use(['upload', 'layer', 'jquery', 'popup', 'util'], function() {
-    let input = layui.jquery('#$id').prev();
+    let input = layui.$('#$id').prev();
     input.prev().html(layui.util.escape(input.val()));
-    layui.jquery("#attachment-choose-$id").on('click', function() {
+    layui.$("#attachment-choose-$id").on('click', function() {
         parent.layer.open({
             type: 2,
             title: "选择附件",
@@ -287,10 +287,10 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["upload", "layer", "jquery"], function() {
-    let input = layui.jquery("#$id").prev();
+layui.use(["upload", "layer"], function() {
+    let input = layui.$("#$id").prev();
     input.prev().attr("src", input.val());
-    layui.jquery("#attachment-choose-$id").on('click', function() {
+    layui.$("#attachment-choose-$id").on('click', function() {
         parent.layer.open({
             type: 2,
             title: "选择附件",
@@ -515,11 +515,11 @@ EOF;
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["form", "jquery"], function() {
-    layui.jquery("#$id").attr("checked", layui.jquery('input[name="$field"]').val() != 0);
+layui.use(["form"], function() {
+    layui.$("#$id").attr("checked", layui.$('input[name="$field"]').val() != 0);
     layui.form.render();
     layui.form.on("switch($field)", function(data) {
-        layui.jquery('input[name="$field"]').val(this.checked ? 1 : 0);
+        layui.$('input[name="$field"]').val(this.checked ? 1 : 0);
     });
 })
 
@@ -623,11 +623,11 @@ EOF;
 
 // 字段 {$options['label']} $field
 layui.use(["jquery", "xmSelect"], function() {
-    layui.jquery.ajax({
+    layui.$.ajax({
         url: "$url",
         dataType: "json",
         success: function (e) {
-            let value = layui.jquery("#$id").attr("value");
+            let value = layui.$("#$id").attr("value");
             let initValue = value ? value.split(",") : [];
             layui.xmSelect.render({
                 el: "#$id",
@@ -645,7 +645,7 @@ EOF;
 
 // 字段 {$options['label']} $field
 layui.use(["jquery", "xmSelect"], function() {
-    let value = layui.jquery("#$id").attr("value");
+    let value = layui.$("#$id").attr("value");
     let initValue = value ? value.split(",") : [];
     layui.xmSelect.render({
         el: "#$id",

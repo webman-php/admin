@@ -3,7 +3,7 @@ button {
     line-height: 100% !important;
 }
 
-.pear-btn-md, .pear-btn-sm {
+.pear-btn-md, .pear-btn-sm, .pear-btn-xs, .pear-btn {
     line-height: 100%;
     letter-spacing: 2px;
     padding: 0 15px;

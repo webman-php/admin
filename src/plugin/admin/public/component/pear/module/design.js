@@ -2,7 +2,9 @@ layui.define(['layer', 'form'], function(exports) {
 	var layer = layui.layer,
 		form = layui.form,
 		$ = layui.$,
-		key = '';
+		key = '',
+		js = '';
+	    module = ["form"];
 	delHtml()
 	$('button').on('click', function() {
 		var _this = $(this),
@@ -32,6 +34,165 @@ layui.define(['layer', 'form'], function(exports) {
 			case 'textarea':
 				html = textarea(size)
 				break;
+			case 'icon':
+				html = icon(size)
+				$('form').append(html);
+				form.render();
+				setHtml(html);
+				layui.use(['iconPicker'], function() {
+					layui.iconPicker.render({
+						elem: "#" + key,
+						type: "fontClass",
+					});
+				});
+				if (module.indexOf('iconPicker') === -1) module.push('iconPicker');
+				js += '    // 图标选择\n' +
+					'    layui.iconPicker.render({\n' +
+					'       elem: "#' + key + '",\n' +
+					'       type: "fontClass",\n' +
+					'    });\n';
+				$('.js-show').text(jscode())
+				return;
+			case 'multiSelect':
+				html = multiSelect(size)
+				$('form').append(html);
+				form.render();
+				setHtml(html);
+				layui.use(['xmSelect'], function() {
+					layui.xmSelect.render({
+						el: "#" + key,
+						name: key,
+						data: [{value: 1, name: "深圳"},{value: 2, name: "上海"},{value: 3, name: "广州"}],
+					});
+				});
+				if (module.indexOf('xmSelect') === -1) module.push('xmSelect');
+				js += '    // 下拉多选\n' +
+					'    layui.xmSelect.render({\n' +
+					'       el: "#' + key + '",\n' +
+					'       name: "' + key + '",\n' +
+					'       data: [{value: 1, name: "深圳"},{value: 2, name: "上海"},{value: 3, name: "广州"}],\n' +
+					'    });\n';
+				$('.js-show').text(jscode())
+				return;
+			case 'tree':
+				html = tree(size)
+				$('form').append(html);
+				form.render();
+				setHtml(html);
+				layui.use(['xmSelect'], function() {
+					layui.xmSelect.render({
+						el: "#" + key,
+						name: key,
+						tree: {show: true},
+						data: [{value: 1, name: "广东省", children:[{value: 2, name: "深圳"},{value: 3, name: "广州"}]},{value: 4, name: "福建省", children:[{value: 5, name: "厦门"},{value: 6, name: "福州"}]}],
+					});
+				});
+				if (module.indexOf('xmSelect') === -1) module.push('xmSelect');
+				js += '    // 树多选\n' +
+					'    layui.xmSelect.render({\n' +
+					'       el: "#' + key + '",\n' +
+					'       name: "' + key + '",\n' +
+					'       tree: {show: true},\n' +
+					'       data: [{value: 1, name: "广东省", children:[{value: 2, name: "深圳"},{value: 3, name: "广州"}]},{value: 4, name: "福建省", children:[{value: 5, name: "厦门"},{value: 6, name: "福州"}]}],\n' +
+					'    });\n';
+				$('.js-show').text(jscode())
+				return;
+			case 'treeSelectOne':
+				html = treeSelectOne(size)
+				$('form').append(html);
+				form.render();
+				setHtml(html);
+				layui.use(['xmSelect'], function() {
+					layui.xmSelect.render({
+						el: "#" + key,
+						name: key,
+						model: {"icon":"hidden","label":{"type":"text"}},
+						clickClose: true,
+						radio: true,
+						tree: {show: true, strict: false, clickCheck: true, clickExpand: false},
+						data: [{value: 1, name: "广东省", children:[{value: 2, name: "深圳"},{value: 3, name: "广州"}]},{value: 4, name: "福建省", children:[{value: 5, name: "厦门"},{value: 6, name: "福州"}]}],
+					});
+				});
+				if (module.indexOf('xmSelect') === -1) module.push('xmSelect');
+				js += '    // 树多选\n' +
+					'    layui.xmSelect.render({\n' +
+					'       el: "#' + key + '",\n' +
+					'       name: "' + key + '",\n' +
+					'       model: {"icon":"hidden","label":{"type":"text"}},\n' +
+					'       clickClose: true,\n' +
+					'       radio: true,\n' +
+					'       tree: {show: true, strict: false, clickCheck: true, clickExpand: false}\n' +
+					'       data: [{value: 1, name: "广东省", children:[{value: 2, name: "深圳"},{value: 3, name: "广州"}]},{value: 4, name: "福建省", children:[{value: 5, name: "厦门"},{value: 6, name: "福州"}]}],\n' +
+					'    });\n';
+				$('.js-show').text(jscode())
+				return;
+			case 'upload':
+				html = upload(size)
+				$('form').append(html);
+				form.render();
+				setHtml(html);
+				layui.use(['upload', 'jquery'], function() {
+					let input = layui.jquery('#' + key).prev();
+					input.prev().html(layui.util.escape(input.val()));
+					layui.upload.render({
+						elem: "#" + key,
+						url: "/app/admin/upload/file",
+						accept: "file",
+						field: "__file__",
+						done: function (res) {
+							this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));
+						}
+					});
+				});
+				if (module.indexOf('upload') === -1) module.push('upload');
+				if (module.indexOf('util') === -1) module.push('util');
+				js += '    // 上传文件\n' +
+					'    let input = layui.jquery("#'+key+'").prev();\n' +
+					'    input.prev().html(layui.util.escape(input.val()));\n' +
+					'    layui.upload.render({\n' +
+					'       elem: "#' + key + '",\n' +
+					'       url: "/app/admin/upload/file",\n' +
+					'       accept: "file",\n' +
+					'       field: "__file__",\n' +
+					'       done: function (res) {\n' +
+					'         this.item.prev().val(res.data.path).prev().html(layui.util.escape(res.data.path));\n' +
+					'       }\n' +
+					'    });\n';
+				$('.js-show').text(jscode())
+				return;
+			case 'uploadImg':
+				html = uploadImg(size)
+				$('form').append(html);
+				form.render();
+				setHtml(html);
+				layui.use(['upload', 'jquery'], function() {
+					let input = layui.jquery('#' + key).prev();
+					input.prev().attr('src', input.val());
+					layui.upload.render({
+						elem: "#" + key,
+						url: "/app/admin/upload/image",
+						acceptMime: "image/gif,image/jpeg,image/jpg,image/png",
+						field: "__file__",
+						done: function (res) {
+							this.item.prev().val(res.data.path).prev().attr('src', res.data.path);
+						}
+					});
+				});
+				if (module.indexOf('upload') === -1) module.push('upload');
+				js += '    // 上传图片\n' +
+					'    let input = layui.jquery("#'+key+'").prev();\n' +
+					'    input.prev().attr(\'src\', input.val());\n' +
+					'    layui.upload.render({\n' +
+					'       elem: "#' + key + '",\n' +
+					'       url: "/app/admin/upload/image",\n' +
+					'       acceptMime: "image/gif,image/jpeg,image/jpg,image/png",\n' +
+					'       field: "__file__",\n' +
+					'       done: function (res) {\n' +
+					'         this.item.prev().val(res.data.path).prev().attr(\'src\', res.data.path);\n' +
+					'       }\n' +
+					'    });\n';
+				$('.js-show').text(jscode())
+				return;
 			case 'submit':
 				html = submits(size)
 				break;
@@ -49,7 +210,8 @@ layui.define(['layer', 'form'], function(exports) {
 
 		$('form').append(html);
 		form.render();
-		setHtml(html)
+		setHtml(html);
+		$('.js-show').text(jscode())
 	})
 
 	function delHtml() {
@@ -72,6 +234,74 @@ layui.define(['layer', 'form'], function(exports) {
 		})
 		$('.code-show').text('<form class="layui-form" action="" onsubmit="return false">\n' + _d + '</form>')
 
+	}
+
+	function icon(size) {
+		var html = '  <div class="layui-form-item">\n' +
+			'    <label class="layui-form-label">图标选择</label>\n' +
+			'    <div class="layui-input-' + size + '">\n' +
+			'      <input name="'+key+'" id="'+key+'" />\n' +
+			'    </div>\n' +
+			'  </div>\n';
+		return html;
+	}
+
+	function multiSelect(size) {
+		var html = '  <div class="layui-form-item">\n' +
+			'    <label class="layui-form-label">下拉多选</label>\n' +
+			'    <div class="layui-input-' + size + '">\n' +
+			'      <div name="'+key+'" id="'+key+'" ></div>\n' +
+			'    </div>\n' +
+			'  </div>\n';
+		return html;
+	}
+
+	function tree(size) {
+		var html = '  <div class="layui-form-item">\n' +
+			'    <label class="layui-form-label">树多选</label>\n' +
+			'    <div class="layui-input-' + size + '">\n' +
+			'      <div name="'+key+'" id="'+key+'" ></div>\n' +
+			'    </div>\n' +
+			'  </div>\n';
+		return html;
+	}
+
+	function treeSelectOne(size) {
+		var html = '  <div class="layui-form-item">\n' +
+			'    <label class="layui-form-label">树单选</label>\n' +
+			'    <div class="layui-input-' + size + '">\n' +
+			'      <div name="'+key+'" id="'+key+'" ></div>\n' +
+			'    </div>\n' +
+			'  </div>\n';
+		return html;
+	}
+
+	function upload(size) {
+		var html = '  <div class="layui-form-item">\n' +
+			'    <label class="layui-form-label">上传文件</label>\n' +
+			'    <div class="layui-input-' + size + '">\n' +
+			'      <span></span>\n' +
+			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
+			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'">\n' +
+			'      <i class="layui-icon">&#xe67c;</i>上传文件\n' +
+			'      </button>\n' +
+			'    </div>\n' +
+			'  </div>\n';
+		return html;
+	}
+
+	function uploadImg(size) {
+		var html = '  <div class="layui-form-item">\n' +
+			'    <label class="layui-form-label">上传图片</label>\n' +
+			'    <div class="layui-input-' + size + '">\n' +
+			'      <img style="max-width:90px;max-height:90px;" src=""/>\n' +
+			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
+			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'">\n' +
+			'      <i class="layui-icon">&#xe67c;</i>上传图片\n' +
+		    '      </button>\n' +
+			'    </div>\n' +
+			'  </div>\n';
+		return html;
 	}
 
 	function input(type, size) {
@@ -149,8 +379,8 @@ layui.define(['layer', 'form'], function(exports) {
 	function submits(size) {
 		var html = '  <div class="layui-form-item">\n' +
 			'    <div class="layui-input-' + size + '">\n' +
-			'      <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>\n' +
-			'      <button type="reset" class="layui-btn layui-btn-primary">重置</button>\n' +
+			'      <button class="pear-btn pear-btn-primary" lay-submit="" lay-filter="formDemo">立即提交</button>\n' + //变更
+			'      <button type="reset" class="pear-btn">重置</button>\n' + //变更
 			'    </div>\n' +
 			'  </div>\n';
 		return html;
@@ -158,8 +388,10 @@ layui.define(['layer', 'form'], function(exports) {
 
 	function jscode() {
 		var html = '<script>\n' +
-			'  layui.use(\'form\', function(){\n' +
+			'  layui.use('+JSON.stringify(module)+', function(){\n' +
 			'    var form = layui.form;\n' +
+			''+ js +
+			'    // 提交表单\n' +
 			'    form.on(\'submit(formDemo)\', function(data){\n' +
 			'      layer.msg(JSON.stringify(data.field));\n' +
 			'      return false;\n' +
@@ -170,10 +402,8 @@ layui.define(['layer', 'form'], function(exports) {
 	}
 
 	function randStrName() {
-		return Math.random().toString(36).substr(8);
+		return 'a' + Math.random().toString(36).substr(9);
 	}
-	var jscodehtml = jscode();
-	$('.js-show').text(jscodehtml)
 	form.on('submit(formDemo)', function(data) {
 		layer.msg(JSON.stringify(data.field));
 		return false;
