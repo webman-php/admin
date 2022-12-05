@@ -45,6 +45,22 @@ class UploadController extends Crud
     }
 
     /**
+     * 查询
+     * @param Request $request
+     * @return Response
+     * @throws BusinessException
+     */
+    public function select(Request $request): Response
+    {
+        [$where, $format, $page_size, $field, $order] = $this->selectInput($request);
+        if (!empty($where['ext']) && is_string($where['ext'])) {
+            $where['ext'] = ['in', explode(',', $where['ext'])];
+        }
+        $query = $this->doSelect($where, $field, $order);
+        return $this->doFormat($query, $format, $page_size);
+    }
+
+    /**
      * 插入
      * @param Request $request
      * @return Response
@@ -105,6 +121,9 @@ class UploadController extends Crud
      */
     public function attachment(Request $request): Response
     {
+        if ($request->method() === 'GET') {
+            return view('upload/attachment');
+        }
         $file = current($request->file());
         if (!$file || !$file->isValid()) {
             return $this->json(1, '未找到文件');

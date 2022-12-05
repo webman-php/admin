@@ -261,6 +261,9 @@ EOF;
         <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="$id">
             <i class="layui-icon">&#xe67c;</i>上传图片
         </button>
+        <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-$id">
+            <i class="layui-icon">&#xe649;</i>选择图片
+        </button>
     </div>
 </div>
 
@@ -271,6 +274,19 @@ EOF;
 layui.use(["upload", "layer", "jquery"], function() {
     let input = layui.jquery("#$id").prev();
     input.prev().attr("src", input.val());
+    layui.jquery("#attachment-choose-$id").on('click', function() {
+        parent.layer.open({
+            type: 2,
+            title: "选择附件",
+            content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",
+            area: ["95%", "90%"],
+            success: function (layero, index) {
+                parent.layui.$("#layui-layer" + index).data("callback", function (data) {
+                    input.val(data.url).prev().attr("src", data.url);
+                });
+            }
+        });
+    });
     layui.upload.render({
         elem: "#$id",$options_string
         done: function (res) {
