@@ -42,6 +42,9 @@
                             <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="avatar">
                                 <i class="layui-icon">&#xe67c;</i>上传图片
                             </button>
+                            <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-avatar">
+                                <i class="layui-icon">&#xe649;</i>选择附件
+                            </button>
                         </div>
                     </div>
                     
@@ -94,6 +97,19 @@
             layui.use(["upload", "layer"], function() {
                 let input = layui.$("#avatar").prev();
                 input.prev().attr("src", input.val());
+                layui.$("#attachment-choose-avatar").on('click', function() {
+                    parent.layer.open({
+                        type: 2,
+                        title: "选择附件",
+                        content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",
+                        area: ["95%", "90%"],
+                        success: function (layero, index) {
+                            parent.layui.$("#layui-layer" + index).data("callback", function (data) {
+                                input.val(data.url).prev().attr("src", data.url);
+                            });
+                        }
+                    });
+                });
                 layui.upload.render({
                     elem: "#avatar",
                     url: '/app/admin/upload/avatar',
