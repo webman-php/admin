@@ -121,7 +121,7 @@ layui.define(['layer', 'form'], function(exports) {
 					'       model: {"icon":"hidden","label":{"type":"text"}},\n' +
 					'       clickClose: true,\n' +
 					'       radio: true,\n' +
-					'       tree: {show: true, strict: false, clickCheck: true, clickExpand: false}\n' +
+					'       tree: {show: true, strict: false, clickCheck: true, clickExpand: false},\n' +
 					'       data: [{value: 1, name: "广东省", children:[{value: 2, name: "深圳"},{value: 3, name: "广州"}]},{value: 4, name: "福建省", children:[{value: 5, name: "厦门"},{value: 6, name: "福州"}]}],\n' +
 					'    });\n';
 				$('.js-show').text(jscode())
@@ -173,7 +173,7 @@ layui.define(['layer', 'form'], function(exports) {
 					'            input.val(data.url).prev().html(layui.util.escape(data.url));\n' +
 					'          });\n' +
 					'        }\n' +
-					'	   });\n' +
+					'      });\n' +
 					'    });\n' +
 					'    layui.upload.render({\n' +
 					'       elem: "#' + key + '",\n' +
@@ -232,7 +232,7 @@ layui.define(['layer', 'form'], function(exports) {
 					'            input.val(data.url).prev().attr("src", data.url);\n' +
 					'          });\n' +
 					'        }\n' +
-					'	   });\n' +
+					'      });\n' +
 					'    });\n' +
 					'    layui.upload.render({\n' +
 					'       elem: "#' + key + '",\n' +
