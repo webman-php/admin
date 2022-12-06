@@ -19,7 +19,7 @@ class AdminRuleController extends Crud
      *
      * @var string[]
      */
-    public $noNeedAuth = ['get', 'controller'];
+    public $noNeedAuth = ['get', 'permission'];
 
     /**
      * @var AdminRule
@@ -104,7 +104,7 @@ class AdminRuleController extends Crud
      * @param Request $request
      * @return Response
      */
-    public function controller(Request $request): Response
+    public function permission(Request $request): Response
     {
         $controller = $request->get('controller');
         if (!$controller) {
