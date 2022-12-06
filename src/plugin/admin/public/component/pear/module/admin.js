@@ -73,6 +73,7 @@ layui.define(['message', 'table', 'jquery', 'element', 'yaml', 'form', 'tab', 'm
 			this.logoRender = function(param) {
 				$(".layui-logo .logo").attr("src", param.logo.image);
 				$(".layui-logo .title").html(param.logo.title);
+				$("title").html(param.logo.title); //变更
 			}
 
 			this.menuRender = function(param) {
