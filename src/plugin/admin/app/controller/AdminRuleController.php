@@ -219,6 +219,7 @@ class AdminRuleController extends Crud
             return view('admin-rule/insert');
         }
         $data = $this->insertInput($request);
+        $data['key'] = str_replace('\\\\', '\\', $data['key']);
         $key = $data['key'] ?? '';
         if ($this->model->where('key', $key)->first()) {
             return $this->json(1, "菜单标识 $key 已经存在");
@@ -246,6 +247,9 @@ class AdminRuleController extends Crud
         $data['pid'] = $data['pid'] ?: 0;
         if ($data['pid'] == $row['id']) {
             return $this->json(2, '不能将自己设置为上级菜单');
+        }
+        if (isset($data['key'])) {
+            $data['key'] = str_replace('\\\\', '\\', $data['key']);
         }
         $this->doUpdate($id, $data);
         return $this->json(0);

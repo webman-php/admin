@@ -107,6 +107,7 @@
 
             // 相关接口
             const PRIMARY_KEY = 'id';
+            const CONTROLLER = "plugin\\admin\\app\\controller\\UploadController";
             const SELECT_API = "/app/admin/upload/select";
             const UPDATE_API = "/app/admin/upload/update";
             const DELETE_API = "/app/admin/upload/delete";
@@ -224,11 +225,11 @@
 						field: "updated_at",
 						hide: true,
 					},{
-						title: "操作",
-						toolbar: "#table-bar",
-						align: "center",
-						fixed: "right",
-					}
+                        title: "操作",
+                        toolbar: "#table-bar",
+                        align: "center",
+                        fixed: "right",
+                    }
 				];
 				
 				// 渲染表格
@@ -288,7 +289,7 @@
 				    render();
 				}
 				
-                // 编辑或删除行事件
+                // 编辑删除或选择行事件
                 table.on('tool(data-table)', function(obj) {
                     if (obj.event === 'remove') {
                         remove(obj);

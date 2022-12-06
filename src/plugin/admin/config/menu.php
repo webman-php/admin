@@ -83,7 +83,21 @@ return [
                 'href' => '/app/admin/config/index',
                 'type' => 1,
                 'weight' => 700,
-            ]
+            ],
+            [
+                'title' => '附件管理',
+                'key' => 'plugin\\admin\\app\\controller\\UploadController',
+                'href' => '/app/admin/upload/index',
+                'type' => 1,
+                'weight' => 600,
+            ],
+            [
+                'title' => '字典设置',
+                'key' => 'plugin\\admin\\app\\controller\\DictController',
+                'href' => '/app/admin/dict/index',
+                'type' => 1,
+                'weight' => 500,
+            ],
         ]
     ],
     [

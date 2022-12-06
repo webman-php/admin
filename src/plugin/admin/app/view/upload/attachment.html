@@ -34,14 +34,14 @@
                             <input type="text" name="name" value="" class="layui-input">
                         </div>
                     </div>
-                    
+
                     <div class="layui-form-item">
                         <label class="layui-form-label">管理员id</label>
                         <div class="layui-input-block">
                             <input type="number" name="admin_id" value="" class="layui-input">
                         </div>
                     </div>
-                    
+
                     <div class="layui-form-item">
                         <label class="layui-form-label">上传时间</label>
                         <div class="layui-input-block">
@@ -77,6 +77,16 @@
             </div>
         </div>
 
+        <!-- 表格顶部工具栏 -->
+        <script type="text/html" id="table-toolbar">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="insert">
+                <i class="layui-icon layui-icon-add-1"></i>新增
+            </button>
+            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="delete">
+                <i class="layui-icon layui-icon-delete"></i>删除
+            </button>
+        </script>
+
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
             <button class="pear-btn pear-btn-xs pear-btn-primary" lay-event="select">选择</button>
@@ -89,14 +99,15 @@
 
             // 相关接口
             const PRIMARY_KEY = 'id';
+            const CONTROLLER = "plugin\\admin\\app\\controller\\UploadController";
             const SELECT_API = "/app/admin/upload/select";
             const UPDATE_API = "/app/admin/upload/update";
             const DELETE_API = "/app/admin/upload/delete";
             const INSERT_URL = "/app/admin/upload/insert";
             const UPDATE_URL = "/app/admin/upload/update";
-
+            
             // 表格渲染
-            layui.use(['table', 'form', 'common', 'popup', 'util', 'laydate', 'xmSelect'], function() {
+            layui.use(['table', 'form', 'common', 'popup', 'util'], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -104,35 +115,39 @@
                 let util = layui.util;
 
                 // 字段 上传时间 created_at
-                layui.laydate.render({
-                    elem: "#created_at",
-                    range: ["#created_at-date-start", "#created_at-date-end"],
-                    type: 'datetime',
-                });
+                layui.use(["laydate"], function() {
+                    layui.laydate.render({
+                        elem: "#created_at",
+                        range: ["#created_at-date-start", "#created_at-date-end"],
+                        type: 'datetime',
+                    });
+                })
 
                 // 字段 类别 category
-                $.ajax({
-                    url: "/app/admin/dict/get/upload",
-                    dataType: "json",
-                    success: function (e) {
-                        let value = layui.$("#category").attr("value");
-                        let initValue = value ? value.split(",") : [];
-                        layui.xmSelect.render({
-                            el: "#category",
-                            name: "category",
-                            initValue: initValue,
-                            data: e.data,
-                            model: {"icon":"hidden","label":{"type":"text"}},
-                            clickClose: 'true',
-                            radio: 'true',
-                            on: function(data){
-                                let value = data.arr[0] ? data.arr[0].value : '';
-                                table.reload('data-table', {
-                                    where: {category: value}
-                                })
-                            },
-                        })
-                    }
+                layui.use(["jquery", "xmSelect"], function() {
+                    layui.$.ajax({
+                        url: "/app/admin/dict/get/upload",
+                        dataType: "json",
+                        success: function (e) {
+                            let value = layui.$("#category").attr("value");
+                            let initValue = value ? value.split(",") : [];
+                            layui.xmSelect.render({
+                                el: "#category",
+                                name: "category",
+                                initValue: initValue,
+                                data: e.data,
+                                model: {"icon":"hidden","label":{"type":"text"}},
+                                clickClose: 'true',
+                                radio: 'true',
+                                on: function(data){
+                                    let value = data.arr[0] ? data.arr[0].value : '';
+                                    table.reload('data-table', {
+                                        where: {category: value}
+                                    })
+                                },
+                            })
+                        }
+                    });
                 });
                 
 				// 表头参数
@@ -208,11 +223,11 @@
 						field: "updated_at",
 						hide: true,
 					},{
-						title: "操作",
-						toolbar: "#table-bar",
-						align: "center",
-						fixed: "right",
-					}
+                        title: "操作",
+                        toolbar: "#table-bar",
+                        align: "center",
+                        fixed: "right",
+                    }
 				];
 				
 				// 渲染表格
@@ -230,6 +245,7 @@
 				        cols: [cols],
 				        skin: "line",
 				        size: "lg",
+				        toolbar: "#table-toolbar",
 				        autoSort: false,
                         where: {ext: searchExt},
 				        defaultToolbar: [{
@@ -277,12 +293,15 @@
 				    render();
 				}
 				
-                // 编辑或删除行事件
+                // 编辑删除或选择行事件
                 table.on('tool(data-table)', function(obj) {
-                    let index = parent.layer.getFrameIndex(window.name);
-                    let callback = parent.layui.$("#layui-layer" + index).data("callback");
-                    callback(obj.data);
-                    parent.layer.close(index);
+                    if (obj.event === 'remove') {
+                        remove(obj);
+                    } else if (obj.event === 'edit') {
+                        edit(obj);
+                    } else if (obj.event === 'select') {
+                        select(obj);
+                    }
                 });
 
                 // 表格顶部工具栏事件
@@ -386,6 +405,14 @@
                         })
                     });
                 }
+
+                // 选择行
+                let select = function (obj) {
+                    let index = parent.layer.getFrameIndex(window.name);
+                    let callback = parent.layui.$("#layui-layer" + index).data("callback");
+                    callback(obj.data);
+                    parent.layer.close(index);
+                };
 
                 // 刷新表格数据
                 window.refreshTable = function(param) {
