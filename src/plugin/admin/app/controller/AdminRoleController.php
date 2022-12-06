@@ -8,7 +8,7 @@ use support\Request;
 use support\Response;
 
 /**
- * 管理员角色设置
+ * 角色管理
  */
 class AdminRoleController extends Crud
 {
@@ -29,7 +29,7 @@ class AdminRoleController extends Crud
      * 浏览
      * @return Response
      */
-    public function index()
+    public function index(): Response
     {
         return view('admin-role/index');
     }
@@ -38,6 +38,7 @@ class AdminRoleController extends Crud
      * 插入
      * @param Request $request
      * @return Response
+     * @throws BusinessException
      */
     public function insert(Request $request): Response
     {
