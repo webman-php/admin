@@ -27,7 +27,7 @@ class Upload extends Base
      *
      * @var string
      */
-    protected $table = 'upload';
+    protected $table = 'wa_uploads';
 
     /**
      * The primary key associated with the table.
