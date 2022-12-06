@@ -2,16 +2,19 @@
 
 namespace plugin\admin\app\model;
 
+use plugin\admin\app\model\Base;
+
 /**
  * @property integer $id 主键(主键)
  * @property string $title 标题
- * @property string $key key，全局唯一
- * @property integer $pid 上级id
  * @property string $icon 图标
+ * @property string $key 标识
+ * @property integer $pid 上级菜单
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
  * @property string $href url
  * @property integer $type 类型
+ * @property integer $weight 排序
  */
 class AdminRule extends Base
 {
@@ -28,6 +31,8 @@ class AdminRule extends Base
      * @var string
      */
     protected $primaryKey = 'id';
+    
+    
     
     
 }
