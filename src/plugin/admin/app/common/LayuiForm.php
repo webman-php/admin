@@ -539,8 +539,8 @@ EOF;
                 'type' => 'text',
             ]
         ], $options['props']['model'] ?? []);
-        $options['props']['clickClose'] = $options['props']['clickClose'] ?? 'true';
-        $options['props']['radio'] = $options['props']['radio'] ?? 'true';
+        $options['props']['clickClose'] = $options['props']['clickClose'] ?? true;
+        $options['props']['radio'] = $options['props']['radio'] ?? true;
         $this->apiSelect($options);
     }
 
@@ -569,8 +569,8 @@ EOF;
                 'type' => 'text',
             ]
         ], $options['props']['model'] ?? []);
-        $options['props']['clickClose'] = $options['props']['clickClose'] ?? 'true';
-        $options['props']['radio'] = $options['props']['radio'] ?? 'true';
+        $options['props']['clickClose'] = $options['props']['clickClose'] ?? true;
+        $options['props']['radio'] = $options['props']['radio'] ?? true;
         $options['props']['tree'] = array_merge_recursive([
             'show' => true,
             'strict' => false,
@@ -612,8 +612,10 @@ EOF;
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $options_string .= "\r\n".($url?'                ':'        ')."$key: $item,";
-            } else {
+            } else if (is_string($item)) {
                 $options_string .= "\r\n".($url?'                ':'        ')."$key: \"$item\",";
+            } else {
+                $options_string .= "\r\n".($url?'                ':'        ')."$key: ".var_export($item, true).",";
             }
         }
 
@@ -816,8 +818,8 @@ EOF;
                 $props = Util::getProps($info['control'], $info['control_args']);
 
                 if (isset($props['url'])) {
-                    $api .= "apis.push(['$field', '{$props['url']}']);\r\n";
-                    $api_result .= "apiResults['$field'] = [];\r\n";
+                    $api .= "apis.push([\"$field\", \"{$props['url']}\"]);\r\n";
+                    $api_result .= "apiResults[\"$field\"] = [];\r\n";
                 } else if (!empty($props['data'])) {
                     $options = [];
                     foreach ($props['data'] as $option) {
@@ -825,7 +827,7 @@ EOF;
                             $options[$option['value']] = $option['name'];
                         }
                     }
-                    $api_result .= "apiResults['$field'] = " . json_encode($options, JSON_UNESCAPED_UNICODE) . ";\r\n";
+                    $api_result .= "apiResults[\"$field\"] = " . json_encode($options, JSON_UNESCAPED_UNICODE) . ";\r\n";
                 }
 
                 $templet = <<<EOF
