@@ -816,8 +816,8 @@ EOF;
                 $props = Util::getProps($info['control'], $info['control_args']);
 
                 if (isset($props['url'])) {
-                    $api .= "apis.push(['$field', '{$props['url']}']);";
-                    $api_result .= "apiResults['$field'] = [];";
+                    $api .= "apis.push(['$field', '{$props['url']}']);\r\n";
+                    $api_result .= "apiResults['$field'] = [];\r\n";
                 } else if (!empty($props['data'])) {
                     $options = [];
                     foreach ($props['data'] as $option) {

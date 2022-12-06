@@ -775,8 +775,8 @@ EOF
         <script>
 
             // 相关常量
-            const PRIMARY_KEY = '$primary_key';
-            const CONTROLLER = '$controller_class_with_namespace';
+            const PRIMARY_KEY = "$primary_key";
+            const CONTROLLER = "$controller_class_with_namespace";
             const SELECT_API = "$url_path_base/$template_path/select";
             const UPDATE_API = "$url_path_base/$template_path/update";
             const DELETE_API = "$url_path_base/$template_path/delete";
@@ -784,7 +784,7 @@ EOF
             const UPDATE_URL = "$url_path_base/$template_path/update";
             $js
             // 表格渲染
-            layui.use(['table', 'form', 'common', 'popup', 'util'], function() {
+            layui.use(["table", "form", "common", "popup", "util"], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -792,45 +792,45 @@ EOF
                 let util = layui.util;
                 $table_js
                 // 编辑或删除行事件
-                table.on('tool(data-table)', function(obj) {
-                    if (obj.event === 'remove') {
+                table.on("tool(data-table)", function(obj) {
+                    if (obj.event === "remove") {
                         remove(obj);
-                    } else if (obj.event === 'edit') {
+                    } else if (obj.event === "edit") {
                         edit(obj);
                     }
                 });
 
                 // 表格顶部工具栏事件
-                table.on('toolbar(data-table)', function(obj) {
-                    if (obj.event === 'add') {
+                table.on("toolbar(data-table)", function(obj) {
+                    if (obj.event === "add") {
                         add();
-                    } else if (obj.event === 'refresh') {
+                    } else if (obj.event === "refresh") {
                         refreshTable();
-                    } else if (obj.event === 'batchRemove') {
+                    } else if (obj.event === "batchRemove") {
                         batchRemove(obj);
                     }
                 });
 
                 // 表格顶部搜索事件
-                form.on('submit(table-query)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-query)", function(data) {
+                    table.reload("data-table", {
                         where: data.field
                     })
                     return false;
                 });
                 
                 // 表格顶部搜索重置事件
-                form.on('submit(table-reset)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-reset)", function(data) {
+                    table.reload("data-table", {
                         where: []
                     })
                 });
 
                 // 表格排序事件
-                table.on('sort(data-table)', function(obj){
-                    table.reload('data-table', {
+                table.on("sort(data-table)", function(obj){
+                    table.reload("data-table", {
                         initSort: obj,
-                        scrollPos: 'fixed',
+                        scrollPos: "fixed",
                         where: {
                             field: obj.field,
                             order: obj.type
@@ -842,9 +842,9 @@ EOF
                 let add = function() {
                     layer.open({
                         type: 2,
-                        title: '新增',
+                        title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'450px'],
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
                         content: INSERT_URL
                     });
                 }
@@ -854,10 +854,10 @@ EOF
                     let value = obj.data[PRIMARY_KEY];
                     layer.open({
                         type: 2,
-                        title: '修改',
+                        title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'450px'],
-                        content: UPDATE_URL + '?' + PRIMARY_KEY + '=' + value
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
 
@@ -870,33 +870,33 @@ EOF
                 let batchRemove = function(obj) {
                     let checkIds = common.checkField(obj, PRIMARY_KEY);
                     if (checkIds === "") {
-                        layui.popup.warning('未选中数据');
+                        layui.popup.warning("未选中数据");
                         return false;
                     }
-                    doRemove(checkIds.split(','));
+                    doRemove(checkIds.split(","));
                 }
 
                 // 执行删除
                 let doRemove = function (ids) {
                     let data = {};
                     data[PRIMARY_KEY] = ids;
-                    layer.confirm('确定删除?', {
+                    layer.confirm("确定删除?", {
                         icon: 3,
-                        title: '提示'
+                        title: "提示"
                     }, function(index) {
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
                             url: DELETE_API,
                             data: data,
-                            dataType: 'json',
-                            type: 'post',
+                            dataType: "json",
+                            type: "post",
                             success: function(res) {
                                 layer.close(loading);
                                 if (res.code) {
                                     return layui.popup.failure(res.msg);
                                 }
-                                return layui.popup.success('操作成功', refreshTable);
+                                return layui.popup.success("操作成功", refreshTable);
                             }
                         })
                     });
@@ -904,8 +904,8 @@ EOF
 
                 // 刷新表格数据
                 window.refreshTable = function(param) {
-                    table.reloadData('data-table', {
-                        scrollPos: 'fixed'
+                    table.reloadData("data-table", {
+                        scrollPos: "fixed"
                     });
                 }
             })
@@ -961,18 +961,18 @@ EOF;
             const INSERT_API = "$url_path_base/$template_path/insert";
             $js
             //提交事件
-            layui.use(['form', 'popup'], function () {
-                layui.form.on('submit(save)', function (data) {
+            layui.use(["form", "popup"], function () {
+                layui.form.on("submit(save)", function (data) {
                     layui.$.ajax({
                         url: INSERT_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });
@@ -1031,30 +1031,30 @@ EOF;
         <script>
 
             // 相关接口
-            const PRIMARY_KEY = '$primary_key';
+            const PRIMARY_KEY = "$primary_key";
             const SELECT_API = "$url_path_base/$template_path/select" + location.search;
             const UPDATE_API = "$url_path_base/$template_path/update";
 
             // 获取数据库记录
-            layui.use(['form', 'util'], function () {
+            layui.use(["form", "util"], function () {
                 let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,
-                    dataType: 'json',
+                    dataType: "json",
                     success: function (e) {
                         
                         // 给表单初始化数据
                         layui.each(e.data[0], function (key, value) {
                             let obj = $('*[name="'+key+'"]');
-                            if (key === 'password') {
-                                obj.attr('placeholder', '不更新密码请留空');
+                            if (key === "password") {
+                                obj.attr("placeholder", "不更新密码请留空");
                                 return;
                             }
-                            if (typeof obj[0] === 'undefined' || !obj[0].nodeName) return;
-                            if (obj[0].nodeName.toLowerCase() === 'textarea') {
+                            if (typeof obj[0] === "undefined" || !obj[0].nodeName) return;
+                            if (obj[0].nodeName.toLowerCase() === "textarea") {
                                 obj.val(layui.util.escape(value));
                             } else {
-                                obj.attr('value', value);
+                                obj.attr("value", value);
                             }
                         });
                         $js
@@ -1064,19 +1064,19 @@ EOF;
             });
 
             //提交事件
-            layui.use(['form', 'popup'], function () {
-                layui.form.on('submit(save)', function (data) {
+            layui.use(["form", "popup"], function () {
+                layui.form.on("submit(save)", function (data) {
                     data.field[PRIMARY_KEY] = layui.url().search[PRIMARY_KEY];
                     layui.$.ajax({
                         url: UPDATE_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });

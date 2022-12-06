@@ -6,10 +6,10 @@ use plugin\admin\app\model\Base;
 
 /**
  * @property integer $id 主键(主键)
- * @property string $name 名字
+ * @property string $name 名称
  * @property string $url url
- * @property integer $admin_id 管理员id
- * @property integer $user_id 用户id
+ * @property integer $admin_id 管理员
+ * @property integer $user_id 用户
  * @property integer $file_size 文件大小
  * @property string $mime_type mime类型
  * @property integer $image_width 图片宽度

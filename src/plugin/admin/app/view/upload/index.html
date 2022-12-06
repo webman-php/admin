@@ -13,32 +13,32 @@
         <div class="layui-card">
             <div class="layui-card-body">
                 <form class="layui-form top-search-from">
-                    
+
                     <div class="layui-form-item">
-                        <label class="layui-form-label">主键</label>
+                        <label class="layui-form-label">类别</label>
                         <div class="layui-input-block">
-                            <input type="number" name="id" value="" class="layui-input">
+                            <div name="category" id="category" value="" ></div>
                         </div>
                     </div>
-                    
+
                     <div class="layui-form-item">
                         <label class="layui-form-label">名字</label>
                         <div class="layui-input-block">
                             <input type="text" name="name" value="" class="layui-input">
                         </div>
                     </div>
-                    
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">管理员id</label>
-                        <div class="layui-input-block">
-                            <input type="number" name="admin_id" value="" class="layui-input">
-                        </div>
-                    </div>
-                    
+
                     <div class="layui-form-item">
                         <label class="layui-form-label">扩展名</label>
                         <div class="layui-input-block">
                             <input type="text" name="ext" value="" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">管理员</label>
+                        <div class="layui-input-block">
+                            <div name="admin_id" id="admin_id" value="" ></div>
                         </div>
                     </div>
                     
@@ -50,13 +50,6 @@
                                 -
                                 <input type="text" autocomplete="off" name="created_at[]" id="created_at-date-end" class="layui-input inline-block" placeholder="结束时间">
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">类别</label>
-                        <div class="layui-input-block">
-                            <div name="category" id="category" value="" ></div>
                         </div>
                     </div>
                     
@@ -122,6 +115,27 @@
                     type: 'datetime',
                 });
             })
+
+            // 字段 管理员 admin_id
+            layui.use(["jquery", "xmSelect"], function() {
+                layui.$.ajax({
+                    url: "/app/admin/admin/select?format=select",
+                    dataType: "json",
+                    success: function (e) {
+                        let value = layui.$("#admin_id").attr("value");
+                        let initValue = value ? value.split(",") : [];
+                        layui.xmSelect.render({
+                            el: "#admin_id",
+                            name: "admin_id",
+                            initValue: initValue,
+                            data: e.data,
+                            model: {"icon":"hidden","label":{"type":"text"}},
+                            clickClose: 'true',
+                            radio: 'true',
+                        })
+                    }
+                });
+            });
             
             // 字段 类别 category
             layui.use(["jquery", "xmSelect"], function() {
@@ -256,10 +270,12 @@
 				}
 				
 				// 获取表格中下拉或树形组件数据
-				let apis = [];
-				apis.push(['category', '/app/admin/dict/get/upload']);
-				let apiResults = {};
-				apiResults['category'] = [];
+                let apis = [];
+                apis.push(['admin_id', '/app/admin/admin/select?format=select']);
+                apis.push(['category', '/app/admin/dict/get/upload']);
+                let apiResults = {};
+                apiResults['admin_id'] = [];
+                apiResults['category'] = [];
 				let count = apis.length;
 				layui.each(apis, function (k, item) {
 				    let [field, url] = item;
