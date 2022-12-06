@@ -191,7 +191,7 @@ EOF;
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $options_string .= "\r\n        $key: $item,";
             } else {
-                $options_string .= "\r\n        $key: '$item',";
+                $options_string .= "\r\n        $key: \"$item\",";
             }
         }
 
@@ -263,7 +263,7 @@ EOF;
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $options_string .= "\r\n        $key: $item,";
             } else {
-                $options_string .= "\r\n        $key: '$item',";
+                $options_string .= "\r\n        $key: \"$item\",";
             }
         }
 
@@ -342,7 +342,7 @@ EOF;
             if (is_array($item)) {
                 continue;
             }
-            $options_string .= "\r\n        $key: '$item',";
+            $options_string .= "\r\n        $key: \"$item\",";
         }
         $id = $this->createId($field);
 
@@ -396,7 +396,7 @@ EOF;
             if (is_array($item)) {
                 continue;
             }
-            $options_string .= "\r\n        $key: '$item',";
+            $options_string .= "\r\n        $key: \"$item\",";
         }
         $id = $this->createId($field);
         $id_start = "$id-date-start";
@@ -455,7 +455,7 @@ EOF;
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $options_string .= "\r\n                $key: $item,";
             } else {
-                $options_string .= "\r\n                $key: '$item',";
+                $options_string .= "\r\n                $key: \"$item\",";
             }
         }
 
@@ -613,7 +613,7 @@ EOF;
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $options_string .= "\r\n".($url?'                ':'        ')."$key: $item,";
             } else {
-                $options_string .= "\r\n".($url?'                ':'        ')."$key: '$item',";
+                $options_string .= "\r\n".($url?'                ':'        ')."$key: \"$item\",";
             }
         }
 
