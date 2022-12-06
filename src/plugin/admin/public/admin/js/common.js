@@ -36,9 +36,7 @@ function toggleSearchFormShow()
  * 获取控制器详细权限，并决定展示哪些按钮或dom元素
  */
 layui.$(function () {
-    console.trace();
-    console.log(CONTROLLER);
-    //if (!window.CONTROLLER) return;
+    if (typeof CONTROLLER === "undefined") return;
     let $ = layui.$;
     $.ajax({
         url: "/app/admin/admin-rule/permission",

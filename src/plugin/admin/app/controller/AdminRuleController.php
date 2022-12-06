@@ -120,7 +120,7 @@ class AdminRuleController extends Crud
         $keys = AdminRule::where('key', 'like', "$controller_search%")
             ->whereIn('id', $rules)->pluck('key');
         $permissions = [];
-        $prefix_length = strlen($controller);
+        $prefix_length = strlen($controller) + 1;
         foreach ($keys as $key) {
             if ($key === $controller) {
                 $permissions = ['*'];
