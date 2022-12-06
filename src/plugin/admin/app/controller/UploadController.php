@@ -17,11 +17,6 @@ use support\Response;
 class UploadController extends Crud
 {
     /**
-     * 不需要鉴权的方法
-     */
-    public $noNeedAuth = ['insert'];
-    
-    /**
      * @var Upload
      */
     protected $model = null;
@@ -87,35 +82,6 @@ class UploadController extends Crud
     }
 
     /**
-     * 上传文件
-     * @param Request $request
-     * @return Response
-     * @throws Exception
-     */
-    public function file(Request $request): Response
-    {
-        $file = current($request->file());
-        if (!$file || !$file->isValid()) {
-            return $this->json(1, '未找到文件');
-        }
-        $img_exts = [
-            'jpg',
-            'jpeg',
-            'png',
-            'gif'
-        ];
-        if (in_array($file->getUploadExtension(), $img_exts)) {
-            return $this->image($request);
-        }
-        $data = $this->base($request, '/upload/files/'.date('Ymd'));
-        return $this->json(0, '上传成功', [
-            'url' => $data['url'],
-            'name' => $data['name'],
-            'size' => $data['size'],
-        ]);
-    }
-
-    /**
      * 添加附件
      * @param Request $request
      * @return Response
@@ -150,6 +116,74 @@ class UploadController extends Crud
             'url' => $data['url'],
             'name' => $data['name'],
             'size' => $data['size'],
+        ]);
+    }
+
+    /**
+     * 上传文件
+     * @param Request $request
+     * @return Response
+     * @throws Exception
+     */
+    public function file(Request $request): Response
+    {
+        $file = current($request->file());
+        if (!$file || !$file->isValid()) {
+            return $this->json(1, '未找到文件');
+        }
+        $img_exts = [
+            'jpg',
+            'jpeg',
+            'png',
+            'gif'
+        ];
+        if (in_array($file->getUploadExtension(), $img_exts)) {
+            return $this->image($request);
+        }
+        $data = $this->base($request, '/upload/files/'.date('Ymd'));
+        return $this->json(0, '上传成功', [
+            'url' => $data['url'],
+            'name' => $data['name'],
+            'size' => $data['size'],
+        ]);
+    }
+
+    /**
+     * 上传图片
+     * @param Request $request
+     * @return Response
+     * @throws Exception
+     */
+    public function image(Request $request): Response
+    {
+        $data = $this->base($request, '/upload/img/'.date('Ymd'));
+        $realpath = $data['realpath'];
+        try {
+            $img = Image::make($realpath);
+            $max_height = 1170;
+            $max_width = 1170;
+            $width = $img->width();
+            $height = $img->height();
+            $ratio = 1;
+            if ($height > $max_height || $width > $max_width) {
+                $ratio = $width > $height ? $max_width / $width : $max_height / $height;
+            }
+            $img->resize($width*$ratio, $height*$ratio)->save($realpath);
+        } catch (Exception $e) {
+            unlink($realpath);
+            return json( [
+                'code'  => 500,
+                'msg'  => '处理图片发生错误'
+            ]);
+        }
+        return json( [
+            'code'  => 0,
+            'msg'  => '上传成功',
+            'data' => [
+                'url' => $data['url'],
+                'name' => $data['name'],
+                'size' => $data['size'],
+            ]
         ]);
     }
 
@@ -204,45 +238,6 @@ class UploadController extends Crud
             ]);
         }
         return json(['code' => 1, 'msg' => 'file not found']);
-    }
-
-    /**
-     * 上传图片
-     * @param Request $request
-     * @return Response
-     * @throws Exception
-     */
-    public function image(Request $request): Response
-    {
-        $data = $this->base($request, '/upload/img/'.date('Ymd'));
-        $realpath = $data['realpath'];
-        try {
-            $img = Image::make($realpath);
-            $max_height = 1170;
-            $max_width = 1170;
-            $width = $img->width();
-            $height = $img->height();
-            $ratio = 1;
-            if ($height > $max_height || $width > $max_width) {
-                $ratio = $width > $height ? $max_width / $width : $max_height / $height;
-            }
-            $img->resize($width*$ratio, $height*$ratio)->save($realpath);
-        } catch (Exception $e) {
-            unlink($realpath);
-            return json( [
-                'code'  => 500,
-                'msg'  => '处理图片发生错误'
-            ]);
-        }
-        return json( [
-            'code'  => 0,
-            'msg'  => '上传成功',
-            'data' => [
-                'url' => $data['url'],
-                'name' => $data['name'],
-                'size' => $data['size'],
-            ]
-        ]);
     }
 
     /**
