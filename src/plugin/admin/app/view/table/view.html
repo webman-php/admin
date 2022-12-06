@@ -37,17 +37,17 @@
         </div>
 
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
 
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove">删除</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="update">编辑</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="delete">删除</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js"></script>
@@ -58,6 +58,7 @@
 
             const TABLE_NAME = "<?=htmlspecialchars($table)?>";
             const PRIMARY_KEY = "<?=htmlspecialchars($primary_key)?>";
+            const CONTROLLER = "plugin\\admin\\app\\controller\\TableController";
             const SELECT_API = "/app/admin/table/select?table=" + TABLE_NAME;
             const UPDATE_API = "/app/admin/table/update";
             const DELETE_API = "/app/admin/table/delete";
