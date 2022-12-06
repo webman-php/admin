@@ -169,7 +169,7 @@
         <script src="/app/admin/admin/js/common.js"></script>
         <script>
 
-            // 相关接口
+            // 相关常量
             const PRIMARY_KEY = 'id';
             const CONTROLLER = 'plugin\\admin\\app\\controller\\UserController';
             const SELECT_API = "/app/admin/user/select";
@@ -369,9 +369,9 @@
 				            layEvent: "refresh",
 				            icon: "layui-icon-refresh",
 				        }, "filter", "print", "exports"],
-                        done: function () {
-                            layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
-                        }
+				        done: function () {
+				            layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
+				        }
 				    });
 				}
 				
@@ -526,7 +526,6 @@
                         scrollPos: 'fixed'
                     });
                 }
-
             })
 
         </script>

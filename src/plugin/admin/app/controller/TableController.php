@@ -730,6 +730,7 @@ EOF
         $html = str_replace("\n", "\n" . str_repeat('    ', 2), $html);
         $js = $form->js(3);
         $table_js = LayuiForm::buildTable($table, 4);
+        $controller_class_with_namespace = str_replace('\\', '\\\\', $controller_class_with_namespace);
         $template_content = <<<EOF
 
 <!DOCTYPE html>
