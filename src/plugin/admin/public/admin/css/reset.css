@@ -97,6 +97,10 @@ a {
     cursor: pointer;
 }
 
+*[permission] {
+    display: none;
+}
+
 /** 左侧菜单 Start **/
 
 .pear-nav-tree .layui-nav-item a span {

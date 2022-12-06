@@ -19,7 +19,7 @@ class AdminRuleController extends Crud
      *
      * @var string[]
      */
-    public $noNeedAuth = ['get'];
+    public $noNeedAuth = ['get', 'controller'];
 
     /**
      * @var AdminRule
@@ -62,7 +62,8 @@ class AdminRuleController extends Crud
      */
     function get(Request $request): Response
     {
-        [$rules, $items] = $this->getRulesAndItems();
+        $rules = $this->getRules(admin('roles'));
+        $items = AdminRule::orderBy('weight', 'desc')->get()->toArray();
         $types = $request->get('type', '0,1');
         $types = is_string($types) ? explode(',', $types) : [0, 1];
         $items_map = [];
@@ -96,6 +97,38 @@ class AdminRuleController extends Crud
             $this->arrayValues($item);
         }
         return $this->json(0, 'ok', $formatted_items);
+    }
+
+    /**
+     * 获取控制器详细权限
+     * @param Request $request
+     * @return Response
+     */
+    public function controller(Request $request): Response
+    {
+        $controller = $request->get('controller');
+        if (!$controller) {
+            return $this->json(0, 'ok', []);
+        }
+        $rules = $this->getRules(admin('roles'));
+        // 超级管理员
+        if (in_array('*', $rules)) {
+            return $this->json(0, 'ok', ['*']);
+        }
+        // 获取详细权限
+        $controller_search = str_replace('\\', '\\\\', $controller);
+        $keys = AdminRule::where('key', 'like', "$controller_search%")
+            ->whereIn('id', $rules)->pluck('key');
+        $permissions = [];
+        $prefix_length = strlen($controller);
+        foreach ($keys as $key) {
+            if ($key === $controller) {
+                $permissions = ['*'];
+                break;
+            }
+            $permissions[] = substr($key, $prefix_length);
+        }
+        return $this->json(0, 'ok', $permissions);
     }
 
     /**
@@ -307,11 +340,11 @@ class AdminRuleController extends Crud
 
     /**
      * 获取权限规则
+     * @param $roles
      * @return array
      */
-    protected function getRulesAndItems(): array
+    protected function getRules($roles): array
     {
-        $roles = admin('roles');
         $rules_strings = $roles ? AdminRole::whereIn('id', $roles)->pluck('rules') : [];
         $rules = [];
         foreach ($rules_strings as $rule_string) {
@@ -320,9 +353,7 @@ class AdminRuleController extends Crud
             }
             $rules = array_merge($rules, explode(',', $rule_string));
         }
-
-        $items = AdminRule::orderBy('weight', 'desc')->get()->toArray();
-        return [$rules, $items];
+        return $rules;
     }
 
     /**
