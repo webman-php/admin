@@ -40,7 +40,7 @@ layui.$(function () {
     $.ajax({
         url: "/app/admin/admin-rule/permission",
         dataType: "json",
-        data: {controller: CONTROLLER},
+        data: {controller: window.CONTROLLER || ''},
         success: function (res) {
             let style = '';
             layui.each(res.data || [], function (k, action) {

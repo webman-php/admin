@@ -485,7 +485,7 @@ class TableController extends Base
         $template_file_path = "$controller_path_base/app/view/$template_path";
         $model_class_with_namespace = "$model_namespace\\$model_class";
         $primary_key = (new $model_class_with_namespace)->getKeyName();
-        $this->createTemplate($template_file_path, $table_name, $template_path, $url_path_base, $primary_key);
+        $this->createTemplate($template_file_path, $table_name, $template_path, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
 
         $reflection = new \ReflectionClass("$controller_namespace\\$controller_class");
         $controller_class_with_nsp = $reflection->getName();
@@ -696,9 +696,10 @@ EOF;
      * @param $template_path
      * @param $url_path_base
      * @param $primary_key
+     * @param $controller_class_with_namespace
      * @return void
      */
-    protected function createTemplate($template_file_path, $table, $template_path, $url_path_base, $primary_key)
+    protected function createTemplate($template_file_path, $table, $template_path, $url_path_base, $primary_key, $controller_class_with_namespace)
     {
         $this->mkdir($template_file_path . '/index.html');
         $form = LayuiForm::buildForm($table, 'search');
@@ -772,8 +773,9 @@ EOF
         <script src="/app/admin/admin/js/common.js"></script>
         <script>
 
-            // 相关接口
+            // 相关常量
             const PRIMARY_KEY = '$primary_key';
+            const CONTROLLER = '$controller_class_with_namespace';
             const SELECT_API = "$url_path_base/$template_path/select";
             const UPDATE_API = "$url_path_base/$template_path/update";
             const DELETE_API = "$url_path_base/$template_path/delete";

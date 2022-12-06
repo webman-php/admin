@@ -106,14 +106,14 @@ class AdminRuleController extends Crud
      */
     public function permission(Request $request): Response
     {
-        $controller = $request->get('controller');
-        if (!$controller) {
-            return $this->json(0, 'ok', []);
-        }
         $rules = $this->getRules(admin('roles'));
         // 超级管理员
         if (in_array('*', $rules)) {
             return $this->json(0, 'ok', ['*']);
+        }
+        $controller = $request->get('controller');
+        if (!$controller) {
+            return $this->json(0, 'ok', []);
         }
         // 获取详细权限
         $controller_search = str_replace('\\', '\\\\', $controller);
