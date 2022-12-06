@@ -19,7 +19,7 @@ class UploadController extends Crud
     /**
      * 不需要鉴权的方法
      */
-    public $noNeedAuth = ['file', 'image'];
+    public $noNeedAuth = ['insert'];
     
     /**
      * @var Upload
@@ -45,7 +45,16 @@ class UploadController extends Crud
     }
 
     /**
-     * 查询
+     * 浏览附件
+     * @return Response
+     */
+    public function attachment(): Response
+    {
+        return view('upload/attachment');
+    }
+
+    /**
+     * 查询附件
      * @param Request $request
      * @return Response
      * @throws BusinessException
@@ -64,17 +73,7 @@ class UploadController extends Crud
     }
 
     /**
-     * 插入
-     * @param Request $request
-     * @return Response
-     */
-    public function insert(Request $request): Response
-    {
-        return view('upload/insert');
-    }
-
-    /**
-     * 更新
+     * 更新附件
      * @param Request $request
      * @return Response
      * @throws BusinessException
@@ -117,15 +116,15 @@ class UploadController extends Crud
     }
 
     /**
-     * 上传附件
+     * 添加附件
      * @param Request $request
      * @return Response
      * @throws Exception
      */
-    public function attachment(Request $request): Response
+    public function insert(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view('upload/attachment');
+            return view('upload/insert');
         }
         $file = current($request->file());
         if (!$file || !$file->isValid()) {
@@ -244,6 +243,16 @@ class UploadController extends Crud
                 'size' => $data['size'],
             ]
         ]);
+    }
+
+    /**
+     * 删除附件
+     * @param Request $request
+     * @return Response
+     */
+    public function delete(Request $request): Response
+    {
+        return parent::delete($request);
     }
 
     /**

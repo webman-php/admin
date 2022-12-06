@@ -74,7 +74,7 @@ class Crud extends Base
      * @param Request $request
      * @return Response
      */
-    public function schema(Request $request): Response
+    /*public function schema(Request $request): Response
     {
         $table = $this->model->getTable();
         $data = Util::getSchema($table);
@@ -85,8 +85,7 @@ class Crud extends Base
             'forms' => array_values($data['forms']),
             'keys' => array_values($data['keys']),
         ]);
-    }
-
+    }*/
 
     /**
      * 查询前置

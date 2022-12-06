@@ -60,13 +60,13 @@
                             obj.attr('value', value);
                         });
                         
-                        // 字段 url url
+                        // 字段 文件 url
                         layui.use(['upload', 'layer', 'popup', 'util'], function() {
                             let input = layui.$('#url').prev();
                             input.prev().html(layui.util.escape(input.val()));
                             layui.upload.render({
                                 elem: "#url",
-                                url: '/app/admin/upload/attachment',
+                                url: '/app/admin/upload/update',
                                 accept: 'file',
                                 field: '__file__',
                                 done: function (res) {
