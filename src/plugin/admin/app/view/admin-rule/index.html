@@ -65,13 +65,14 @@
 
         <script>
 
-            // 相关接口
+            // 相关常量
+            const PRIMARY_KEY = 'id';
+            const CONTROLLER = 'plugin\\admin\\app\\controller\\AdminRuleController';
             const SELECT_API = "/app/admin/admin-rule/select?limit=5000";
             const DELETE_API = "/app/admin/admin-rule/delete";
             const UPDATE_API = "/app/admin/admin-rule/update";
             const INSERT_URL = "/app/admin/admin-rule/insert";
             const UPDATE_URL = "/app/admin/admin-rule/update";
-            let PRIMARY_KEY = 'id';
 
             // 表格渲染
             layui.use(['table', 'treetable', 'form', 'common', 'popup', 'util'], function() {
