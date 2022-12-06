@@ -77,18 +77,18 @@
 
             const CRUD_API = "/app/admin/table/crud";
 
-            layui.use(['jquery', 'xmSelect'], function() {
+            layui.use(["jquery", "xmSelect"], function() {
                 layui.$.ajax({
-                    url: '/app/admin/admin-rule/select?format=tree&type=0,1',
-                    dataType: 'json',
+                    url: "/app/admin/admin-rule/select?format=tree&type=0,1",
+                    dataType: "json",
                     success: function (e) {
-                        let value = layui.$('#pid').attr('value');
-                        let initValue = value ? value.split(',') : [];
+                        let value = layui.$("#pid").attr("value");
+                        let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
-                            el: '#pid',
-                            name: 'pid',
+                            el: "#pid",
+                            name: "pid",
                             initValue: initValue,
-                            tips: '无',
+                            tips: "无",
                             data: e.data,
                             toolbar: {show: true, list: ["CLEAR"]},
                             model: {"icon":"hidden","label":{"type":"text"}},
@@ -100,27 +100,27 @@
                 });
             });
 
-            layui.use(['iconPicker'], function() {
+            layui.use(["iconPicker"], function() {
                 layui.iconPicker.render({
-                    elem: '#icon',
-                    type: 'fontClass',
+                    elem: "#icon",
+                    type: "fontClass",
                     page: false
                 });
             });
 
-            layui.use(['form', 'popup'], function () {
+            layui.use(["form", "popup"], function () {
                 //提交事件
-                layui.form.on('submit(save)', function (data) {
+                layui.form.on("submit(save)", function (data) {
                     layui.$.ajax({
                         url: CRUD_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });

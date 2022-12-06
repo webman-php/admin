@@ -98,7 +98,7 @@
         <script>
 
             // 相关接口
-            const PRIMARY_KEY = 'id';
+            const PRIMARY_KEY = "id";
             const CONTROLLER = "plugin\\admin\\app\\controller\\UploadController";
             const SELECT_API = "/app/admin/upload/select";
             const UPDATE_API = "/app/admin/upload/update";
@@ -107,7 +107,7 @@
             const UPDATE_URL = "/app/admin/upload/update";
             
             // 表格渲染
-            layui.use(['table', 'form', 'common', 'popup', 'util'], function() {
+            layui.use(["table", "form", "common", "popup", "util"], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -119,7 +119,7 @@
                     layui.laydate.render({
                         elem: "#created_at",
                         range: ["#created_at-date-start", "#created_at-date-end"],
-                        type: 'datetime',
+                        type: "datetime",
                     });
                 })
 
@@ -137,11 +137,11 @@
                                 initValue: initValue,
                                 data: e.data,
                                 model: {"icon":"hidden","label":{"type":"text"}},
-                                clickClose: 'true',
-                                radio: 'true',
+                                clickClose: true,
+                                radio: true,
                                 on: function(data){
-                                    let value = data.arr[0] ? data.arr[0].value : '';
-                                    table.reload('data-table', {
+                                    let value = data.arr[0] ? data.arr[0].value : "";
+                                    table.reload("data-table", {
                                         where: {category: value}
                                     })
                                 },
@@ -166,7 +166,7 @@
 						title: "文件",
 						field: "url",
 						templet: function (d) {
-                            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].indexOf(d.ext.toLowerCase()) !== -1) {
+                            if (["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"].indexOf(d.ext.toLowerCase()) !== -1) {
                                 return '<img src="' + encodeURI(d['url']) + '" style="max-width:32px;max-height:32px;" />';
                             }
 							return '<a href="' + encodeURI(d['url']) + '" target="_blank">' + util.escape(d['url']) + '</a>';
@@ -236,7 +236,7 @@
                     // 查询指定后缀
                     let searchExt = layui.url().search.ext;
                     if (searchExt) {
-                        layui.$('.top-search-from input[name="ext"]').val(searchExt);
+                        layui.$(".top-search-from input[name="ext"]").val(searchExt);
                     }
 				    table.render({
 				        elem: "#data-table",
@@ -254,16 +254,16 @@
 				            icon: "layui-icon-refresh",
 				        }, "filter", "print", "exports"],
                         done: function () {
-                            layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
+                            layer.photos({photos: "div[lay-id="data-table"]", anim: 5});
                         }
 				    });
 				}
 				
 				// 获取表格中下拉或树形组件数据
 				let apis = [];
-				apis.push(['category', '/app/admin/dict/get/upload']);
+				apis.push(["category", "/app/admin/dict/get/upload"]);
 				let apiResults = {};
-				apiResults['category'] = [];
+				apiResults["category"] = [];
 				let count = apis.length;
 				layui.each(apis, function (k, item) {
 				    let [field, url] = item;
@@ -294,47 +294,47 @@
 				}
 				
                 // 编辑删除或选择行事件
-                table.on('tool(data-table)', function(obj) {
-                    if (obj.event === 'remove') {
+                table.on("tool(data-table)", function(obj) {
+                    if (obj.event === "remove") {
                         remove(obj);
-                    } else if (obj.event === 'edit') {
+                    } else if (obj.event === "edit") {
                         edit(obj);
-                    } else if (obj.event === 'select') {
+                    } else if (obj.event === "select") {
                         select(obj);
                     }
                 });
 
                 // 表格顶部工具栏事件
-                table.on('toolbar(data-table)', function(obj) {
-                    if (obj.event === 'add') {
+                table.on("toolbar(data-table)", function(obj) {
+                    if (obj.event === "add") {
                         add();
-                    } else if (obj.event === 'refresh') {
+                    } else if (obj.event === "refresh") {
                         refreshTable();
-                    } else if (obj.event === 'batchRemove') {
+                    } else if (obj.event === "batchRemove") {
                         batchRemove(obj);
                     }
                 });
 
                 // 表格顶部搜索事件
-                form.on('submit(table-query)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-query)", function(data) {
+                    table.reload("data-table", {
                         where: data.field
                     })
                     return false;
                 });
                 
                 // 表格顶部搜索重置事件
-                form.on('submit(table-reset)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-reset)", function(data) {
+                    table.reload("data-table", {
                         where: []
                     })
                 });
 
                 // 表格排序事件
-                table.on('sort(data-table)', function(obj){
-                    table.reload('data-table', {
+                table.on("sort(data-table)", function(obj){
+                    table.reload("data-table", {
                         initSort: obj,
-                        scrollPos: 'fixed',
+                        scrollPos: "fixed",
                         where: {
                             field: obj.field,
                             order: obj.type
@@ -346,9 +346,9 @@
                 let add = function() {
                     layer.open({
                         type: 2,
-                        title: '新增',
+                        title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'380px'],
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"380px"],
                         content: INSERT_URL
                     });
                 }
@@ -358,10 +358,10 @@
                     let value = obj.data[PRIMARY_KEY];
                     layer.open({
                         type: 2,
-                        title: '修改',
+                        title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'380px'],
-                        content: UPDATE_URL + '?' + PRIMARY_KEY + '=' + value
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"380px"],
+                        content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
 
@@ -374,33 +374,33 @@
                 let batchRemove = function(obj) {
                     let checkIds = common.checkField(obj, PRIMARY_KEY);
                     if (checkIds === "") {
-                        layui.popup.warning('未选中数据');
+                        layui.popup.warning("未选中数据");
                         return false;
                     }
-                    doRemove(checkIds.split(','));
+                    doRemove(checkIds.split(","));
                 }
 
                 // 执行删除
                 let doRemove = function (ids) {
                     let data = {};
                     data[PRIMARY_KEY] = ids;
-                    layer.confirm('确定删除?', {
+                    layer.confirm("确定删除?", {
                         icon: 3,
-                        title: '提示'
+                        title: "提示"
                     }, function(index) {
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
                             url: DELETE_API,
                             data: data,
-                            dataType: 'json',
-                            type: 'post',
+                            dataType: "json",
+                            type: "post",
                             success: function(res) {
                                 layer.close(loading);
                                 if (res.code) {
                                     return layui.popup.failure(res.msg);
                                 }
-                                return layui.popup.success('操作成功', refreshTable);
+                                return layui.popup.success("操作成功", refreshTable);
                             }
                         })
                     });
@@ -416,14 +416,14 @@
 
                 // 刷新表格数据
                 window.refreshTable = function(param) {
-                    table.reloadData('data-table', {
-                        scrollPos: 'fixed'
+                    table.reloadData("data-table", {
+                        scrollPos: "fixed"
                     });
                 }
 
                 // 格式化文件大小
                 let formatSize = function(value) {
-                    if(null == value || '' === value){
+                    if(null == value || "" === value){
                         return "0 Bytes";
                     }
                     let unitArr = ["Bytes","KB","MB","GB","TB","PB","EB","ZB","YB"];

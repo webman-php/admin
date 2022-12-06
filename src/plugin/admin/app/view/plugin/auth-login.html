@@ -32,22 +32,22 @@
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
-            layui.use(['form', 'button', 'popup', 'layer'], function() {
+            layui.use(["form", "button", "popup", "layer"], function() {
                 var $ = layui.$, layer = layui.layer, form = layui.form;
                 function switchCaptcha() {
-                    $('.codeImage').attr("src", "/app/admin/plugin/captcha?v=" + new Date().getTime());
+                    $(".codeImage").attr("src", "/app/admin/plugin/captcha?v=" + new Date().getTime());
                 }
                 switchCaptcha();
-                form.on('submit(login)', function (data) {
+                form.on("submit(login)", function (data) {
                     layer.load();
                     $.ajax({
-                        url: '/app/admin/plugin/login',
+                        url: "/app/admin/plugin/login",
                         type: "POST",
                         data: data.field,
                         success: function (res) {
-                            layer.closeAll('loading');
+                            layer.closeAll("loading");
                             if (!res.code) {
-                                layui.popup.success('登录成功', function () {
+                                layui.popup.success("登录成功", function () {
                                     parent.layer.close(parent.layer.getFrameIndex(window.name));
                                 })
                             } else {
@@ -59,7 +59,7 @@
                     });
                     return false;
                 });
-                $('.codeImage').on('click', function () {
+                $(".codeImage").on("click", function () {
                     switchCaptcha();
                 });
             })

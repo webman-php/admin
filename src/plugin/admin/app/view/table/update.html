@@ -37,28 +37,28 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            let PRIMARY_KEY = 'id';
+            let PRIMARY_KEY = "id";
             const SELECT_API = "/app/admin/table/select" + location.search;
             const UPDATE_API = "/app/admin/table/update";
 
-            layui.use(['form', 'util'], function () {
+            layui.use(["form", "util"], function () {
                 let $ = layui.$;
                 let util = layui.util;
                 $.ajax({
                     url: SELECT_API,
-                    dataType: 'json',
+                    dataType: "json",
                     success: function (e) {
                         layui.each(e.data[0], function (key, value) {
                             let obj = $('*[name="'+key+'"]');
-                            if (key === 'password') {
-                                obj.attr('placeholder', '不更新密码请留空');
+                            if (key === "password") {
+                                obj.attr("placeholder", "不更新密码请留空");
                                 return;
                             }
-                            if (typeof obj[0] === 'undefined' || !obj[0].nodeName) return;
-                            if (obj[0].nodeName.toLowerCase() === 'textarea') {
+                            if (typeof obj[0] === "undefined" || !obj[0].nodeName) return;
+                            if (obj[0].nodeName.toLowerCase() === "textarea") {
                                 obj.html(util.escape(value));
                             } else {
-                                obj.attr('value', value);
+                                obj.attr("value", value);
                             }
                         });
 
@@ -68,19 +68,19 @@
                 });
             });
 
-            layui.use(['form', 'popup'], function () {
+            layui.use(["form", "popup"], function () {
                 //提交事件
-                layui.form.on('submit(save)', function (data) {
+                layui.form.on("submit(save)", function (data) {
                     layui.$.ajax({
                         url: UPDATE_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });

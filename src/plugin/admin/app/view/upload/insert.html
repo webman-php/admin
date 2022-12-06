@@ -41,17 +41,17 @@
         <script>
             
             // 字段 文件 url
-            layui.use(['upload', 'layer', 'popup', 'util'], function() {
-                let input = layui.$('#url').prev();
+            layui.use(["upload", "layer", "popup", "util"], function() {
+                let input = layui.$("#url").prev();
                 input.prev().html(layui.util.escape(input.val()));
                 layui.upload.render({
                     elem: "#url",
-                    accept: 'file',
+                    accept: "file",
                     data: {category: function () {
                         return layui.$('input[name="category"]').val();
                     }},
-                    url: '/app/admin/upload/insert',
-                    field: '__file__',
+                    url: "/app/admin/upload/insert",
+                    field: "__file__",
                     done: function (res) {
                         if (res.code) return layui.popup.failure(res.msg);
                         parent.refreshTable();
@@ -74,8 +74,8 @@
                             initValue: initValue,
                             data: e.data, 
                             model: {"icon":"hidden","label":{"type":"text"}},
-                            clickClose: 'true',
-                            radio: 'true',
+                            clickClose: true,
+                            radio: true,
                         })
                     }
                 });

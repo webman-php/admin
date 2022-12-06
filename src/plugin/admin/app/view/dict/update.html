@@ -95,29 +95,29 @@
 <script>
 
     const DICT_NAME = layui.url().search.name;
-    const UPDATE_API = '/app/admin/dict/update';
-    const SELECT_API = '/app/admin/dict/get/' + DICT_NAME;
+    const UPDATE_API = "/app/admin/dict/update";
+    const SELECT_API = "/app/admin/dict/get/" + DICT_NAME;
 
     // 字段设置
-    layui.use(['table', 'common', 'popup'], function () {
+    layui.use(["table", "common", "popup"], function () {
 
         let table = layui.table;
         let common = layui.common;
         let $ = layui.$;
         let cols = [
             {
-                type: 'checkbox',
+                type: "checkbox",
                 width: 50,
             },
             {
-                title: '值',
-                field: 'value',
-                templet: '#col-value'
+                title: "值",
+                field: "value",
+                templet: "#col-value"
             },
             {
-                title: '标题',
-                field: 'name',
-                templet: '#col-name',
+                title: "标题",
+                field: "name",
+                templet: "#col-name",
             }
         ];
 
@@ -127,78 +127,78 @@
         let data = [];
         $.ajax({
             url: SELECT_API,
-            dataType: 'json',
+            dataType: "json",
             async: false,
             success: function (res) {
                 data = res.data;
                 layui.each(data, function (k, v) {
-                    data[k]['_field_id'] = _field_id++;
+                    data[k]["_field_id"] = _field_id++;
                 })
             }
         });
 
         table.render({
-            elem: '#column-table',
+            elem: "#column-table",
             cols: [cols],
             data: data,
             cellMinWidth: 40,
-            skin: 'line',
-            size: 'lg',
+            skin: "line",
+            size: "lg",
             limit: 10000,
             page: false,
-            toolbar: '#column-toolbar',
+            toolbar: "#column-toolbar",
             defaultToolbar: [],
         });
 
-        table.on('toolbar(column-table)', function(obj) {
-            if (obj.event === 'add') {
+        table.on("toolbar(column-table)", function(obj) {
+            if (obj.event === "add") {
                 add();
-            } else if (obj.event === 'batchRemove') {
+            } else if (obj.event === "batchRemove") {
                 batchRemove(obj);
             }
         });
 
         let add = function() {
             syncTableData();
-            let options = table.getData('column-table');
+            let options = table.getData("column-table");
             options.push({
                 _field_id: _field_id++,
-                value : '',
-                name: '',
+                value : "",
+                name: "",
             });
-            table.reloadData('column-table', {data:options});
+            table.reloadData("column-table", {data:options});
         }
 
         let batchRemove = function(obj) {
-            var checkIds = common.checkField(obj,'_field_id');
-            if (checkIds === "") return layui.popup.warning('未选中数据');
-            let data = table.getData('column-table');
+            var checkIds = common.checkField(obj,"_field_id");
+            if (checkIds === "") return layui.popup.warning("未选中数据");
+            let data = table.getData("column-table");
             let newData = [];
-            let deleteIds = checkIds.split(',');
+            let deleteIds = checkIds.split(",");
             layui.each(data, function (index, item) {
-                if (deleteIds.indexOf(item._field_id + '') === -1) {
+                if (deleteIds.indexOf(item._field_id + "") === -1) {
                     newData.push(item);
                 }
             });
-            table.reloadData('column-table', {data: newData})
+            table.reloadData("column-table", {data: newData})
         }
 
     });
 
-    layui.use(['form', 'popup'], function () {
+    layui.use(["form", "popup"], function () {
         //提交事件
-        layui.form.on('submit(save)', function () {
-            let data = layui.form.val('create-dict-form');
+        layui.form.on("submit(save)", function () {
+            let data = layui.form.val("create-dict-form");
             layui.$.ajax({
                 url: UPDATE_API,
-                type: 'POST',
-                dateType: 'json',
+                type: "POST",
+                dateType: "json",
                 data: data,
                 success: function (res) {
                     if (res.code) {
                         return layui.popup.failure(res.msg);
                     }
-                    return layui.popup.success('操作成功', function () {
+                    return layui.popup.success("操作成功", function () {
                         parent.refreshTable();
                         parent.layer.close(parent.layer.getFrameIndex(window.name));
                     });
@@ -209,24 +209,24 @@
     });
 
     window.syncTableData = function () {
-        let tableData = layui.form.val('create-dict-form');
+        let tableData = layui.form.val("create-dict-form");
         let columnTableData = [];
         let len = Object.keys(tableData).length;
         let id = 0;
         window._key_id = 0;
         while (id < len) {
             // column data
-            if (typeof tableData['value[' + id + '][_field_id]'] !== 'undefined') {
+            if (typeof tableData["value[" + id + "][_field_id]"] !== "undefined") {
                 columnTableData.push({
-                    _field_id: tableData['value[' + id + '][_field_id]'],
-                    name : tableData['value[' + id + '][name]'],
-                    value: tableData['value[' + id + '][value]'],
+                    _field_id: tableData["value[" + id + "][_field_id]"],
+                    name : tableData["value[" + id + "][name]"],
+                    value: tableData["value[" + id + "][value]"],
                 });
             }
             _key_id++;
             id++;
         }
-        layui.table.reloadData('column-table', {data: columnTableData});
+        layui.table.reloadData("column-table", {data: columnTableData});
     }
 
 </script>

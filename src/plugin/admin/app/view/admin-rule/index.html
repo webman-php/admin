@@ -66,8 +66,8 @@
         <script>
 
             // 相关常量
-            const PRIMARY_KEY = 'id';
-            const CONTROLLER = 'plugin\\admin\\app\\controller\\AdminRuleController';
+            const PRIMARY_KEY = "id";
+            const CONTROLLER = "plugin\\admin\\app\\controller\\AdminRuleController";
             const SELECT_API = "/app/admin/admin-rule/select?limit=5000";
             const DELETE_API = "/app/admin/admin-rule/delete";
             const UPDATE_API = "/app/admin/admin-rule/update";
@@ -75,7 +75,7 @@
             const UPDATE_URL = "/app/admin/admin-rule/update";
 
             // 表格渲染
-            layui.use(['table', 'treetable', 'form', 'common', 'popup', 'util'], function() {
+            layui.use(["table", "treetable", "form", "common", "popup", "util"], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -86,60 +86,60 @@
                 // 表格头部列数据
                 let cols = [
                     {
-                        type: 'checkbox'
+                        type: "checkbox"
                     },{
-                        title: '标题',
-                        field: 'title',
+                        title: "标题",
+                        field: "title",
                     },{
-                        title: '图标',
-                        field: 'icon',
+                        title: "图标",
+                        field: "icon",
                         templet: function (d) {
-                            return '<i class="layui-icon ' + util.escape(d['icon']) + '"></i>';
+                            return '<i class="layui-icon ' + util.escape(d["icon"]) + '"></i>';
                         }
                     },{
-                        title: '主键',
-                        field: 'id',
+                        title: "主键",
+                        field: "id",
                         hide: true,
                     },{
-                        title: 'key',
-                        field: 'key',
+                        title: "key",
+                        field: "key",
                     },{
-                        title: '上级菜单',
-                        field: 'pid',
+                        title: "上级菜单",
+                        field: "pid",
                         hide: true,
                         templet: function (d) {
-                            let field = 'pid';
-                            if (typeof d[field] == "undefined") return '';
+                            let field = "pid";
+                            if (typeof d[field] == "undefined") return "";
                             let items = [];
-                            layui.each((d[field] + '').split(','), function (k , v) {
+                            layui.each((d[field] + "").split(","), function (k , v) {
                                 items.push(apiResults[field][v] || v);
                             });
-                            return util.escape(items.join(','));
+                            return util.escape(items.join(","));
                         }
                     },{
-                        title: '创建时间',
-                        field: 'created_at',
+                        title: "创建时间",
+                        field: "created_at",
                         hide: true,
                     },{
-                        title: '更新时间',
-                        field: 'updated_at',
+                        title: "更新时间",
+                        field: "updated_at",
                         hide: true,
                     },{
-                        title: 'url',
-                        field: 'href',
+                        title: "url",
+                        field: "href",
                     },{
-                        title: '类型',
-                        field: 'type',
+                        title: "类型",
+                        field: "type",
                         width: 80,
                         templet: function (d) {
-                            let field = 'type';
-                            let value = apiResults['type'][d['type']] || d['type'];
-                            let css = {'目录':'layui-bg-blue', '菜单': 'layui-bg-green', '权限': 'layui-bg-orange'}[value];
+                            let field = "type";
+                            let value = apiResults["type"][d["type"]] || d["type"];
+                            let css = {"目录":"layui-bg-blue", "菜单": "layui-bg-green", "权限": "layui-bg-orange"}[value];
                             return '<span class="layui-badge '+css+'">'+util.escape(value)+'</span>';
                         }
                     },{
-                        title: '排序',
-                        field: 'weight',
+                        title: "排序",
+                        field: "weight",
                         width: 80,
                     },{
                         title: "操作",
@@ -154,37 +154,37 @@
                 function render()
                 {
                     treeTable.render({
-                        elem: '#data-table',
+                        elem: "#data-table",
                         url: SELECT_API,
                         treeColIndex: 1,
                         treeSpid: 0,
-                        treeIdName: 'id',
-                        treePidName: 'pid',
+                        treeIdName: "id",
+                        treePidName: "pid",
                         treeDefaultClose: true,
                         cols: [cols],
-                        skin: 'line',
-                        size: 'lg',
-                        toolbar: '#table-toolbar',
+                        skin: "line",
+                        size: "lg",
+                        toolbar: "#table-toolbar",
                         defaultToolbar: [{
-                            title: '刷新',
-                            layEvent: 'refresh',
-                            icon: 'layui-icon-refresh',
-                        }, 'filter', 'print', 'exports']
+                            title: "刷新",
+                            layEvent: "refresh",
+                            icon: "layui-icon-refresh",
+                        }, "filter", "print", "exports"]
                     });
                 }
 
                 // 获取下拉菜单及树形组件数据
                 let apis = [];
                 let apiResults = {};
-                apiResults['pid'] = [];
-                apis.push(['pid', '/app/admin/admin-rule/select?format=tree&type=0,1']);
-                apiResults['type'] = ["目录","菜单","权限"];
+                apiResults["pid"] = [];
+                apis.push(["pid", "/app/admin/admin-rule/select?format=tree&type=0,1"]);
+                apiResults["type"] = ["目录","菜单","权限"];
                 let count = apis.length;
                 layui.each(apis, function (k, item) {
                     let [field, url] = item;
                     $.ajax({
                         url: url,
-                        dateType: 'json',
+                        dateType: "json",
                         success: function (res) {
                             function travel(items) {
                                 for (let k in items) {
@@ -209,21 +209,21 @@
                 }
 
                 // 删除或编辑行事件
-                table.on('tool(data-table)', function(obj) {
-                    if (obj.event === 'remove') {
+                table.on("tool(data-table)", function(obj) {
+                    if (obj.event === "remove") {
                         remove(obj);
-                    } else if (obj.event === 'edit') {
+                    } else if (obj.event === "edit") {
                         edit(obj);
                     }
                 });
 
                 // 添加 批量删除 刷新事件
-                table.on('toolbar(data-table)', function(obj) {
-                    if (obj.event === 'add') {
+                table.on("toolbar(data-table)", function(obj) {
+                    if (obj.event === "add") {
                         add();
-                    } else if (obj.event === 'refresh') {
+                    } else if (obj.event === "refresh") {
                         refreshTable();
-                    } else if (obj.event === 'batchRemove') {
+                    } else if (obj.event === "batchRemove") {
                         batchRemove(obj);
                     }
                 });
@@ -232,9 +232,9 @@
                 let add = function() {
                     layer.open({
                         type: 2,
-                        title: '新增',
+                        title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'520px', common.isModile()?'100%':'520px'],
+                        area: [common.isModile()?"100%":"520px", common.isModile()?"100%":"520px"],
                         content: INSERT_URL
                     });
                 }
@@ -244,10 +244,10 @@
                     let value = obj.data[PRIMARY_KEY];
                     layer.open({
                         type: 2,
-                        title: '修改',
+                        title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'520px', common.isModile()?'100%':'520px'],
-                        content: UPDATE_URL + '?' + PRIMARY_KEY + '=' + value
+                        area: [common.isModile()?"100%":"520px", common.isModile()?"100%":"520px"],
+                        content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
 
@@ -260,33 +260,33 @@
                 let batchRemove = function(obj) {
                     let checkIds = common.checkField(obj, PRIMARY_KEY);
                     if (checkIds === "") {
-                        layui.popup.warning('未选中数据');
+                        layui.popup.warning("未选中数据");
                         return false;
                     }
-                    doRemove(checkIds.split(','));
+                    doRemove(checkIds.split(","));
                 }
 
                 // 执行删除
                 let doRemove = function (ids, obj) {
                     let data = {};
                     data[PRIMARY_KEY] = ids;
-                    layer.confirm('确定删除?', {
+                    layer.confirm("确定删除?", {
                         icon: 3,
-                        title: '提示'
+                        title: "提示"
                     }, function(index) {
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
                             url: DELETE_API,
                             data: data,
-                            dataType: 'json',
-                            type: 'post',
+                            dataType: "json",
+                            type: "post",
                             success: function(res) {
                                 layer.close(loading);
                                 if (res.code) {
                                     return layui.popup.failure(res.msg);
                                 }
-                                return layui.popup.success('操作成功', function () {
+                                return layui.popup.success("操作成功", function () {
                                     return obj ? obj.del() : refreshTable();
                                 });
                             }
@@ -296,7 +296,7 @@
 
                 // 刷新表格
                 window.refreshTable = function(param) {
-                    treeTable.reload('#data-table');
+                    treeTable.reload("#data-table");
                 }
             })
 

@@ -25,7 +25,7 @@
                     升级
                 </button>
                 {{# } }}
-                {{# if(d.name !== 'admin'){ }}
+                {{# if(d.name !== "admin"){ }}
                 <button class="pear-btn pear-btn-xs pear-btn-danger" onclick="uninstall('{{ d.name }}','{{ d.installed }}')">
                     卸载
                 </button>
@@ -41,7 +41,7 @@
             const AUTH_URL = "/app/admin/plugin/login";
             const SCHEMA_API = "/app/admin/plugin/schema";
 
-            layui.use(['table', 'form','common', 'popup'], function() {
+            layui.use(["table", "form","common", "popup"], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -49,29 +49,29 @@
 
                 $.ajax({
                     url: SCHEMA_API,
-                    dataType: 'json',
+                    dataType: "json",
                     success: function (e) {
                         let cols = e.data;
                         layui.each(cols, function (k, v) {
-                            if (v.field === 'installed') {
-                                cols[k].templet = '#install';
+                            if (v.field === "installed") {
+                                cols[k].templet = "#install";
                             }
                         })
                         function render()
                         {
                             table.render({
-                                elem: '#data-table',
+                                elem: "#data-table",
                                 url: SELECT_API,
                                 page: true,
                                 cols: [cols],
-                                skin: 'line',
-                                size: 'lg',
+                                skin: "line",
+                                size: "lg",
                                 autoSort: false,
                                 defaultToolbar: [{
-                                    title: '刷新',
-                                    layEvent: 'refresh',
-                                    icon: 'layui-icon-refresh',
-                                }, 'filter', 'print', 'exports']
+                                    title: "刷新",
+                                    layEvent: "refresh",
+                                    icon: "layui-icon-refresh",
+                                }, "filter", "print", "exports"]
                             });
                         }
                         render();
@@ -81,9 +81,9 @@
                 window.install = function(name, version) {
                     let loading = layer.load();
                     $.ajax({
-                        url: '/app/admin/plugin/install',
-                        type: 'POST',
-                        dataType: 'json',
+                        url: "/app/admin/plugin/install",
+                        type: "POST",
+                        dataType: "json",
                         data: {name, version},
                         success: function (res) {
                             if (res.code) {
@@ -93,14 +93,14 @@
                             if (res.data && res.data.code === 401) {
                                 layer.open({
                                     type: 2,
-                                    title: '登录 workerman.net 官网',
+                                    title: "登录 workerman.net 官网",
                                     shade: 0.1,
-                                    area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'450px'],
+                                    area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
                                     content: AUTH_URL
                                 });
                                 return;
                             }
-                            return layui.popup.success('安装成功', function () {
+                            return layui.popup.success("安装成功", function () {
                                 parent.location.reload();
                             });
                         },
@@ -111,22 +111,22 @@
                 }
 
                 window.uninstall = function(name, version) {
-                    layer.confirm('确定卸载?', {
+                    layer.confirm("确定卸载?", {
                         icon: 3,
-                        title: '提示'
+                        title: "提示"
                     }, function(index) {
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
-                            url: '/app/admin/plugin/uninstall',
-                            type: 'POST',
-                            dataType: 'json',
+                            url: "/app/admin/plugin/uninstall",
+                            type: "POST",
+                            dataType: "json",
                             data: {name, version},
                             success: function (res) {
                                 if (res.code) {
                                     return layui.popup.failure(res.msg);
                                 }
-                                return layui.popup.success('卸载成功', function () {
+                                return layui.popup.success("卸载成功", function () {
                                     parent.location.reload();
                                 });
                             },

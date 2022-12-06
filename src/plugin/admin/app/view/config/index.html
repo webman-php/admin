@@ -185,37 +185,37 @@
         <script>
 
             // 基础设置
-            layui.use(['upload', 'layer', 'popup'], function() {
+            layui.use(["upload", "layer", "popup"], function() {
                 let $ = layui.$;
                 let form = layui.form;
 
                 // image
-                let input = $('#image').prev();
-                input.prev().attr('src', input.val());
+                let input = $("#image").prev();
+                input.prev().attr("src", input.val());
                 layui.upload.render({
-                    elem: '#image',
-                    url: '/app/admin/upload/avatar',
-                    acceptMime: 'image/gif,image/jpeg,image/jpg,image/png',
+                    elem: "#image",
+                    url: "/app/admin/upload/avatar",
+                    acceptMime: "image/gif,image/jpeg,image/jpg,image/png",
                     done: function (res) {
                         if (res.code) {
                             return layui.popup.failure(res.msg);
                         }
-                        this.item.prev().val(res.data.url).prev().attr('src', res.data.url);
+                        this.item.prev().val(res.data.url).prev().attr("src", res.data.url);
                     }
                 });
 
                 // 提交
-                form.on('submit(saveBaseInfo)', function(data){
+                form.on("submit(saveBaseInfo)", function(data){
                     $.ajax({
-                        url: '/app/admin/config/update',
-                        dataType: 'json',
-                        type: 'POST',
+                        url: "/app/admin/config/update",
+                        dataType: "json",
+                        type: "POST",
                         data: {logo: data.field},
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功');
+                            return layui.popup.success("操作成功");
                         }
                     });
                     return false;
@@ -224,21 +224,21 @@
 
 
             // 菜单设置
-            layui.use(['upload', 'layer', 'popup'], function() {
+            layui.use(["upload", "layer", "popup"], function() {
                 let $ = layui.$;
                 let form = layui.form;
                 // 提交
-                form.on('submit(saveMenuInfo)', function(data){
+                form.on("submit(saveMenuInfo)", function(data){
                     $.ajax({
-                        url: '/app/admin/config/update',
-                        dataType: 'json',
-                        type: 'POST',
+                        url: "/app/admin/config/update",
+                        dataType: "json",
+                        type: "POST",
                         data: {menu: data.field},
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功');
+                            return layui.popup.success("操作成功");
                         }
                     });
                     return false;
@@ -246,11 +246,11 @@
             });
 
             // 标签设置
-            layui.use(['upload', 'layer', 'popup'], function() {
+            layui.use(["upload", "layer", "popup"], function() {
                 let $ = layui.$;
                 let form = layui.form;
                 // 提交
-                form.on('submit(saveTabInfo)', function(data){
+                form.on("submit(saveTabInfo)", function(data){
                     let field = data.field;
                     field.index = {
                         id: field.id,
@@ -259,38 +259,38 @@
                     };
                     delete data.field;
                     $.ajax({
-                        url: '/app/admin/config/update',
-                        dataType: 'json',
-                        type: 'POST',
+                        url: "/app/admin/config/update",
+                        dataType: "json",
+                        type: "POST",
                         data: {tab: field},
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功');
+                            return layui.popup.success("操作成功");
                         }
                     });
                     return false;
                 });
             });
 
-            layui.use(['form'], function () {
+            layui.use(["form"], function () {
                 let form = layui.form;
                 let $ = layui.$;
                 $.ajax({
-                    url: '/app/admin/config/get',
-                    dataType: 'json',
+                    url: "/app/admin/config/get",
+                    dataType: "json",
                     success: function (res) {
-                        form.val('baseInfo', res.logo);
-                        $('#image').prev().val(res.logo.image).prev().attr('src', res.logo.image);
-                        form.val('menuInfo', res.menu);
+                        form.val("baseInfo", res.logo);
+                        $("#image").prev().val(res.logo.image).prev().attr("src", res.logo.image);
+                        form.val("menuInfo", res.menu);
                         let tab = res.tab;
                         let index = tab.index;
                         delete tab.index;
                         tab.id = index.id;
                         tab.title = index.title;
                         tab.href= index.href;
-                        form.val('tabInfo', res.tab);
+                        form.val("tabInfo", res.tab);
                     }
                 });
 

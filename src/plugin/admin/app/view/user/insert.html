@@ -170,10 +170,10 @@
                             name: "sex",
                             initValue: initValue,
                             data: e.data, 
-                            value: '1',
+                            value: "1",
                             model: {"icon":"hidden","label":{"type":"text"}},
-                            clickClose: 'true',
-                            radio: 'true',
+                            clickClose: true,
+                            radio: true,
                         })
                     }
                 });
@@ -183,7 +183,7 @@
             layui.use(["upload", "layer"], function() {
                 let input = layui.$("#avatar").prev();
                 input.prev().attr("src", input.val());
-                layui.$("#attachment-choose-avatar").on('click', function() {
+                layui.$("#attachment-choose-avatar").on("click", function() {
                     parent.layer.open({
                         type: 2,
                         title: "选择附件",
@@ -198,9 +198,9 @@
                 });
                 layui.upload.render({
                     elem: "#avatar",
-                    url: '/app/admin/upload/avatar',
-                    acceptMime: 'image/gif,image/jpeg,image/jpg,image/png',
-                    field: '__file__',
+                    url: "/app/admin/upload/avatar",
+                    acceptMime: "image/gif,image/jpeg,image/jpg,image/png",
+                    field: "__file__",
                     done: function (res) {
                         if (res.code > 0) return layui.layer.msg(res.msg);
                         this.item.prev().val(res.data.url).prev().attr("src", res.data.url);
@@ -219,7 +219,7 @@
             layui.use(["laydate"], function() {
                 layui.laydate.render({
                     elem: "#last_time",
-                    type: 'datetime',
+                    type: "datetime",
                 });
             })
             
@@ -227,7 +227,7 @@
             layui.use(["laydate"], function() {
                 layui.laydate.render({
                     elem: "#join_time",
-                    type: 'datetime',
+                    type: "datetime",
                 });
             })
             
@@ -241,18 +241,18 @@
             })
             
             //提交事件
-            layui.use(['form', 'popup'], function () {
-                layui.form.on('submit(save)', function (data) {
+            layui.use(["form", "popup"], function () {
+                layui.form.on("submit(save)", function (data) {
                     layui.$.ajax({
                         url: INSERT_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });

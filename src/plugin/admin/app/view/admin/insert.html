@@ -97,7 +97,7 @@
             layui.use(["upload", "layer"], function() {
                 let input = layui.$("#avatar").prev();
                 input.prev().attr("src", input.val());
-                layui.$("#attachment-choose-avatar").on('click', function() {
+                layui.$("#attachment-choose-avatar").on("click", function() {
                     parent.layer.open({
                         type: 2,
                         title: "选择附件",
@@ -112,10 +112,10 @@
                 });
                 layui.upload.render({
                     elem: "#avatar",
-                    url: '/app/admin/upload/avatar',
-                    value: '/app/admin/avatar.png',
-                    acceptMime: 'image/gif,image/jpeg,image/jpg,image/png',
-                    field: '__file__',
+                    url: "/app/admin/upload/avatar",
+                    value: "/app/admin/avatar.png",
+                    acceptMime: "image/gif,image/jpeg,image/jpg,image/png",
+                    field: "__file__",
                     done: function (res) {
                         if (res.code > 0) return layui.layer.msg(res.msg);
                         this.item.prev().val(res.data.url).prev().attr("src", res.data.url);
@@ -144,18 +144,18 @@
             });
             
             //提交事件
-            layui.use(['form', 'popup'], function () {
-                layui.form.on('submit(save)', function (data) {
+            layui.use(["form", "popup"], function () {
+                layui.form.on("submit(save)", function (data) {
                     layui.$.ajax({
                         url: INSERT_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });

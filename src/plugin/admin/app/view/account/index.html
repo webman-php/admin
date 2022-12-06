@@ -106,44 +106,44 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            layui.use(['form', 'popup'], function () {
+            layui.use(["form", "popup"], function () {
                 let form = layui.form;
                 let $ = layui.$;
                 $.ajax({
-                    url: '/app/admin/account/info',
-                    dataType: 'json',
+                    url: "/app/admin/account/info",
+                    dataType: "json",
                     success: function (res) {
-                        form.val('baseInfo', res.data);
+                        form.val("baseInfo", res.data);
                     }
                 });
 
-                form.on('submit(saveBaseInfo)', function(data){
+                form.on("submit(saveBaseInfo)", function(data){
                     $.ajax({
-                        url: '/app/admin/account/update',
-                        dataType: 'json',
-                        type: 'POST',
+                        url: "/app/admin/account/update",
+                        dataType: "json",
+                        type: "POST",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功');
+                            return layui.popup.success("操作成功");
                         }
                     });
                     return false;
                 });
 
-                form.on('submit(savePassword)', function(data){
+                form.on("submit(savePassword)", function(data){
                     $.ajax({
-                        url: '/app/admin/account/password',
-                        dataType: 'json',
-                        type: 'POST',
+                        url: "/app/admin/account/password",
+                        dataType: "json",
+                        type: "POST",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功');
+                            return layui.popup.success("操作成功");
                         }
                     });
                     return false;

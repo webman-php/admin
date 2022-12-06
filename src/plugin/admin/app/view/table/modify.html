@@ -221,15 +221,15 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script>
 
-            const MODIFY_API = '/app/admin/table/modify';
-            const SCHEMA_API = '/app/admin/table/schema';
-            const TABLE_NAME = '<?=htmlspecialchars($table)?>';
+            const MODIFY_API = "/app/admin/table/modify";
+            const SCHEMA_API = "/app/admin/table/schema";
+            const TABLE_NAME = "<?=htmlspecialchars($table)?>";
 
-            layui.use(['jquery'], function () {
+            layui.use(["jquery"], function () {
                 let $ = layui.$;
                 $.ajax({
-                    url: SCHEMA_API + '?table=' + TABLE_NAME,
-                    dataType: 'json',
+                    url: SCHEMA_API + "?table=" + TABLE_NAME,
+                    dataType: "json",
                     success: function (res) {
                         // 表信息
                         $('input[name="table"]').val(res.data.table.name);
@@ -244,16 +244,16 @@
                         layui.each(columnsData, function (index, item) {
                             columnsData[index]._field_id = _field_id;
                             columnsData[index].old_field = item.field;
-                            columnsData[index].default = item.default === '' ? "''" :  item.default;
+                            columnsData[index].default = item.default === "" ? "''" :  item.default;
                             formsData[index]._field_id = _field_id;
                             _field_id++;
                         });
 
                         if (keysData.length === 0) {
                             keysData.push({
-                                name : '',
-                                columns: '',
-                                type: 'normal'
+                                name : "",
+                                columns: "",
+                                type: "normal"
                             });
                         }
                         window._key_id = 0;
@@ -263,205 +263,205 @@
                         });
 
                         // 字段设置
-                        layui.use(['table', 'common', 'popup'], function () {
+                        layui.use(["table", "common", "popup"], function () {
 
                             let table = layui.table;
                             let common = layui.common;
                             let cols = [
                                 {
-                                    type: 'checkbox',
+                                    type: "checkbox",
                                     width: 50,
                                 },
                                 {
-                                    title: '字段名称',
-                                    field: 'field',
-                                    templet: '#col-field',
+                                    title: "字段名称",
+                                    field: "field",
+                                    templet: "#col-field",
                                     width: 182
                                 },
                                 {
-                                    title: '字段备注',
-                                    field: 'comment',
-                                    templet: '#col-comment',
+                                    title: "字段备注",
+                                    field: "comment",
+                                    templet: "#col-comment",
                                     width: 182
                                 },
                                 {
-                                    title: '长度/值',
-                                    field: 'length',
-                                    templet: '#col-length',
+                                    title: "长度/值",
+                                    field: "length",
+                                    templet: "#col-length",
                                     width: 182
                                 },
                                 {
-                                    title: '默认值',
-                                    field: 'default',
-                                    templet: '#col-default',
+                                    title: "默认值",
+                                    field: "default",
+                                    templet: "#col-default",
                                     width: 182
                                 },
                                 {
-                                    title: '字段类型',
-                                    field: 'type',
-                                    templet: '#col-type',
+                                    title: "字段类型",
+                                    field: "type",
+                                    templet: "#col-type",
                                     width: 182
                                 },
                                 {
-                                    title: '主键',
-                                    field: 'primary_key',
-                                    templet: '#col-primary_key',
+                                    title: "主键",
+                                    field: "primary_key",
+                                    templet: "#col-primary_key",
                                     width: 50,
-                                    align: 'center',
+                                    align: "center",
                                 },
                                 {
-                                    title: '自增',
-                                    field: 'auto_increment',
-                                    templet: '#col-auto_increment',
+                                    title: "自增",
+                                    field: "auto_increment",
+                                    templet: "#col-auto_increment",
                                     width: 50,
-                                    align: 'center',
+                                    align: "center",
                                 },
                                 {
-                                    title: '为空',
-                                    field: 'nullable',
-                                    templet: '#col-nullable',
+                                    title: "为空",
+                                    field: "nullable",
+                                    templet: "#col-nullable",
                                     width: 50,
-                                    align: 'center',
+                                    align: "center",
                                 },
                                 {
-                                    type: 'space'
+                                    type: "space"
                                 }
                             ];
 
                             table.render({
-                                elem: '#column-table',
+                                elem: "#column-table",
                                 cols: [cols],
                                 data: columnsData,
                                 cellMinWidth: 10,
-                                skin: 'line',
-                                size: 'lg',
+                                skin: "line",
+                                size: "lg",
                                 limit: 10000,
                                 page: false,
-                                toolbar: '#column-toolbar',
+                                toolbar: "#column-toolbar",
                                 defaultToolbar: [],
                             });
 
-                            table.on('toolbar(column-table)', function(obj) {
-                                if (obj.event === 'add') {
+                            table.on("toolbar(column-table)", function(obj) {
+                                if (obj.event === "add") {
                                     add();
-                                } else if (obj.event === 'batchRemove') {
+                                } else if (obj.event === "batchRemove") {
                                     batchRemove(obj);
                                 }
                             });
 
                             let add = function() {
                                 syncTableData();
-                                let options = table.getData('column-table');
+                                let options = table.getData("column-table");
                                 options.push({
                                     _field_id: _field_id++,
-                                    field : '',
-                                    comment: '',
-                                    length: '',
-                                    default: '',
-                                    type: 'integer',
+                                    field : "",
+                                    comment: "",
+                                    length: "",
+                                    default: "",
+                                    type: "integer",
                                     primary_key: false,
                                     auto_increment: false,
                                     nullable: true,
                                 });
-                                table.reloadData('column-table', {data:options});
+                                table.reloadData("column-table", {data:options});
                             }
 
                             let batchRemove = function(obj) {
-                                var checkIds = common.checkField(obj,'_field_id');
-                                if (checkIds === "") return layui.popup.warning('未选中数据');
-                                let data = table.getData('column-table');
+                                var checkIds = common.checkField(obj,"_field_id");
+                                if (checkIds === "") return layui.popup.warning("未选中数据");
+                                let data = table.getData("column-table");
                                 let newData = [];
-                                let deleteIds = checkIds.split(',');
+                                let deleteIds = checkIds.split(",");
                                 layui.each(data, function (index, item) {
-                                    if (deleteIds.indexOf(item._field_id + '') === -1) {
+                                    if (deleteIds.indexOf(item._field_id + "") === -1) {
                                         newData.push(item);
                                     }
                                 });
-                                table.reloadData('column-table', {data: newData})
+                                table.reloadData("column-table", {data: newData})
                             }
 
 
                         });
 
                         // 表单设置
-                        layui.use(['table', 'common', 'element'], function () {
+                        layui.use(["table", "common", "element"], function () {
                             let table = layui.table;
 
-                            layui.element.on('tab(create-table-tab)', function(){
+                            layui.element.on("tab(create-table-tab)", function(){
                                 syncTableData();
                             });
 
                             let cols = [
                                 {
-                                    title: '字段名称',
-                                    field: 'field',
-                                    templet: '#form-field',
+                                    title: "字段名称",
+                                    field: "field",
+                                    templet: "#form-field",
                                     width: 180
                                 },
                                 {
-                                    title: '字段备注',
-                                    field: 'comment',
-                                    templet: '#form-comment',
+                                    title: "字段备注",
+                                    field: "comment",
+                                    templet: "#form-comment",
                                     width: 180
                                 },
                                 {
-                                    title: '控件类型',
-                                    field: 'control',
-                                    templet: '#form-control',
+                                    title: "控件类型",
+                                    field: "control",
+                                    templet: "#form-control",
                                     width: 180
                                 },
                                 {
-                                    title: '控件参数',
-                                    field: 'control_args',
-                                    templet: '#form-control_args',
+                                    title: "控件参数",
+                                    field: "control_args",
+                                    templet: "#form-control_args",
                                     width: 180
                                 },
                                 {
-                                    title: '表单显示',
-                                    field: 'form_show',
-                                    templet: '#form-form_show',
+                                    title: "表单显示",
+                                    field: "form_show",
+                                    templet: "#form-form_show",
                                     width: 67,
-                                    align: 'center',
+                                    align: "center",
                                 },
                                 {
-                                    title: '列表显示',
-                                    field: 'list_show',
-                                    templet: '#form-list_show',
+                                    title: "列表显示",
+                                    field: "list_show",
+                                    templet: "#form-list_show",
                                     width: 67,
-                                    align: 'center',
+                                    align: "center",
                                 },
                                 {
-                                    title: '支持排序',
-                                    field: 'enable_sort',
-                                    templet: '#form-enable_sort',
+                                    title: "支持排序",
+                                    field: "enable_sort",
+                                    templet: "#form-enable_sort",
                                     width: 67,
-                                    align: 'center',
+                                    align: "center",
                                 },
                                 {
-                                    title: '支持查询',
-                                    field: 'searchable',
-                                    templet: '#form-searchable',
+                                    title: "支持查询",
+                                    field: "searchable",
+                                    templet: "#form-searchable",
                                     width: 67,
-                                    align: 'center',
+                                    align: "center",
                                 },
                                 {
-                                    title: '查询类型',
-                                    field: 'search_type',
-                                    templet: '#form-search_type',
+                                    title: "查询类型",
+                                    field: "search_type",
+                                    templet: "#form-search_type",
                                     width: 130,
                                 },
                                 {
-                                    type: 'space'
+                                    type: "space"
                                 }
                             ];
 
                             table.render({
-                                elem: '#form-table',
+                                elem: "#form-table",
                                 cols: [cols],
                                 data: formsData,
                                 cellMinWidth: 40,
-                                skin: 'line',
-                                size: 'lg',
+                                skin: "line",
+                                size: "lg",
                                 limit: 10000,
                                 page: false,
                                 defaultToolbar: [],
@@ -470,88 +470,88 @@
                         });
 
                         // 索引设置
-                        layui.use(['table', 'common', 'xmSelect', 'popup'], function () {
+                        layui.use(["table", "common", "xmSelect", "popup"], function () {
                             let table = layui.table;
                             let common = layui.common;
 
                             let cols = [
                                 {
-                                    type: 'checkbox',
+                                    type: "checkbox",
                                     width: 52,
                                 },
                                 {
-                                    title: '索引名称',
-                                    field: 'name',
-                                    templet: '#key-name',
+                                    title: "索引名称",
+                                    field: "name",
+                                    templet: "#key-name",
                                     width: 200,
                                 },
                                 {
-                                    title: '索引字段',
-                                    field: 'columns',
-                                    templet: '#key-columns',
+                                    title: "索引字段",
+                                    field: "columns",
+                                    templet: "#key-columns",
                                     width: 200,
                                 },
                                 {
-                                    title: '索引类型',
-                                    field: 'type',
-                                    templet: '#key-type',
+                                    title: "索引类型",
+                                    field: "type",
+                                    templet: "#key-type",
                                     width: 200,
                                 },
                                 {
-                                    type: 'space'
+                                    type: "space"
                                 }
                             ];
 
                             table.render({
-                                elem: '#key-table',
+                                elem: "#key-table",
                                 cols: [cols],
                                 data: keysData,
-                                skin: 'line',
-                                size: 'lg',
+                                skin: "line",
+                                size: "lg",
                                 limit: 10000,
                                 page: false,
-                                toolbar: '#column-toolbar',
+                                toolbar: "#column-toolbar",
                                 defaultToolbar: [],
                             });
 
-                            table.on('toolbar(key-table)', function(obj) {
-                                if (obj.event === 'add') {
+                            table.on("toolbar(key-table)", function(obj) {
+                                if (obj.event === "add") {
                                     add();
-                                } else if (obj.event === 'batchRemove') {
+                                } else if (obj.event === "batchRemove") {
                                     batchRemove(obj);
                                 }
                             });
 
                             let add = function() {
                                 syncTableData();
-                                let options = table.getData('key-table');
+                                let options = table.getData("key-table");
                                 options.push({
                                     _key_id: _key_id++,
-                                    name : '',
-                                    columns: '',
-                                    type: 'normal'
+                                    name : "",
+                                    columns: "",
+                                    type: "normal"
                                 });
-                                table.reloadData('key-table', {data:options});
+                                table.reloadData("key-table", {data:options});
                                 keyColumnMultiSelectRender();
                             }
 
                             let batchRemove = function(obj) {
-                                var checkIds = common.checkField(obj,'_key_id');
-                                if (checkIds === "") return layui.popup.warning('未选中数据');
-                                let data = table.getData('key-table');
+                                var checkIds = common.checkField(obj,"_key_id");
+                                if (checkIds === "") return layui.popup.warning("未选中数据");
+                                let data = table.getData("key-table");
                                 let newData = [];
-                                let deleteIds = checkIds.split(',');
+                                let deleteIds = checkIds.split(",");
                                 layui.each(data, function (index, item) {
-                                    if (deleteIds.indexOf(item._key_id + '') === -1) {
+                                    if (deleteIds.indexOf(item._key_id + "") === -1) {
                                         newData.push(item);
                                     }
                                 });
-                                table.reloadData('key-table', {data: newData});
+                                table.reloadData("key-table", {data: newData});
                                 keyColumnMultiSelectRender();
                             }
 
                             window.syncTableData = function () {
-                                let tableData = layui.form.val('create-table-form');
+                                let tableData = layui.form.val("create-table-form");
                                 let formTableDataOld = [];
                                 let columnTableData = [];
                                 let formTableData = [];
@@ -562,42 +562,42 @@
                                 window._key_id = 0;
                                 while (id < len) {
                                     // column data
-                                    if (typeof tableData['columns[' + id + '][_field_id]'] !== 'undefined') {
+                                    if (typeof tableData["columns[" + id + "][_field_id]"] !== "undefined") {
                                         columnTableData.push({
-                                            _field_id: tableData['columns[' + id + '][_field_id]'],
-                                            field : tableData['columns[' + id + '][field]'],
-                                            old_field : tableData['columns[' + id + '][old_field]'],
-                                            comment: tableData['columns[' + id + '][comment]'],
-                                            length: tableData['columns[' + id + '][length]'],
-                                            default: tableData['columns[' + id + '][default]'],
-                                            type: tableData['columns[' + id + '][type]'],
-                                            primary_key: tableData['columns[' + id + '][primary_key]'] === 'on',
-                                            auto_increment: tableData['columns[' + id + '][auto_increment]'] === 'on',
-                                            nullable: tableData['columns[' + id + '][nullable]'] === 'on',
+                                            _field_id: tableData["columns[" + id + "][_field_id]"],
+                                            field : tableData["columns[" + id + "][field]"],
+                                            old_field : tableData["columns[" + id + "][old_field]"],
+                                            comment: tableData["columns[" + id + "][comment]"],
+                                            length: tableData["columns[" + id + "][length]"],
+                                            default: tableData["columns[" + id + "][default]"],
+                                            type: tableData["columns[" + id + "][type]"],
+                                            primary_key: tableData["columns[" + id + "][primary_key]"] === "on",
+                                            auto_increment: tableData["columns[" + id + "][auto_increment]"] === "on",
+                                            nullable: tableData["columns[" + id + "][nullable]"] === "on",
                                         });
                                     }
                                     // old form data
-                                    if (typeof tableData['forms[' + id + '][_field_id]'] !== 'undefined') {
+                                    if (typeof tableData["forms[" + id + "][_field_id]"] !== "undefined") {
                                         formTableDataOld.push({
-                                            _field_id: tableData['forms[' + id + '][_field_id]'],
-                                            field : tableData['columns[' + id + '][field]'], // column
-                                            comment: tableData['columns[' + id + '][comment]'], //column
-                                            control: tableData['forms[' + id + '][control]'],
-                                            control_args: tableData['forms[' + id + '][control_args]'],
-                                            form_show: tableData['forms[' + id + '][form_show]'] === 'on',
-                                            list_show: tableData['forms[' + id + '][list_show]'] === 'on',
-                                            enable_sort: tableData['forms[' + id + '][enable_sort]'] === 'on',
-                                            searchable: tableData['forms[' + id + '][searchable]'],
-                                            search_type: tableData['forms[' + id + '][search_type]'],
+                                            _field_id: tableData["forms[" + id + "][_field_id]"],
+                                            field : tableData["columns[" + id + "][field]"], // column
+                                            comment: tableData["columns[" + id + "][comment]"], //column
+                                            control: tableData["forms[" + id + "][control]"],
+                                            control_args: tableData["forms[" + id + "][control_args]"],
+                                            form_show: tableData["forms[" + id + "][form_show]"] === "on",
+                                            list_show: tableData["forms[" + id + "][list_show]"] === "on",
+                                            enable_sort: tableData["forms[" + id + "][enable_sort]"] === "on",
+                                            searchable: tableData["forms[" + id + "][searchable]"],
+                                            search_type: tableData["forms[" + id + "][search_type]"],
                                         });
                                     }
                                     // key data
-                                    if (typeof tableData['keys[' + _key_id + '][name]'] !== 'undefined') {
+                                    if (typeof tableData["keys[" + _key_id + "][name]"] !== "undefined") {
                                         keyTableData.push({
                                             _key_id: _key_id,
-                                            name: tableData['keys[' + _key_id + '][name]'],
-                                            columns: tableData['keys[' + _key_id + '][columns]'],
-                                            type: tableData['keys[' + _key_id + '][type]'],
+                                            name: tableData["keys[" + _key_id + "][name]"],
+                                            columns: tableData["keys[" + _key_id + "][columns]"],
+                                            type: tableData["keys[" + _key_id + "][type]"],
                                         });
                                     }
                                     _key_id++;
@@ -619,30 +619,30 @@
                                             _field_id: _field_id,
                                             field : item.field, // column
                                             comment: item.comment, // column
-                                            control: item.type.toLocaleString().indexOf('int') !== -1 ? 'inputNumber' : 'input',
-                                            control_args: '',
+                                            control: item.type.toLocaleString().indexOf("int") !== -1 ? "inputNumber" : "input",
+                                            control_args: "",
                                             form_show: true,
                                             list_show: true,
                                             enable_sort: false,
                                             searchable: false,
-                                            search_type: 'normal',
+                                            search_type: "normal",
                                         });
                                     } else {
                                         formTableData.push(formTableOldDataMap[_field_id]);
                                     }
                                 });
 
-                                layui.table.reloadData('column-table', {data: columnTableData});
-                                layui.table.reloadData('form-table', {data: formTableData});
-                                layui.table.reloadData('key-table', {data: keyTableData});
+                                layui.table.reloadData("column-table", {data: columnTableData});
+                                layui.table.reloadData("form-table", {data: formTableData});
+                                layui.table.reloadData("key-table", {data: keyTableData});
                                 keyColumnMultiSelectRender();
                             }
 
                             window.keyColumnMultiSelectRender = function () {
-                                layui.use(['jquery', 'xmSelect', 'table'], function () {
+                                layui.use(["jquery", "xmSelect", "table"], function () {
                                     let $ = layui.$;
                                     let table = layui.table;
-                                    let columnData = table.getData('column-table');
+                                    let columnData = table.getData("column-table");
                                     let data = [];
                                     layui.each(columnData, function (i, item) {
                                         if (item.field) {
@@ -651,10 +651,10 @@
                                             });
                                         }
                                     });
-                                    layui.each($('.key-columns-div'), function (_, dom) {
-                                        let name = $(dom).attr('name');
-                                        let value = $(dom).attr('value');
-                                        let initValue = value ? value.split(',') : [];
+                                    layui.each($(".key-columns-div"), function (_, dom) {
+                                        let name = $(dom).attr("name");
+                                        let value = $(dom).attr("value");
+                                        let initValue = value ? value.split(",") : [];
                                         layui.xmSelect.render({
                                             el: dom,
                                             name: name,
@@ -675,21 +675,21 @@
 
 
 
-            layui.use(['form', 'popup'], function () {
+            layui.use(["form", "popup"], function () {
                 //提交事件
-                layui.form.on('submit(save)', function () {
+                layui.form.on("submit(save)", function () {
                     syncTableData();
-                    let data = layui.form.val('create-table-form');
+                    let data = layui.form.val("create-table-form");
                     layui.$.ajax({
                         url: MODIFY_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });

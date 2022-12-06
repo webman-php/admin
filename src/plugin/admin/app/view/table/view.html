@@ -68,7 +68,7 @@
 
             <?=$form->js(3)?>
 
-            layui.use(['table', 'form','common', 'popup', 'util'], function() {
+            layui.use(["table", "form","common", "popup", "util"], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -79,11 +79,11 @@
                 let apiResults = {};
                 $.ajax({
                     url: SCHEMA_API,
-                    dataType: 'json',
+                    dataType: "json",
                     success: function (e) {
                         let forms = e.data.forms;
                         let cols = [{
-                            type: 'checkbox'
+                            type: "checkbox"
                         }];
                         for (let i in forms) {
                             let item = forms[i];
@@ -97,13 +97,13 @@
 
                             let control = item.control.toLowerCase();
                             // switch 可以直接编辑
-                            if (control === 'switch') {
+                            if (control === "switch") {
                                 let props = getProps(item.control_args);
-                                let layText = props['lay-text'] || '';
+                                let layText = props["lay-text"] || "";
                                 schema.templet = function (d) {
-                                    form.on('switch('+field+')', function (data) {
+                                    form.on("switch("+field+")", function (data) {
                                         if (!PRIMARY_KEY) {
-                                            return layui.popup.warning('该表没有主键，无法完成此操作');
+                                            return layui.popup.warning("该表没有主键，无法完成此操作");
                                         }
                                         let load = layer.load();
                                         let postData = { table: TABLE_NAME };
@@ -114,25 +114,25 @@
                                             if (res.code) {
                                                 return layui.popup.failure(res.msg);
                                             }
-                                            return layui.popup.success('操作成功');
+                                            return layui.popup.success("操作成功");
                                         })
                                     });
-                                    let checked = d[field] === 1 ? 'checked' : '';
+                                    let checked = d[field] === 1 ? "checked" : "";
                                     return '<input type="checkbox" value="'+util.escape(d[PRIMARY_KEY])+'" lay-filter="'+util.escape(field)+'" lay-skin="switch" lay-text="'+util.escape(layText)+'" '+checked+'/>';
                                 }
-                            } else if (control === 'iconpicker') {
+                            } else if (control === "iconpicker") {
                                 schema.templet = function (d) {
                                     return '<i class="layui-icon ' + util.escape(d[field]) + '"></i>';
                                 };
-                            } else if (control === 'upload') {
+                            } else if (control === "upload") {
                                 schema.templet = function (d) {
                                     return '<a href="' + encodeURI(d[field]) + '" target="_blank">' + util.escape(d[field]) + '</a>';
                                 };
-                            } else if (control === 'uploadimage') {
+                            } else if (control === "uploadimage") {
                                 schema.templet = function (d) {
                                     return '<img src="'+encodeURI(d[field])+'" style="max-width:32px;max-height:32px;" />';
                                 };
-                            } else if (['select', 'selectmulti', 'treeselect', 'treeselectmulti'].indexOf(control) !== -1) {
+                            } else if (["select", "selectmulti", "treeselect", "treeselectmulti"].indexOf(control) !== -1) {
                                 let props = getProps(item.control_args);
                                 apiResults[field] = [];
                                 if (props.url) {
@@ -141,39 +141,39 @@
                                     apiResults[field] = props.data;
                                 }
                                 schema.templet = function (d) {
-                                    if (typeof d[field] == "undefined") return '';
+                                    if (typeof d[field] == "undefined") return "";
                                     let items = [];
-                                    layui.each((d[field] + '').split(','), function (k , v) {
+                                    layui.each((d[field] + "").split(","), function (k , v) {
                                         items.push(apiResults[field][v] || v);
                                     });
-                                    return util.escape(items.join(','));
+                                    return util.escape(items.join(","));
                                 }
                             }
                             cols.push(schema);
                         }
                         cols.push({
-                            title: '操作',
-                            toolbar: '#table-bar',
-                            align: 'center',
+                            title: "操作",
+                            toolbar: "#table-bar",
+                            align: "center",
                             width: 130
                         });
 
                         function render()
                         {
                             table.render({
-                                elem: '#data-table',
+                                elem: "#data-table",
                                 url: SELECT_API,
                                 page: true,
                                 cols: [cols],
-                                skin: 'line',
-                                size: 'lg',
-                                toolbar: '#table-toolbar',
+                                skin: "line",
+                                size: "lg",
+                                toolbar: "#table-toolbar",
                                 autoSort: false,
                                 defaultToolbar: [{
-                                    title: '刷新',
-                                    layEvent: 'refresh',
-                                    icon: 'layui-icon-refresh',
-                                }, 'filter', 'print', 'exports']
+                                    title: "刷新",
+                                    layEvent: "refresh",
+                                    icon: "layui-icon-refresh",
+                                }, "filter", "print", "exports"]
                             });
                         }
 
@@ -183,7 +183,7 @@
                                 let [field, url] = item;
                                 $.ajax({
                                     url: url,
-                                    dateType: 'json',
+                                    dateType: "json",
                                     success: function (res) {
                                         function travel(items) {
                                             for (let k in items) {
@@ -210,40 +210,40 @@
                     }
                 });
 
-                table.on('tool(data-table)', function(obj) {
-                    if (obj.event === 'remove') {
+                table.on("tool(data-table)", function(obj) {
+                    if (obj.event === "remove") {
                         window.remove(obj);
-                    } else if (obj.event === 'edit') {
+                    } else if (obj.event === "edit") {
                         window.edit(obj);
                     }
                 });
 
-                table.on('toolbar(data-table)', function(obj) {
-                    if (obj.event === 'add') {
+                table.on("toolbar(data-table)", function(obj) {
+                    if (obj.event === "add") {
                         window.add();
-                    } else if (obj.event === 'refresh') {
+                    } else if (obj.event === "refresh") {
                         window.refreshTable();
-                    } else if (obj.event === 'batchRemove') {
+                    } else if (obj.event === "batchRemove") {
                         window.batchRemove(obj);
                     }
                 });
 
-                form.on('submit(table-query)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-query)", function(data) {
+                    table.reload("data-table", {
                         where: data.field
                     })
                     return false;
                 });
-                form.on('submit(table-reset)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-reset)", function(data) {
+                    table.reload("data-table", {
                         where: []
                     })
                 });
 
-                table.on('sort(data-table)', function(obj){
-                    table.reload('data-table', {
+                table.on("sort(data-table)", function(obj){
+                    table.reload("data-table", {
                         initSort: obj,
-                        scrollPos: 'fixed',
+                        scrollPos: "fixed",
                         where: {
                             field: obj.field,
                             order: obj.type
@@ -254,24 +254,24 @@
                 window.add = function() {
                     layer.open({
                         type: 2,
-                        title: '新增',
+                        title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'450px'],
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
                         content: INSERT_URL
                     });
                 }
 
                 window.edit = function(obj) {
                     if (!PRIMARY_KEY) {
-                        return layui.popup.warning('该表没有主键，无法完成此操作');
+                        return layui.popup.warning("该表没有主键，无法完成此操作");
                     }
                     let value = obj.data[PRIMARY_KEY];
                     layer.open({
                         type: 2,
-                        title: '修改',
+                        title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'450px'],
-                        content: UPDATE_URL + '&' + PRIMARY_KEY + '=' + value
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        content: UPDATE_URL + "&" + PRIMARY_KEY + "=" + value
                     });
                 }
 
@@ -282,45 +282,45 @@
                 window.batchRemove = function(obj) {
                     var checkIds = common.checkField(obj, PRIMARY_KEY);
                     if (checkIds === "") {
-                        layui.popup.warning('未选中数据');
+                        layui.popup.warning("未选中数据");
                         return false;
                     }
-                    window.doRemove(checkIds.split(','));
+                    window.doRemove(checkIds.split(","));
                 }
 
                 window.doRemove = function (ids) {
                     if (!PRIMARY_KEY) {
-                        return layui.popup.warning('该表没有主键，无法完成此操作');
+                        return layui.popup.warning("该表没有主键，无法完成此操作");
                     }
                     let data = {
                         table: TABLE_NAME
                     };
                     data[PRIMARY_KEY] = ids;
-                    layer.confirm('确定删除?', {
+                    layer.confirm("确定删除?", {
                         icon: 3,
-                        title: '提示'
+                        title: "提示"
                     }, function(index) {
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
                             url: DELETE_API,
                             data: data,
-                            dataType: 'json',
-                            type: 'post',
+                            dataType: "json",
+                            type: "post",
                             success: function(res) {
                                 layer.close(loading);
                                 if (res.code) {
                                     return layui.popup.failure(res.msg);
                                 }
-                                return layui.popup.success('操作成功', refreshTable);
+                                return layui.popup.success("操作成功", refreshTable);
                             }
                         })
                     });
                 }
 
                 window.refreshTable = function() {
-                    table.reloadData('data-table', {
-                        scrollPos: 'fixed'
+                    table.reloadData("data-table", {
+                        scrollPos: "fixed"
                     });
                 }
             })
@@ -333,20 +333,20 @@
                     return {};
                 }
                 let props = {};
-                let split = control_args.split(';');
+                let split = control_args.split(";");
                 for (let item of split) {
-                    let pos = item.indexOf(':');
+                    let pos = item.indexOf(":");
                     if (pos === -1) continue;
                     let name = item.substring(0, pos).trim();
                     let values = item.substring(pos + 1).trim();
 
                     // values = a:v,c:d
-                    pos = values.indexOf(':');
+                    pos = values.indexOf(":");
                     if (pos !== -1) {
-                        let options = values.split(',');
+                        let options = values.split(",");
                         values = {};
                         for (const option of options) {
-                            let [value, name] = option.split(':');
+                            let [value, name] = option.split(":");
                             values[value] = name;
                         }
                     }

@@ -118,7 +118,7 @@
 <script src="/app/admin/component/layui/layui.js"></script>
 <script src="/app/admin/component/pear/pear.js"></script>
 <script>
-    layui.use(['form', 'step','code','element', 'popup'], function() {
+    layui.use(["form", "step","code","element", "popup"], function() {
         var $ = layui.$,
                 form = layui.form,
                 step = layui.step;
@@ -126,33 +126,33 @@
         layui.code();
 
         step.render({
-            elem: '#stepForm',
-            filter: 'stepForm',
-            width: '100%',
-            stepWidth: '70%',
-            height: '500px',
+            elem: "#stepForm",
+            filter: "stepForm",
+            width: "100%",
+            stepWidth: "70%",
+            height: "500px",
             stepItems: [{
-                title: '填写数据库信息'
+                title: "填写数据库信息"
             }, {
-                title: '填写管理员账户'
+                title: "填写管理员账户"
             }, {
-                title: '完成'
+                title: "完成"
             }]
         });
 
-        form.on('submit(formStep)', function(data) {
+        form.on("submit(formStep)", function(data) {
             let loading = layer.load();
             $.ajax({
-                url: '/app/admin/install/step1',
-                type: 'POST',
-                dataType: 'json',
+                url: "/app/admin/install/step1",
+                type: "POST",
+                dataType: "json",
                 data: data.field,
                 success: function (res) {
                     if (res.code) {
                         return layui.popup.failure(res.msg);
                     }
-                    layui.popup.success('操作成功', function () {
-                        step.next('#stepForm');
+                    layui.popup.success("操作成功", function () {
+                        step.next("#stepForm");
                     });
                 },
                 complete: function () {
@@ -162,19 +162,19 @@
             return false;
         });
 
-        form.on('submit(formStep2)', function(data) {
+        form.on("submit(formStep2)", function(data) {
             let loading = layer.load();
             $.ajax({
-                url: '/app/admin/install/step2',
-                type: 'POST',
-                dataType: 'json',
+                url: "/app/admin/install/step2",
+                type: "POST",
+                dataType: "json",
                 data: data.field,
                 success: function (res) {
                     if (res.code) {
                         return layui.popup.failure(res.msg);
                     }
-                    //layui.popup.success('安装成功');
-                    step.next('#stepForm');
+                    //layui.popup.success("安装成功");
+                    step.next("#stepForm");
                     layer.close(loading);
                 },
                 complete: function () {
@@ -184,17 +184,17 @@
             return false;
         });
 
-        $('.pre').click(function() {
-            step.pre('#stepForm');
+        $(".pre").click(function() {
+            step.pre("#stepForm");
             return false;
         });
 
-        $('.next').click(function() {
-            step.next('#stepForm');
+        $(".next").click(function() {
+            step.next("#stepForm");
             return false;
         });
 
-        $('.finish').click(function() {
+        $(".finish").click(function() {
             location.reload();
         });
     })

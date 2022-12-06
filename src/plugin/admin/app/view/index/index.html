@@ -97,7 +97,7 @@
         <script src="component/pear/pear.js"></script>
         <!-- 框 架 初 始 化 -->
         <script>
-            layui.use(['admin','jquery','popup','drawer'], function() {
+            layui.use(["admin","jquery","popup","drawer"], function() {
                 var $ = layui.$;
                 var admin = layui.admin;
                 var popup = layui.popup;
@@ -110,8 +110,8 @@
                 // 登出逻辑
                 admin.logout(function(){
                     $.ajax({
-                        url: '/app/admin/account/logout',
-                        dataType: 'json',
+                        url: "/app/admin/account/logout",
+                        dataType: "json",
                         success: function (res) {
                             if (res.code) {
                                 return popup.error(res.msg);

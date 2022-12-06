@@ -38,19 +38,19 @@
 
             <?=$form->js(3)?>
 
-            layui.use(['form', 'popup'], function () {
+            layui.use(["form", "popup"], function () {
                 //提交事件
-                layui.form.on('submit(save)', function (data) {
+                layui.form.on("submit(save)", function (data) {
                     layui.$.ajax({
                         url: INSERT_API,
-                        type: 'POST',
-                        dateType: 'json',
+                        type: "POST",
+                        dateType: "json",
                         data: data.field,
                         success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-                            return layui.popup.success('操作成功', function () {
+                            return layui.popup.success("操作成功", function () {
                                 parent.refreshTable();
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
                             });

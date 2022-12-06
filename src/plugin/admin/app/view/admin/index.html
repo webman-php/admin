@@ -99,8 +99,8 @@
         <script>
 
             // 相关常量
-            const PRIMARY_KEY = 'id';
-            const CONTROLLER = 'plugin\\admin\\app\\controller\\AdminController';
+            const PRIMARY_KEY = "id";
+            const CONTROLLER = "plugin\\admin\\app\\controller\\AdminController";
             const SELECT_API = "/app/admin/admin/select";
             const UPDATE_API = "/app/admin/admin/update";
             const DELETE_API = "/app/admin/admin/delete";
@@ -116,7 +116,7 @@
             })
             
             // 表格渲染
-            layui.use(['table', 'form', 'common', 'popup', 'util'], function() {
+            layui.use(["table", "form", "common", "popup", "util"], function() {
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -205,9 +205,9 @@
 				
 				// 获取表格中下拉或树形组件数据
 				let apis = [];
-				apis.push(['roles', '/app/admin/admin-role/select?format=select']);
+				apis.push(["roles", "/app/admin/admin-role/select?format=select"]);
 				let apiResults = {};
-				apiResults['roles'] = [];
+				apiResults["roles"] = [];
 				let count = apis.length;
 				layui.each(apis, function (k, item) {
 				    let [field, url] = item;
@@ -238,45 +238,45 @@
 				}
 				
                 // 编辑或删除行事件
-                table.on('tool(data-table)', function(obj) {
-                    if (obj.event === 'remove') {
+                table.on("tool(data-table)", function(obj) {
+                    if (obj.event === "remove") {
                         remove(obj);
-                    } else if (obj.event === 'edit') {
+                    } else if (obj.event === "edit") {
                         edit(obj);
                     }
                 });
 
                 // 表格顶部工具栏事件
-                table.on('toolbar(data-table)', function(obj) {
-                    if (obj.event === 'add') {
+                table.on("toolbar(data-table)", function(obj) {
+                    if (obj.event === "add") {
                         add();
-                    } else if (obj.event === 'refresh') {
+                    } else if (obj.event === "refresh") {
                         refreshTable();
-                    } else if (obj.event === 'batchRemove') {
+                    } else if (obj.event === "batchRemove") {
                         batchRemove(obj);
                     }
                 });
 
                 // 表格顶部搜索事件
-                form.on('submit(table-query)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-query)", function(data) {
+                    table.reload("data-table", {
                         where: data.field
                     })
                     return false;
                 });
                 
                 // 表格顶部搜索重置事件
-                form.on('submit(table-reset)', function(data) {
-                    table.reload('data-table', {
+                form.on("submit(table-reset)", function(data) {
+                    table.reload("data-table", {
                         where: []
                     })
                 });
 
                 // 表格排序事件
-                table.on('sort(data-table)', function(obj){
-                    table.reload('data-table', {
+                table.on("sort(data-table)", function(obj){
+                    table.reload("data-table", {
                         initSort: obj,
-                        scrollPos: 'fixed',
+                        scrollPos: "fixed",
                         where: {
                             field: obj.field,
                             order: obj.type
@@ -288,9 +288,9 @@
                 let add = function() {
                     layer.open({
                         type: 2,
-                        title: '新增',
+                        title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'450px'],
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
                         content: INSERT_URL
                     });
                 }
@@ -300,10 +300,10 @@
                     let value = obj.data[PRIMARY_KEY];
                     layer.open({
                         type: 2,
-                        title: '修改',
+                        title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?'100%':'500px', common.isModile()?'100%':'450px'],
-                        content: UPDATE_URL + '?' + PRIMARY_KEY + '=' + value
+                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
 
@@ -316,33 +316,33 @@
                 let batchRemove = function(obj) {
                     let checkIds = common.checkField(obj, PRIMARY_KEY);
                     if (checkIds === "") {
-                        layui.popup.warning('未选中数据');
+                        layui.popup.warning("未选中数据");
                         return false;
                     }
-                    doRemove(checkIds.split(','));
+                    doRemove(checkIds.split(","));
                 }
 
                 // 执行删除
                 let doRemove = function (ids) {
                     let data = {};
                     data[PRIMARY_KEY] = ids;
-                    layer.confirm('确定删除?', {
+                    layer.confirm("确定删除?", {
                         icon: 3,
-                        title: '提示'
+                        title: "提示"
                     }, function(index) {
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
                             url: DELETE_API,
                             data: data,
-                            dataType: 'json',
-                            type: 'post',
+                            dataType: "json",
+                            type: "post",
                             success: function(res) {
                                 layer.close(loading);
                                 if (res.code) {
                                     return layui.popup.failure(res.msg);
                                 }
-                                return layui.popup.success('操作成功', refreshTable);
+                                return layui.popup.success("操作成功", refreshTable);
                             }
                         })
                     });
@@ -350,8 +350,8 @@
 
                 // 刷新表格数据
                 window.refreshTable = function(param) {
-                    table.reloadData('data-table', {
-                        scrollPos: 'fixed'
+                    table.reloadData("data-table", {
+                        scrollPos: "fixed"
                     });
                 }
             })
