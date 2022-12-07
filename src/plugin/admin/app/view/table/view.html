@@ -98,7 +98,7 @@
                             let control = item.control.toLowerCase();
                             // switch 可以直接编辑
                             if (control === "switch") {
-                                let props = getProps(item.control_args);
+                                let props = getControlProps(item.control_args);
                                 let layText = props["lay-text"] || "";
                                 schema.templet = function (d) {
                                     form.on("switch("+field+")", function (data) {
@@ -133,7 +133,7 @@
                                     return '<img src="'+encodeURI(d[field])+'" style="max-width:32px;max-height:32px;" />';
                                 };
                             } else if (["select", "selectmulti", "treeselect", "treeselectmulti"].indexOf(control) !== -1) {
-                                let props = getProps(item.control_args);
+                                let props = getControlProps(item.control_args);
                                 apiResults[field] = [];
                                 if (props.url) {
                                     apis.push([field, props.url]);
@@ -327,7 +327,7 @@
 
 
             // 获取选择组件配置项
-            function getProps(control_args)
+            function getControlProps(control_args)
             {
                 if (!control_args) {
                     return {};

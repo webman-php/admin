@@ -699,7 +699,7 @@ EOF;
      * @param $controller_class_with_namespace
      * @return void
      */
-    protected function createTemplate($template_file_path, $table, $template_path, $url_path_base, $primary_key, $controller_class_with_namespace)
+    protected function createTemplate($template_file_path, $table, $template_path, $url_path_base, $primary_key)
     {
         $this->mkdir($template_file_path . '/index.html');
         $form = LayuiForm::buildForm($table, 'search');
@@ -730,7 +730,6 @@ EOF
         $html = str_replace("\n", "\n" . str_repeat('    ', 2), $html);
         $js = $form->js(3);
         $table_js = LayuiForm::buildTable($table, 4);
-        $controller_class_with_namespace = str_replace('\\', '\\\\', $controller_class_with_namespace);
         $template_content = <<<EOF
 
 <!DOCTYPE html>
@@ -776,7 +775,6 @@ EOF
 
             // 相关常量
             const PRIMARY_KEY = "$primary_key";
-            const CONTROLLER = "$controller_class_with_namespace";
             const SELECT_API = "$url_path_base/$template_path/select";
             const UPDATE_API = "$url_path_base/$template_path/update";
             const DELETE_API = "$url_path_base/$template_path/delete";

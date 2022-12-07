@@ -703,7 +703,7 @@ EOF;
                 $info['control_args'] = '';
             }
 
-            $props = Util::getProps($control, $info['control_args']);
+            $props = Util::getControlProps($control, $info['control_args']);
             // 增加修改记录验证必填项
             if ($filter == 'form_show' && !isset($props['lay-verify']) && !$columns[$key]['nullable'] && $default === null && ($field !== 'password' || $type === 'insert')) {
                 $props['lay-verify'] = 'required';
@@ -762,7 +762,7 @@ EOF;
             $control = strtolower($info['control']);
             switch ($control) {
                 case 'switch':
-                    $props = Util::getProps($info['control'], $info['control_args']);
+                    $props = Util::getControlProps($info['control'], $info['control_args']);
                     $lay_text = $props['lay-text'] ?? '';
                     $templet = <<<EOF
 
@@ -815,7 +815,7 @@ EOF;
             }
 
             if (in_array($control, ['select', 'selectmulti', 'treeselect', 'treeselectmulti'])) {
-                $props = Util::getProps($info['control'], $info['control_args']);
+                $props = Util::getControlProps($info['control'], $info['control_args']);
 
                 if (isset($props['url'])) {
                     $api .= "apis.push([\"$field\", \"{$props['url']}\"]);\r\n";

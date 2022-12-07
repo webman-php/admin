@@ -2,6 +2,8 @@
 
 namespace plugin\admin\app\common;
 
+use Illuminate\Database\Connection;
+use Illuminate\Database\Schema\Builder;
 use plugin\admin\app\model\Option;
 use support\Db;
 use Support\Exception\BusinessException;
@@ -10,27 +12,58 @@ use function config;
 
 class Util
 {
+    /**
+     * 密码哈希
+     * @param $password
+     * @param $algo
+     * @return false|string|null
+     */
     static public function passwordHash($password, $algo = PASSWORD_DEFAULT)
     {
         return password_hash($password, $algo);
     }
 
-    static function db()
-    {
-        return Db::connection('plugin.admin.mysql');
-    }
-
-    static function schema()
-    {
-        return Db::schema('plugin.admin.mysql');
-    }
-
-    static public function passwordVerify($password, $hash)
+    /**
+     * 验证密码哈希
+     * @param $password
+     * @param $hash
+     * @return bool
+     */
+    static public function passwordVerify($password, $hash): bool
     {
         return password_verify($password, $hash);
     }
 
     /**
+     * 获取webman-admin数据库连接
+     * @return Connection
+     */
+    static function db(): Connection
+    {
+        return Db::connection('plugin.admin.mysql');
+    }
+
+    /**
+     * 获取SchemaBuilder
+     * @return Builder
+     */
+    static function schema(): Builder
+    {
+        return Db::schema('plugin.admin.mysql');
+    }
+
+    /**
+     * 数据库字符串转义
+     * @param $var
+     * @return false|string
+     */
+    static public function pdoQuote($var)
+    {
+        return Util::db()->getPdo()->quote($var, \PDO::PARAM_STR);
+    }
+
+    /**
+     * 检查表名是否合法
      * @param string $table
      * @return string
      * @throws BusinessException
@@ -78,15 +111,7 @@ class Util
     }
 
     /**
-     * @param $var
-     * @return false|string
-     */
-    static public function pdoQuote($var)
-    {
-        return Util::db()->getPdo()->quote($var, \PDO::PARAM_STR);
-    }
-
-    /**
+     * 检测是否是合法URL Path
      * @param $var
      * @return string
      * @throws BusinessException
@@ -98,9 +123,13 @@ class Util
         }
         return $var;
     }
-    
 
-    static public function camel($value)
+    /**
+     * 转换为驼峰
+     * @param string $value
+     * @return string
+     */
+    static public function camel(string $value): string
     {
         static $cache = [];
         $key = $value;
@@ -114,11 +143,21 @@ class Util
         return $cache[$key] = str_replace(' ', '', $value);
     }
 
-    static public function smCamel($value)
+    /**
+     * 转换为小驼峰
+     * @param $value
+     * @return string
+     */
+    static public function smCamel($value): string
     {
         return lcfirst(static::camel($value));
     }
 
+    /**
+     * 获取注释中第一行
+     * @param $comment
+     * @return false|mixed|string
+     */
     static public function getCommentFirstLine($comment)
     {
         if ($comment === false) {
@@ -132,7 +171,11 @@ class Util
         return $comment;
     }
 
-    static public function methodControlMap()
+    /**
+     * 表单类型到插件的映射
+     * @return \string[][]
+     */
+    static public function methodControlMap(): array
     {
         return  [
             //method=>[控件]
@@ -171,7 +214,12 @@ class Util
         ];
     }
 
-    static public function typeToControl($type)
+    /**
+     * 数据库类型到插件的转换
+     * @param $type
+     * @return string
+     */
+    static public function typeToControl($type): string
     {
         if (stripos($type, 'int') !== false) {
             return 'InputNumber';
@@ -188,6 +236,12 @@ class Util
         return 'Input';
     }
 
+    /**
+     * 数据库类型到表单类型的转换
+     * @param $type
+     * @param $unsigned
+     * @return string
+     */
     static public function typeToMethod($type, $unsigned = false)
     {
         if (stripos($type, 'int') !== false) {
@@ -206,10 +260,10 @@ class Util
 
     /**
      * 按表获取摘要
-     *
      * @param $table
-     * @param $section
+     * @param null $section
      * @return array|mixed
+     * @throws BusinessException
      */
     static public function getSchema($table, $section = null)
     {
@@ -282,6 +336,11 @@ class Util
         return $section ? $data[$section] : $data;
     }
 
+    /**
+     * 获取字段长度或默认值
+     * @param $schema
+     * @return mixed|string
+     */
     static public function getLengthValue($schema)
     {
         $type = $schema->DATA_TYPE;
@@ -302,7 +361,13 @@ class Util
         return '';
     }
 
-    static public function getProps($control, $control_args)
+    /**
+     * 获取控件参数
+     * @param $control
+     * @param $control_args
+     * @return array
+     */
+    static public function getControlProps($control, $control_args): array
     {
         if (!$control_args) {
             return [];
@@ -339,8 +404,7 @@ class Util
 
 
     /**
-     * reload webman
-     *
+     * reload webman (不支持windows)
      * @return bool
      */
     static public function reloadWebman()
