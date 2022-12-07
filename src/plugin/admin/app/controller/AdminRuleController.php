@@ -19,7 +19,7 @@ class AdminRuleController extends Crud
      *
      * @var string[]
      */
-    public $noNeedAuth = ['get', 'permission'];
+    public $noNeedAuth = ['get', 'permissionCodes'];
 
     /**
      * @var AdminRule
@@ -104,31 +104,62 @@ class AdminRuleController extends Crud
      * @param Request $request
      * @return Response
      */
-    public function permission(Request $request): Response
+    public function permissionCodes(Request $request): Response
     {
         $rules = $this->getRules(admin('roles'));
         // 超级管理员
         if (in_array('*', $rules)) {
             return $this->json(0, 'ok', ['*']);
         }
-        $controller = $request->get('controller');
-        if (!$controller) {
-            return $this->json(0, 'ok', []);
-        }
-        // 获取详细权限
-        $controller_search = str_replace('\\', '\\\\', $controller);
-        $keys = AdminRule::where('key', 'like', "$controller_search%")
-            ->whereIn('id', $rules)->pluck('key');
+        $keys = AdminRule::whereIn('id', $rules)->pluck('key');
         $permissions = [];
-        $prefix_length = strlen($controller) + 1;
         foreach ($keys as $key) {
-            if ($key === $controller) {
-                $permissions = ['*'];
-                break;
+            $key = strtolower($key);
+            $action = '';
+            if (strpos($key, '@')) {
+                [$key, $action] = explode( '@', $key, 2);
             }
-            $permissions[] = substr($key, $prefix_length);
+            $prefix = 'plugin';
+            $paths = explode('\\', $key);
+            if (count($paths) < 2) {
+                continue;
+            }
+            $base = '';
+            if (strpos($key, "$prefix\\") === 0) {
+                if (count($paths) < 4) {
+                    continue;
+                }
+                array_shift($paths);
+                $plugin = array_shift($paths);
+                $base = "app.$plugin.";
+            }
+            if ($code = $this->formatPermissionCode($paths, $action, $base)) {
+                $permissions[] = $code;
+            }
         }
         return $this->json(0, 'ok', $permissions);
+    }
+
+    /**
+     * @param $paths
+     * @param $action
+     * @param string $base
+     * @return false|string
+     */
+    protected function formatPermissionCode($paths, $action, string $base = '')
+    {
+        array_shift($paths);
+        foreach ($paths as $index => $path) {
+            if ($path === 'controller') {
+                unset($paths[$index]);
+            }
+        }
+        $suffix = 'controller';
+        $code = $base . implode('.', $paths);
+        if (substr($code, -strlen($suffix)) === $suffix) {
+            $code = substr($code, 0, -strlen($suffix));
+        }
+        return $action ? "$code.$action" : $code;
     }
 
     /**

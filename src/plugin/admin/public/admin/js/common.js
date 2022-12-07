@@ -36,22 +36,23 @@ function toggleSearchFormShow()
  * 获取控制器详细权限，并决定展示哪些按钮或dom元素
  */
 layui.$(function () {
-    if (typeof CONTROLLER === "undefined") return;
     let $ = layui.$;
     $.ajax({
-        url: "/app/admin/admin-rule/permission",
+        url: "/app/admin/admin-rule/permission-codes",
         dataType: "json",
-        data: {controller: CONTROLLER},
         success: function (res) {
             let style = '';
-            layui.each(res.data || [], function (k, action) {
-                if (action === '*') {
-                    style = '*[permission]{display: initial}';
-                    return;
-                }
-                style += '*[permission="'+action+'"]{display: initial}';
+            let codes = res.data || [];
+            // codes里有*，说明是超级管理员，拥有所有权限
+            if (codes.indexOf('*') !== -1) {
+                $("head").append("<style>*[permission]{display: initial}</style>");
+                return;
+            }
+            // 细分权限
+            layui.each(codes, function (k, code) {
+                codes[k] = '*[permission^="'+code+'"]';
             });
-            $("head").append("<style>"+style+"</style>");
+            $("head").append("<style>"+codes.join(",")+"{display: initial}</style>");
         }
     });
 });
