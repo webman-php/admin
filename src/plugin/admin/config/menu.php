@@ -116,4 +116,20 @@ return [
             ]
         ]
     ],
+    [
+        'title' => '开发辅助',
+        'key' => 'dev',
+        'icon' => 'layui-icon-fonts-code',
+        'weight' => 500,
+        'type' => 0,
+        'children' => [
+            [
+                'title' => '表单构建',
+                'key' => 'plugin\\admin\\app\\controller\\DevController',
+                'href' => '/app/admin/dev/form-build',
+                'weight' => 800,
+                'type' => 1,
+            ]
+        ]
+    ],
 ];

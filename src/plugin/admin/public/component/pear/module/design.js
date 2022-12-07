@@ -3,8 +3,9 @@ layui.define(['layer', 'form'], function(exports) {
 		form = layui.form,
 		$ = layui.$,
 		key = '',
-		js = '';
-	    module = ["form"];
+		allJS = '',
+	    allHtml = '';
+	    let module = ["form"];
 	delHtml()
 	$('button').on('click', function() {
 		var _this = $(this),
@@ -46,7 +47,7 @@ layui.define(['layer', 'form'], function(exports) {
 					});
 				});
 				if (module.indexOf('iconPicker') === -1) module.push('iconPicker');
-				js += '    // 图标选择\n' +
+				allJS += '    // 图标选择\n' +
 					'    layui.iconPicker.render({\n' +
 					'       elem: "#' + key + '",\n' +
 					'       type: "fontClass",\n' +
@@ -66,7 +67,7 @@ layui.define(['layer', 'form'], function(exports) {
 					});
 				});
 				if (module.indexOf('xmSelect') === -1) module.push('xmSelect');
-				js += '    // 下拉多选\n' +
+				allJS += '    // 下拉多选\n' +
 					'    layui.xmSelect.render({\n' +
 					'       el: "#' + key + '",\n' +
 					'       name: "' + key + '",\n' +
@@ -88,7 +89,7 @@ layui.define(['layer', 'form'], function(exports) {
 					});
 				});
 				if (module.indexOf('xmSelect') === -1) module.push('xmSelect');
-				js += '    // 树多选\n' +
+				allJS += '    // 树多选\n' +
 					'    layui.xmSelect.render({\n' +
 					'       el: "#' + key + '",\n' +
 					'       name: "' + key + '",\n' +
@@ -114,7 +115,7 @@ layui.define(['layer', 'form'], function(exports) {
 					});
 				});
 				if (module.indexOf('xmSelect') === -1) module.push('xmSelect');
-				js += '    // 树多选\n' +
+				allJS += '    // 树多选\n' +
 					'    layui.xmSelect.render({\n' +
 					'       el: "#' + key + '",\n' +
 					'       name: "' + key + '",\n' +
@@ -159,7 +160,7 @@ layui.define(['layer', 'form'], function(exports) {
 				});
 				if (module.indexOf('upload') === -1) module.push('upload');
 				if (module.indexOf('util') === -1) module.push('util');
-				js += '    // 上传文件\n' +
+				allJS += '    // 上传文件\n' +
 					'    layui.use([\'upload\'], function() {\n' +
 					'      let input = layui.$("#'+key+'").prev();\n' +
 					'      input.prev().html(layui.util.escape(input.val()));\n' +
@@ -220,7 +221,7 @@ layui.define(['layer', 'form'], function(exports) {
 					});
 				});
 				if (module.indexOf('upload') === -1) module.push('upload');
-				js += '    // 上传图片\n' +
+				allJS += '    // 上传图片\n' +
 					'    layui.use([\'upload\'], function() {\n' +
 					'      let input = layui.$("#'+key+'").prev();\n' +
 					'      input.prev().attr(\'src\', input.val());\n' +
@@ -255,9 +256,7 @@ layui.define(['layer', 'form'], function(exports) {
 			case 'del':
 				$('form').html("\n")
 				delHtml()
-				$('.code-show').text('')
-				return false
-				break;
+				return false;
 			default:
 				layer.msg('类型错误', {
 					icon: 2
@@ -271,25 +270,15 @@ layui.define(['layer', 'form'], function(exports) {
 	})
 
 	function delHtml() {
-		layui.data('form_html', {
-			key: 'html',
-			remove: true
-		});
+		allHtml = '';
+		allJS = '';
+		$('.code-show').text('');
+		$('.js-show').text(jscode());
 	}
 
 	function setHtml(html) {
-		var h = layui.data('form_html');
-		if (h && h.html) {
-			var _d = h.html + html
-		} else {
-			var _d = html
-		}
-		layui.data('form_html', {
-			key: 'html',
-			value: _d
-		})
-		$('.code-show').text('<form class="layui-form" action="" onsubmit="return false">\n' + _d + '</form>')
-
+		allHtml += html;
+		$('.code-show').text('<form class="layui-form" action="" onsubmit="return false">\n' + allHtml + '</form>')
 	}
 
 	function icon(size) {
@@ -340,7 +329,7 @@ layui.define(['layer', 'form'], function(exports) {
 			'    <div class="layui-input-' + size + '">\n' +
 			'      <span></span>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
-			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'" permission="app.admin.upload.file>\n' +
+			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'" permission="app.admin.upload.file">\n' +
 			'        <i class="layui-icon">&#xe67c;</i>'+uploadWords+'\n' +
 			'      </button>\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'" permission="app.admin.upload.attachment">\n' +
@@ -456,7 +445,7 @@ layui.define(['layer', 'form'], function(exports) {
 		var html = '<script>\n' +
 			'  layui.use('+JSON.stringify(module)+', function(){\n' +
 			'    var form = layui.form;\n' +
-			''+ js +
+			''+ allJS +
 			'    // 提交表单\n' +
 			'    form.on(\'submit(formDemo)\', function(data){\n' +
 			'      layer.msg(JSON.stringify(data.field));\n' +
