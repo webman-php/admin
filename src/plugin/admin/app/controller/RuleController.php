@@ -3,8 +3,8 @@
 namespace plugin\admin\app\controller;
 
 use plugin\admin\app\common\Util;
-use plugin\admin\app\model\AdminRole;
-use plugin\admin\app\model\AdminRule;
+use plugin\admin\app\model\Role;
+use plugin\admin\app\model\Rule;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
@@ -12,7 +12,7 @@ use support\Response;
 /**
  * 权限菜单
  */
-class AdminRuleController extends Crud
+class RuleController extends Crud
 {
     /**
      * 不需要权限的方法
@@ -22,7 +22,7 @@ class AdminRuleController extends Crud
     public $noNeedAuth = ['get', 'permissionCodes'];
 
     /**
-     * @var AdminRule
+     * @var Rule
      */
     protected $model = null;
 
@@ -31,7 +31,7 @@ class AdminRuleController extends Crud
      */
     public function __construct()
     {
-        $this->model = new AdminRule;
+        $this->model = new Rule;
     }
 
     /**
@@ -40,7 +40,7 @@ class AdminRuleController extends Crud
      */
     public function index(): Response
     {
-        return view('admin-rule/index');
+        return view('rule/index');
     }
 
     /**
@@ -63,7 +63,7 @@ class AdminRuleController extends Crud
     function get(Request $request): Response
     {
         $rules = $this->getRules(admin('roles'));
-        $items = AdminRule::orderBy('weight', 'desc')->get()->toArray();
+        $items = Rule::orderBy('weight', 'desc')->get()->toArray();
         $types = $request->get('type', '0,1');
         $types = is_string($types) ? explode(',', $types) : [0, 1];
         $items_map = [];
@@ -111,7 +111,7 @@ class AdminRuleController extends Crud
         if (in_array('*', $rules)) {
             return $this->json(0, 'ok', ['*']);
         }
-        $keys = AdminRule::whereIn('id', $rules)->pluck('key');
+        $keys = Rule::whereIn('id', $rules)->pluck('key');
         $permissions = [];
         foreach ($keys as $key) {
             if (!$key = Util::controllerToUrlPath($key)) {
@@ -157,11 +157,11 @@ class AdminRuleController extends Crud
                     $menu = $items[$name] ?? [];
                     if ($menu) {
                         if ($menu->title != $title) {
-                            AdminRule::where('key', $name)->update(['title' => $title]);
+                            Rule::where('key', $name)->update(['title' => $title]);
                         }
                         continue;
                     }
-                    $menu = new AdminRule;
+                    $menu = new Rule;
                     $menu->pid = $pid;
                     $menu->key = $name;
                     $menu->title = $title;
@@ -173,7 +173,7 @@ class AdminRuleController extends Crud
         // 从数据库中删除已经不存在的方法
         $menu_names_to_del = array_diff($methods_in_db, $methods_in_files);
         if ($menu_names_to_del) {
-            //AdminRule::whereIn('key', $menu_names_to_del)->delete();
+            //Rule::whereIn('key', $menu_names_to_del)->delete();
         }
     }
 
@@ -208,7 +208,7 @@ class AdminRuleController extends Crud
     public function insert(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view('admin-rule/insert');
+            return view('rule/insert');
         }
         $data = $this->insertInput($request);
         $data['key'] = str_replace('\\\\', '\\', $data['key']);
@@ -230,7 +230,7 @@ class AdminRuleController extends Crud
     public function update(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view('admin-rule/update');
+            return view('rule/update');
         }
         [$id, $data] = $this->updateInput($request);
         if (!$row = $this->model->find($id)) {
@@ -341,7 +341,7 @@ class AdminRuleController extends Crud
      */
     protected function getRules($roles): array
     {
-        $rules_strings = $roles ? AdminRole::whereIn('id', $roles)->pluck('rules') : [];
+        $rules_strings = $roles ? Role::whereIn('id', $roles)->pluck('rules') : [];
         $rules = [];
         foreach ($rules_strings as $rule_string) {
             if (!$rule_string) {

@@ -393,7 +393,7 @@ class PluginController extends Base
      * 获取webman/admin版本
      * @return string
      */
-    public function getAdminVersion(): string
+    protected function getAdminVersion(): string
     {
         return config('plugin.admin.app.version', '');
     }

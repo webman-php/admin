@@ -45,18 +45,18 @@
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.adminrule.insert">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.rule.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.adminrule.delete">
+            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.rule.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.adminrule.update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.adminrule.delete">删除</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.rule.update">编辑</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.rule.delete">删除</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js"></script>
@@ -68,12 +68,11 @@
 
             // 相关常量
             const PRIMARY_KEY = "id";
-            const CONTROLLER = "plugin\\admin\\app\\controller\\AdminRuleController";
-            const SELECT_API = "/app/admin/admin-rule/select?limit=5000";
-            const DELETE_API = "/app/admin/admin-rule/delete";
-            const UPDATE_API = "/app/admin/admin-rule/update";
-            const INSERT_URL = "/app/admin/admin-rule/insert";
-            const UPDATE_URL = "/app/admin/admin-rule/update";
+            const SELECT_API = "/app/admin/rule/select?limit=5000";
+            const DELETE_API = "/app/admin/rule/delete";
+            const UPDATE_API = "/app/admin/rule/update";
+            const INSERT_URL = "/app/admin/rule/insert";
+            const UPDATE_URL = "/app/admin/rule/update";
 
             // 表格渲染
             layui.use(["table", "treetable", "form", "common", "popup", "util"], function() {
@@ -178,7 +177,7 @@
                 let apis = [];
                 let apiResults = {};
                 apiResults["pid"] = [];
-                apis.push(["pid", "/app/admin/admin-rule/select?format=tree&type=0,1"]);
+                apis.push(["pid", "/app/admin/rule/select?format=tree&type=0,1"]);
                 apiResults["type"] = ["目录","菜单","权限"];
                 let count = apis.length;
                 layui.each(apis, function (k, item) {

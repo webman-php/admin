@@ -2,18 +2,14 @@
 
 namespace plugin\admin\app\model;
 
+use plugin\admin\app\model\Base;
+
 /**
  * @property integer $id 主键(主键)
- * @property string $name 名字
- * @property integer $pid 上级id
- * @property string $component 组件
- * @property string $path 路径
- * @property string $icon 图标
- * @property string $title 标题
+ * @property string $name 角色名
+ * @property string $rules 权限
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
- * @property string $frame_src url
- * @property integer $hide_menu 隐藏菜单
  */
 class Role extends Base
 {
@@ -22,7 +18,7 @@ class Role extends Base
      *
      * @var string
      */
-    protected $table = 'wa_admin_rules';
+    protected $table = 'wa_roles';
 
     /**
      * The primary key associated with the table.
@@ -30,6 +26,8 @@ class Role extends Base
      * @var string
      */
     protected $primaryKey = 'id';
-
+    
+    
+    
     
 }

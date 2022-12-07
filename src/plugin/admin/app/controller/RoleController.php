@@ -2,7 +2,7 @@
 
 namespace plugin\admin\app\controller;
 
-use plugin\admin\app\model\AdminRole;
+use plugin\admin\app\model\Role;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
@@ -10,10 +10,10 @@ use support\Response;
 /**
  * 角色管理
  */
-class AdminRoleController extends Crud
+class RoleController extends Crud
 {
     /**
-     * @var AdminRole
+     * @var Role
      */
     protected $model = null;
 
@@ -22,7 +22,7 @@ class AdminRoleController extends Crud
      */
     public function __construct()
     {
-        $this->model = new AdminRole;
+        $this->model = new Role;
     }
 
     /**
@@ -31,7 +31,7 @@ class AdminRoleController extends Crud
      */
     public function index(): Response
     {
-        return view('admin-role/index');
+        return view('role/index');
     }
 
     /**
@@ -45,7 +45,7 @@ class AdminRoleController extends Crud
         if ($request->method() === 'POST') {
             return parent::insert($request);
         }
-        return view('admin-role/insert');
+        return view('role/insert');
     }
 
     /**
@@ -57,7 +57,7 @@ class AdminRoleController extends Crud
     public function update(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view('admin-role/update');
+            return view('role/update');
         }
         [$id, $data] = $this->updateInput($request);
         // id为1的管理员权限固定为*

@@ -127,7 +127,7 @@
             // 字段 角色 roles
             layui.use(["jquery", "xmSelect"], function() {
                 layui.$.ajax({
-                    url: "/app/admin/admin-role/select?format=select",
+                    url: "/app/admin/role/select?format=select",
                     dataType: "json",
                     success: function (e) {
                         let value = layui.$("#roles").attr("value");

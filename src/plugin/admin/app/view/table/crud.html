@@ -80,7 +80,7 @@
 
             layui.use(["jquery", "xmSelect"], function() {
                 layui.$.ajax({
-                    url: "/app/admin/admin-rule/select?format=tree&type=0,1",
+                    url: "/app/admin/rule/select?format=tree&type=0,1",
                     dataType: "json",
                     success: function (e) {
                         let value = layui.$("#pid").attr("value");

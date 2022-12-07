@@ -50,8 +50,8 @@
 
             // 相关接口
             const PRIMARY_KEY = "id";
-            const SELECT_API = "/app/admin/admin-role/select" + location.search;
-            const UPDATE_API = "/app/admin/admin-role/update";
+            const SELECT_API = "/app/admin/role/select" + location.search;
+            const UPDATE_API = "/app/admin/role/update";
 
             // 获取数据库记录
             layui.use(["form", "util"], function () {
@@ -79,7 +79,7 @@
                         // 字段 权限 rules
                         layui.use(["jquery", "xmSelect"], function() {
                             layui.$.ajax({
-                                url: "/app/admin/admin-rule/get?type=0,1,2",
+                                url: "/app/admin/rule/get?type=0,1,2",
                                 dataType: "json",
                                 success: function (e) {
                                     let value = layui.$("#rules").attr("value");

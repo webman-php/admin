@@ -1,8 +1,8 @@
 <?php
 namespace plugin\admin\api;
 
-use plugin\admin\app\model\AdminRole;
-use plugin\admin\app\model\AdminRule;
+use plugin\admin\app\model\Role;
+use plugin\admin\app\model\Rule;
 use support\exception\BusinessException;
 use function admin;
 
@@ -20,7 +20,7 @@ class Menu
      */
     public static function get($key)
     {
-        $menu = AdminRule::where('key', $key)->first();
+        $menu = Rule::where('key', $key)->first();
         return $menu ? $menu->toArray() : null;
     }
 
@@ -32,7 +32,7 @@ class Menu
      */
     public static function find($id): array
     {
-        return AdminRule::find($id)->toArray();
+        return Rule::find($id)->toArray();
     }
 
     /**
@@ -43,7 +43,7 @@ class Menu
      */
     public static function add(array $menu)
     {
-        $item = new AdminRule;
+        $item = new Rule;
         foreach ($menu as $key => $value) {
             $item->$key = $value;
         }
@@ -69,7 +69,7 @@ class Menu
         unset($menu_tree['children']);
         if ($old_menu = Menu::get($menu_tree['key'])) {
             $pid = $old_menu['id'];
-            AdminRule::where('key', $menu_tree['key'])->update($menu_tree);
+            Rule::where('key', $menu_tree['key'])->update($menu_tree);
         } else {
             $pid = static::add($menu_tree);
         }
@@ -87,17 +87,17 @@ class Menu
      */
     public static function delete($key)
     {
-        $item = AdminRule::where('key', $key)->first();
+        $item = Rule::where('key', $key)->first();
         if (!$item) {
             return;
         }
         // 子规则一起删除
         $delete_ids = $children_ids = [$item['id']];
         while($children_ids) {
-            $children_ids = AdminRule::whereIn('pid', $children_ids)->pluck('id')->toArray();
+            $children_ids = Rule::whereIn('pid', $children_ids)->pluck('id')->toArray();
             $delete_ids = array_merge($delete_ids, $children_ids);
         }
-        AdminRule::whereIn('id', $delete_ids)->delete();
+        Rule::whereIn('id', $delete_ids)->delete();
     }
 
 

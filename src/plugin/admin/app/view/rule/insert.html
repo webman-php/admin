@@ -85,7 +85,7 @@
         <script>
 
             // 接口
-            const INSERT_URL = "/app/admin/admin-rule/insert";
+            const INSERT_URL = "/app/admin/rule/insert";
 
             // 图标选择
             layui.use(["iconPicker"], function() {
@@ -99,7 +99,7 @@
             // 上级菜单
             layui.use(["jquery", "xmSelect"], function() {
                 layui.$.ajax({
-                    url: "/app/admin/admin-rule/select?format=tree&type=0,1",
+                    url: "/app/admin/rule/select?format=tree&type=0,1",
                     dataType: "json",
                     success: function (e) {
                         let value = layui.$("#pid").attr("value");

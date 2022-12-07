@@ -1,8 +1,8 @@
 <?php
 namespace plugin\admin\api;
 
-use plugin\admin\app\model\AdminRole;
-use plugin\admin\app\model\AdminRule;
+use plugin\admin\app\model\Role;
+use plugin\admin\app\model\Rule;
 use support\exception\BusinessException;
 use function admin;
 
@@ -73,7 +73,7 @@ class Auth
         }
 
         // 角色没有规则
-        $rules = AdminRole::whereIn('id', $roles)->pluck('rules');
+        $rules = Role::whereIn('id', $roles)->pluck('rules');
         $rule_ids = [];
         foreach ($rules as $rule_string) {
             if (!$rule_string) {
@@ -95,7 +95,7 @@ class Auth
         // 如果action为index，规则里有任意一个以$controller开头的权限即可
         if (strtolower($action) === 'index') {
             $controller = str_replace('\\', '\\\\', $controller);
-            $rule = AdminRule::where(function ($query) use ($controller, $action) {
+            $rule = Rule::where(function ($query) use ($controller, $action) {
                 $query->where('key', 'like', "$controller@%")->orWhere('key', $controller);
             })->whereIn('id', $rule_ids)->first();
             if ($rule) {
@@ -107,7 +107,7 @@ class Auth
         }
 
         // 查询是否有当前控制器的规则
-        $rule = AdminRule::where(function ($query) use ($controller, $action) {
+        $rule = Rule::where(function ($query) use ($controller, $action) {
             $query->where('key', "$controller@$action")->orWhere('key', $controller);
         })->whereIn('id', $rule_ids)->first();
 

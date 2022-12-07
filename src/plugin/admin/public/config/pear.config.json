@@ -4,7 +4,7 @@
 		"image": "/app/admin/admin/images/logo.png"
 	},
 	"menu": {
-		"data": "/app/admin/admin-rule/get",
+		"data": "/app/admin/rule/get",
 		"method": "GET",
 		"accordion": true,
 		"collapse": false,

@@ -58,18 +58,18 @@
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.adminrole.insert">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.role.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.adminrole.delete">
+            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.role.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.adminrole.update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.adminrole.delete">删除</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.role.update">编辑</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.role.delete">删除</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js"></script>
@@ -80,11 +80,11 @@
 
             // 相关常量
             const PRIMARY_KEY = "id";
-            const SELECT_API = "/app/admin/admin-role/select";
-            const UPDATE_API = "/app/admin/admin-role/update";
-            const DELETE_API = "/app/admin/admin-role/delete";
-            const INSERT_URL = "/app/admin/admin-role/insert";
-            const UPDATE_URL = "/app/admin/admin-role/update";
+            const SELECT_API = "/app/admin/role/select";
+            const UPDATE_API = "/app/admin/role/update";
+            const DELETE_API = "/app/admin/role/delete";
+            const INSERT_URL = "/app/admin/role/insert";
+            const UPDATE_URL = "/app/admin/role/update";
             
             // 字段 创建时间 created_at
             layui.use(["laydate"], function() {
@@ -164,7 +164,7 @@
 				
 				// 获取表格中下拉或树形组件数据
 				let apis = [];
-				apis.push(["rules", "/app/admin/admin-rule/get?type=0,1,2"]);
+				apis.push(["rules", "/app/admin/rule/get?type=0,1,2"]);
 				let apiResults = {};
 				apiResults["rules"] = [];
 				let count = apis.length;

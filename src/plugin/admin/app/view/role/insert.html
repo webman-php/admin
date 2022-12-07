@@ -50,12 +50,12 @@
         <script>
 
             // 相关接口
-            const INSERT_API = "/app/admin/admin-role/insert";
+            const INSERT_API = "/app/admin/role/insert";
             
             // 字段 权限 rules
             layui.use(["jquery", "xmSelect"], function() {
                 layui.$.ajax({
-                    url: "/app/admin/admin-rule/get?type=0,1,2",
+                    url: "/app/admin/rule/get?type=0,1,2",
                     dataType: "json",
                     success: function (e) {
                         let value = layui.$("#rules").attr("value");

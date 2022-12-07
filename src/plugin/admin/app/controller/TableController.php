@@ -6,8 +6,8 @@ use Doctrine\Inflector\InflectorFactory;
 use Illuminate\Database\Schema\Blueprint;
 use plugin\admin\app\common\LayuiForm;
 use plugin\admin\app\common\Util;
-use plugin\admin\app\model\AdminRole;
-use plugin\admin\app\model\AdminRule;
+use plugin\admin\app\model\Role;
+use plugin\admin\app\model\Rule;
 use plugin\admin\app\model\Option;
 use Support\Exception\BusinessException;
 use Support\Request;
@@ -414,7 +414,7 @@ class TableController extends Base
 
         $pid = (int)$pid;
         if ($pid) {
-            $parent_menu = AdminRule::find($pid);
+            $parent_menu = Rule::find($pid);
             if (!$parent_menu) {
                 return $this->json(1, '父菜单不存在');
             }
@@ -490,9 +490,9 @@ class TableController extends Base
         $reflection = new \ReflectionClass("$controller_namespace\\$controller_class");
         $controller_class_with_nsp = $reflection->getName();
 
-        $menu = AdminRule::where('key', $controller_class_with_nsp)->first();
+        $menu = Rule::where('key', $controller_class_with_nsp)->first();
         if (!$menu) {
-            $menu = new AdminRule;
+            $menu = new Rule;
         }
         $menu->pid = $pid;
         $menu->key = $controller_class_with_nsp;
@@ -503,7 +503,7 @@ class TableController extends Base
         $menu->save();
 
         $roles = admin('roles');
-        $rules = AdminRole::whereIn('id', $roles)->pluck('rules');
+        $rules = Role::whereIn('id', $roles)->pluck('rules');
         $rule_ids = [];
         foreach ($rules as $rule_string) {
             if (!$rule_string) {
@@ -514,7 +514,7 @@ class TableController extends Base
 
         // 不是超级管理员，则需要给当前管理员这个菜单的权限
         if (!in_array('*', $rule_ids) && $roles){
-            $role = AdminRole::find(current($roles));
+            $role = Role::find(current($roles));
             if ($role) {
                 $role->rules .= ",{$menu->id}";
             }
