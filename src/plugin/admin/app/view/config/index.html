@@ -40,8 +40,11 @@
                                 <div class="layui-input-block">
                                     <img style="max-width:90px;max-height:90px;" src=""/>
                                     <input type="text" style="display:none" name="image" value="/app/admin/admin/avatar.png" />
-                                    <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="image">
+                                    <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="image" permission="app.admin.upload.avatar">
                                         <i class="layui-icon">&#xe67c;</i>上传图片
+                                    </button>
+                                    <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-image" permission="app.admin.upload.attachment">
+                                        <i class="layui-icon">&#xe649;</i>选择附件
                                     </button>
                                 </div>
                             </div>
@@ -192,6 +195,19 @@
                 // image
                 let input = $("#image").prev();
                 input.prev().attr("src", input.val());
+                layui.$("#attachment-choose-avatar").on("click", function() {
+                    parent.layer.open({
+                        type: 2,
+                        title: "选择附件",
+                        content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",
+                        area: ["95%", "90%"],
+                        success: function (layero, index) {
+                            parent.layui.$("#layui-layer" + index).data("callback", function (data) {
+                                input.val(data.url).prev().attr("src", data.url);
+                            });
+                        }
+                    });
+                });
                 layui.upload.render({
                     elem: "#image",
                     url: "/app/admin/upload/avatar",
