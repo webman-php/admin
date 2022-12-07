@@ -20,8 +20,8 @@
 		"preload": false,
 		"max": "30",
 		"index": {
-			"id": "1",
-			"href": "/app/admin/table/index",
+			"id": "0",
+			"href": "/app/admin/index/dashboard",
 			"title": "首页"
 		}
 	},

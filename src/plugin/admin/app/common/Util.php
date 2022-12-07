@@ -442,6 +442,20 @@ class Util
 
     }
 
+    /**
+     * 获取某个composer包的版本
+     * @param string $package
+     * @return mixed|string
+     */
+    static public function getPackageVersion(string $package)
+    {
+        $installed_php = base_path('vendor/composer/installed.php');
+        if (is_file($installed_php)) {
+            $packages = include $installed_php;
+        }
+        return substr($packages['versions'][$package]['version'] ?? 'unknown  ', 0, -2);
+    }
+
 
     /**
      * reload webman (不支持windows)
