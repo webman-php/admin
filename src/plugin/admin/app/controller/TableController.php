@@ -772,7 +772,9 @@ EOF
 
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
+        <script src="/app/admin/admin/js/permission.js"></script>
         <script src="/app/admin/admin/js/common.js"></script>
+        
         <script>
 
             // 相关常量
@@ -955,6 +957,8 @@ EOF;
 
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
+        <script src="/app/admin/admin/js/permission.js"></script>
+        
         <script>
 
             // 相关接口
@@ -1028,6 +1032,8 @@ EOF;
 
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
+        <script src="/app/admin/admin/js/permission.js"></script>
+        
         <script>
 
             // 相关接口
