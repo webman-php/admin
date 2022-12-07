@@ -230,7 +230,6 @@
                 });
             });
 
-
             // 菜单设置
             layui.use(["upload", "layer", "popup"], function() {
                 let $ = layui.$;
@@ -278,6 +277,8 @@
                             return layui.popup.success("操作成功");
                         }
                     });
+                    // 删除sessionStorage缓存
+                    sessionStorage.clear();
                     return false;
                 });
             });

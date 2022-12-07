@@ -44,6 +44,7 @@ class IndexController
     }
 
     /**
+     * 仪表板
      * @param Request $request
      * @return Response
      */
