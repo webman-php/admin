@@ -15,18 +15,18 @@
         </div>
 
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="create">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.table.create">
                 <i class="layui-icon layui-icon-add-1"></i>创建表格
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="drop">
+            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.table.drop">
                 <i class="layui-icon layui-icon-delete"></i>删除表格
             </button>
         </script>
 
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="drop">删除</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="crud" permission="crud">一键菜单</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.table.modify">编辑</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.table.drop">删除</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="crud" permission="app.admin.table.crud">一键菜单</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js"></script>
