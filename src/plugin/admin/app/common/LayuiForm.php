@@ -189,9 +189,9 @@ EOF;
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\r\n        $key: $item,";
+                $options_string .= "\n        $key: $item,";
             } else {
-                $options_string .= "\r\n        $key: \"$item\",";
+                $options_string .= "\n        $key: \"$item\",";
             }
         }
 
@@ -261,9 +261,9 @@ EOF;
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\r\n        $key: $item,";
+                $options_string .= "\n        $key: $item,";
             } else {
-                $options_string .= "\r\n        $key: \"$item\",";
+                $options_string .= "\n        $key: \"$item\",";
             }
         }
 
@@ -342,7 +342,7 @@ EOF;
             if (is_array($item)) {
                 continue;
             }
-            $options_string .= "\r\n        $key: \"$item\",";
+            $options_string .= "\n        $key: \"$item\",";
         }
         $id = $this->createId($field);
 
@@ -396,7 +396,7 @@ EOF;
             if (is_array($item)) {
                 continue;
             }
-            $options_string .= "\r\n        $key: \"$item\",";
+            $options_string .= "\n        $key: \"$item\",";
         }
         $id = $this->createId($field);
         $id_start = "$id-date-start";
@@ -453,9 +453,9 @@ EOF;
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\r\n                $key: $item,";
+                $options_string .= "\n                $key: $item,";
             } else {
-                $options_string .= "\r\n                $key: \"$item\",";
+                $options_string .= "\n                $key: \"$item\",";
             }
         }
 
@@ -611,11 +611,11 @@ EOF;
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\r\n".($url?'                ':'        ')."$key: $item,";
+                $options_string .= "\n".($url?'                ':'        ')."$key: $item,";
             } else if (is_string($item)) {
-                $options_string .= "\r\n".($url?'                ':'        ')."$key: \"$item\",";
+                $options_string .= "\n".($url?'                ':'        ')."$key: \"$item\",";
             } else {
-                $options_string .= "\r\n".($url?'                ':'        ')."$key: ".var_export($item, true).",";
+                $options_string .= "\n".($url?'                ':'        ')."$key: ".var_export($item, true).",";
             }
         }
 
@@ -818,8 +818,8 @@ EOF;
                 $props = Util::getControlProps($info['control'], $info['control_args']);
 
                 if (isset($props['url'])) {
-                    $api .= "apis.push([\"$field\", \"{$props['url']}\"]);\r\n";
-                    $api_result .= "apiResults[\"$field\"] = [];\r\n";
+                    $api .= "\napis.push([\"$field\", \"{$props['url']}\"]);";
+                    $api_result .= "\napiResults[\"$field\"] = [];";
                 } else if (!empty($props['data'])) {
                     $options = [];
                     foreach ($props['data'] as $option) {
@@ -827,7 +827,7 @@ EOF;
                             $options[$option['value']] = $option['name'];
                         }
                     }
-                    $api_result .= "apiResults[\"$field\"] = " . json_encode($options, JSON_UNESCAPED_UNICODE) . ";\r\n";
+                    $api_result .= "\napiResults[\"$field\"] = " . json_encode($options, JSON_UNESCAPED_UNICODE) . ";";
                 }
 
                 $templet = <<<EOF
@@ -871,22 +871,18 @@ EOF;
         if (!$api && $api_result) {
             $codes = <<<EOF
 // 获取表格中下拉或树形组件数据
-let apiResults = {};
-$api_result
+let apiResults = {};$api_result
 EOF;
         } else if ($api && !$api_result) {
             $codes = <<<EOF
 // 获取表格中下拉或树形组件数据
-let apis = [];
-$api
+let apis = [];$api
 EOF;
         } else if ($api && $api_result) {
             $codes = <<<EOF
 // 获取表格中下拉或树形组件数据
-let apis = [];
-$api
-let apiResults = {};
-$api_result
+let apis = [];$api
+let apiResults = {};$api_result
 EOF;
         }
 
