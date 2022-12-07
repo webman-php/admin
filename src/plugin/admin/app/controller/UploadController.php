@@ -233,7 +233,7 @@ class UploadController extends Crud
                 'code' => 0,
                 'msg' => '上传成功',
                 'data' => [
-                    'url' => "/app/admin/$relative_path/$name.$ext"
+                    'url' => "/app/admin/$relative_path/$name.md.$ext"
                 ]
             ]);
         }
