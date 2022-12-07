@@ -330,10 +330,10 @@ layui.define(['layer', 'form'], function(exports) {
 			'      <span></span>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'" permission="app.admin.upload.file">\n' +
-			'        <i class="layui-icon">&#xe67c;</i>'+uploadWords+'\n' +
+			'        <i class="layui-icon layui-icon-upload"></i>'+uploadWords+'\n' +
 			'      </button>\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'" permission="app.admin.upload.attachment">\n' +
-			'	     <i class="layui-icon">&#xe649;</i>'+selectWords+'\n' +
+			'	     <i class="layui-icon layui-icon-align-left"></i>'+selectWords+'\n' +
 			'      </button>\n' +
 			'    </div>\n' +
 			'  </div>\n';
@@ -349,10 +349,10 @@ layui.define(['layer', 'form'], function(exports) {
 			'      <img style="max-width:90px;max-height:90px;" src=""/>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'" permission="app.admin.upload.image">\n' +
-			'        <i class="layui-icon">&#xe67c;</i>'+uploadWords+'\n' +
+			'        <i class="layui-icon layui-icon-upload"></i>'+uploadWords+'\n' +
 		    '      </button>\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'" permission="app.admin.upload.attachment">\n' +
-			'	     <i class="layui-icon">&#xe649;</i>'+selectWords+'\n' +
+			'	     <i class="layui-icon layui-icon-align-left"></i>'+selectWords+'\n' +
 			'      </button>\n' +
 			'    </div>\n' +
 			'  </div>\n';

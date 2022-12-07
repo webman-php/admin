@@ -203,10 +203,10 @@ EOF;
         <span>$value</span>
         <input type="text" style="display:none" name="$field" value="$value" />
         <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="$id" permission="app.admin.upload.file">
-            <i class="layui-icon">&#xe67c;</i>上传文件
+            <i class="layui-icon layui-icon-upload"></i>上传文件
         </button>
         <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-$id" permission="app.admin.upload.attachment">
-            <i class="layui-icon">&#xe649;</i>选择附件
+            <i class="layui-icon layui-icon-align-left"></i>上传图片
         </button>
     </div>
 </div>
@@ -275,10 +275,10 @@ EOF;
         <img style="max-width:90px;max-height:90px;" src=""/>
         <input type="text" style="display:none" name="$field" value="$value" />
         <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="$id"  permission="app.admin.upload.image">
-            <i class="layui-icon">&#xe67c;</i>上传图片
+            <i class="layui-icon layui-icon-upload"></i>上传图片
         </button>
         <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-$id"  permission="app.admin.upload.attachment">
-            <i class="layui-icon">&#xe649;</i>选择附件
+            <i class="layui-icon layui-icon-align-left"></i>上传图片
         </button>
     </div>
 </div>
