@@ -237,7 +237,7 @@
                     // 查询指定后缀
                     let searchExt = layui.url().search.ext;
                     if (searchExt) {
-                        layui.$(".top-search-from input[name="ext"]").val(searchExt);
+                        layui.$('.top-search-from input[name="ext"]').val(searchExt);
                     }
 				    table.render({
 				        elem: "#data-table",
@@ -255,7 +255,7 @@
 				            icon: "layui-icon-refresh",
 				        }, "filter", "print", "exports"],
                         done: function () {
-                            layer.photos({photos: "div[lay-id="data-table"]", anim: 5});
+                            layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
                         }
 				    });
 				}
