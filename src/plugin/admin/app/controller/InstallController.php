@@ -70,8 +70,8 @@ class InstallController extends Base
 
         $tables_to_install = [
             'wa_admins',
-            'wa_admin_roles',
-            'wa_admin_rules',
+            'wa_roles',
+            'wa_rules',
             'wa_options',
             'wa_users',
         ];
@@ -204,7 +204,7 @@ EOF;
         foreach ($columns as $k => $column) {
             $columns[$k] = "`$column`";
         }
-        $sql = "insert into wa_admin_rules (" .implode(',', $columns). ") values (" . implode(',', $values) . ")";
+        $sql = "insert into wa_rules (" .implode(',', $columns). ") values (" . implode(',', $values) . ")";
         $smt = $pdo->prepare($sql);
         foreach ($data as $key => $value) {
             $smt->bindValue($key, $value);
@@ -229,17 +229,17 @@ EOF;
         }
         $children = $menu_tree['children'] ?? [];
         unset($menu_tree['children']);
-        $smt = $pdo->prepare("select * from wa_admin_rules where `key`=:key limit 1");
+        $smt = $pdo->prepare("select * from wa_rules where `key`=:key limit 1");
         $smt->execute(['key' => $menu_tree['key']]);
         $old_menu = $smt->fetch();
         if ($old_menu) {
             $pid = $old_menu['id'];
             $params = [
                 'title' => $menu_tree['title'],
-                'icon' => $menu_tree['icon'],
+                'icon' => $menu_tree['icon'] ?? '',
                 'key' => $menu_tree['key'],
             ];
-            $sql = "update wa_admin_rules set title=:title, icon=:icon where `key`=:key";
+            $sql = "update wa_rules set title=:title, icon=:icon where `key`=:key";
             $smt = $pdo->prepare($sql);
             $smt->execute($params);
         } else {

@@ -1337,7 +1337,7 @@ EOF;
         if (!$tables) {
             return $this->json(0, 'not found');
         }
-        $table_not_allow_drop = ['wa_admins', 'wa_users', 'wa_options', 'wa_admin_roles', 'wa_admin_rules'];
+        $table_not_allow_drop = ['wa_admins', 'wa_users', 'wa_options', 'wa_roles', 'wa_rules'];
         if ($found = array_intersect($tables, $table_not_allow_drop)) {
             return $this->json(400, implode(',', $found) . '不允许删除');
         }
