@@ -125,6 +125,46 @@ class Util
     }
 
     /**
+     * 类转换为url path
+     * @param $controller_class
+     * @return false|string
+     */
+    static function controllerToUrlPath($controller_class)
+    {
+        $key = strtolower($controller_class);
+        $action = '';
+        if (strpos($key, '@')) {
+            [$key, $action] = explode( '@', $key, 2);
+        }
+        $prefix = 'plugin';
+        $paths = explode('\\', $key);
+        if (count($paths) < 2) {
+            return false;
+        }
+        $base = '';
+        if (strpos($key, "$prefix\\") === 0) {
+            if (count($paths) < 4) {
+                return false;
+            }
+            array_shift($paths);
+            $plugin = array_shift($paths);
+            $base = "/app/$plugin/";
+        }
+        array_shift($paths);
+        foreach ($paths as $index => $path) {
+            if ($path === 'controller') {
+                unset($paths[$index]);
+            }
+        }
+        $suffix = 'controller';
+        $code = $base . implode('/', $paths);
+        if (substr($code, -strlen($suffix)) === $suffix) {
+            $code = substr($code, 0, -strlen($suffix));
+        }
+        return $action ? "$code/$action" : $code;
+    }
+
+    /**
      * 转换为驼峰
      * @param string $value
      * @return string

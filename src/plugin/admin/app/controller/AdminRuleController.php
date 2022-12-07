@@ -114,52 +114,13 @@ class AdminRuleController extends Crud
         $keys = AdminRule::whereIn('id', $rules)->pluck('key');
         $permissions = [];
         foreach ($keys as $key) {
-            $key = strtolower($key);
-            $action = '';
-            if (strpos($key, '@')) {
-                [$key, $action] = explode( '@', $key, 2);
-            }
-            $prefix = 'plugin';
-            $paths = explode('\\', $key);
-            if (count($paths) < 2) {
+            if (!$key = Util::controllerToUrlPath($key)) {
                 continue;
             }
-            $base = '';
-            if (strpos($key, "$prefix\\") === 0) {
-                if (count($paths) < 4) {
-                    continue;
-                }
-                array_shift($paths);
-                $plugin = array_shift($paths);
-                $base = "app.$plugin.";
-            }
-            if ($code = $this->formatPermissionCode($paths, $action, $base)) {
-                $permissions[] = $code;
-            }
+            $code = str_replace('/', '.', trim($key, '/'));
+            $permissions[] = $code;
         }
         return $this->json(0, 'ok', $permissions);
-    }
-
-    /**
-     * @param $paths
-     * @param $action
-     * @param string $base
-     * @return false|string
-     */
-    protected function formatPermissionCode($paths, $action, string $base = '')
-    {
-        array_shift($paths);
-        foreach ($paths as $index => $path) {
-            if ($path === 'controller') {
-                unset($paths[$index]);
-            }
-        }
-        $suffix = 'controller';
-        $code = $base . implode('.', $paths);
-        if (substr($code, -strlen($suffix)) === $suffix) {
-            $code = substr($code, 0, -strlen($suffix));
-        }
-        return $action ? "$code.$action" : $code;
     }
 
     /**

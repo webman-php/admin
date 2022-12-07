@@ -699,9 +699,11 @@ EOF;
      * @param $controller_class_with_namespace
      * @return void
      */
-    protected function createTemplate($template_file_path, $table, $template_path, $url_path_base, $primary_key)
+    protected function createTemplate($template_file_path, $table, $template_path, $url_path_base, $primary_key, $controller_class_with_namespace)
     {
         $this->mkdir($template_file_path . '/index.html');
+        $code_base = Util::controllerToUrlPath($controller_class_with_namespace);
+        $code_base = str_replace('/', '.', trim($code_base, '/'));
         $form = LayuiForm::buildForm($table, 'search');
         $html = $form->html(3);
         $html = $html ? <<<EOF
@@ -754,18 +756,18 @@ EOF
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="insert">
+            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="$code_base.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="delete">
+            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="$code_base.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="delete">删除</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="$code_base.update">编辑</button>
+            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="$code_base.delete">删除</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js"></script>
