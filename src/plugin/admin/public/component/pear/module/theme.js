@@ -61,6 +61,7 @@ layui.define(["jquery","layer"], function (exports) {
 		style += 'xm-select > .xm-body .xm-option.selected.hide-icon{background-color:'+color+'!important;}';//变更
 		style += 'xm-select > .xm-body .xm-toolbar .toolbar-tag:hover{color:'+color+'!important;}';//变更
 		style += '.layui-layer-dialog .layui-layer-content .layui-icon-ok{color:'+color+'!important;}';//变更
+		style += '.layui-layer-loading-icon{color:'+color+'!important;}';//变更
 		style += '.pear-this,.pear-text{color:' + color + '!important}';
 		style += '.pear-back{background-color:'+ color +'!important}';
 		style += '.pear-collapsed-pe{background-color:'+color+'!important}'
