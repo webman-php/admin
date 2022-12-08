@@ -84,11 +84,6 @@ button {
     top: 5px;
 }
 
-.layui-iconpicker .layui-anim {
-    bottom: 42px !important;
-    top: inherit !important;
-}
-
 .layui-bg-green {
     background-color: #36b368 !important;
 }
