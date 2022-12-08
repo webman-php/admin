@@ -17,7 +17,7 @@ class ConfigController extends Base
      * 不需要验证权限的方法
      * @var string[]
      */
-    public $noNeedAuth = ['get'];
+    protected $noNeedAuth = ['get'];
 
     /**
      * 账户设置

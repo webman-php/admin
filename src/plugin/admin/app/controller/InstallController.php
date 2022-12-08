@@ -19,7 +19,7 @@ class InstallController extends Base
      * 不需要登录的方法
      * @var string[]
      */
-    public $noNeedLogin = ['step1', 'step2'];
+    protected $noNeedLogin = ['step1', 'step2'];
 
     /**
      * 设置数据库

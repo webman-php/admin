@@ -15,7 +15,7 @@ class DictController extends Base
     /**
      * 不需要授权的方法
      */
-    public $noNeedAuth = ['get'];
+    protected $noNeedAuth = ['get'];
 
     /**
      * 浏览

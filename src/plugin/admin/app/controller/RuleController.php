@@ -19,7 +19,7 @@ class RuleController extends Crud
      *
      * @var string[]
      */
-    public $noNeedAuth = ['get', 'permissionCodes'];
+    protected $noNeedAuth = ['get', 'permissionCodes'];
 
     /**
      * @var Rule

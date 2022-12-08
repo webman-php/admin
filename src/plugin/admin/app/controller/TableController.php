@@ -19,7 +19,7 @@ class TableController extends Base
      * 不需要鉴权的方法
      * @var string[]
      */
-    public $noNeedAuth = ['types'];
+    protected $noNeedAuth = ['types'];
 
     /**
      * 浏览
