@@ -92,12 +92,12 @@ class ConfigController extends Base
                     $data[$section]['preload'] = !empty($items['preload']);
                     $data[$section]['session'] = !empty($items['session']);
                     $data[$section]['max'] = Util::filterNum($items['max'] ?? '30');
-                    $data[$section]['index']['id'] = Util::filterNum($items['index']['id'] ?? '10');
+                    $data[$section]['index']['id'] = Util::filterNum($items['index']['id'] ?? '0');
                     $data[$section]['index']['href'] = Util::filterUrlPath($items['index']['href'] ?? '');
                     $data[$section]['index']['title'] = htmlspecialchars($items['index']['title'] ?? '首页');
                     break;
                 case 'theme':
-                    $data[$section]['defaultColor'] = Util::filterNum($items['defaultColor'] ?? '1');
+                    $data[$section]['defaultColor'] = Util::filterNum($items['defaultColor'] ?? '2');
                     $data[$section]['defaultMenu'] = $items['defaultMenu'] ?? '' == 'dark-theme' ?  'dark-theme' : 'light-theme';
                     $data[$section]['defaultHeader'] = $items['defaultHeader'] ?? '' == 'dark-theme' ?  'dark-theme' : 'light-theme';
                     $data[$section]['allowCustom'] = !empty($items['allowCustom']);

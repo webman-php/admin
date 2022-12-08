@@ -23,7 +23,6 @@ layui.define(["jquery","layer"], function (exports) {
 	}
 
 	theme.colorSet = function(color, second) {
-		
 		var style = '';
 		style += '.light-theme .pear-nav-tree .layui-this a:hover,.light-theme .pear-nav-tree .layui-this,.light-theme .pear-nav-tree .layui-this a,.pear-nav-tree .layui-this a,.pear-nav-tree .layui-this{background-color: ' +color + '!important;}';
 		style += '.pear-admin .layui-logo .title{color:' + color + '!important;}';
@@ -61,6 +60,7 @@ layui.define(["jquery","layer"], function (exports) {
 		style += 'xm-select .xm-body .xm-option .xm-option-icon{border-color:'+color+'!important;}';//变更
 		style += 'xm-select > .xm-body .xm-option.selected.hide-icon{background-color:'+color+'!important;}';//变更
 		style += 'xm-select > .xm-body .xm-toolbar .toolbar-tag:hover{color:'+color+'!important;}';//变更
+		style += '.layui-layer-dialog .layui-layer-content .layui-icon-ok{color:'+color+'!important;}';//变更
 		style += '.pear-this,.pear-text{color:' + color + '!important}';
 		style += '.pear-back{background-color:'+ color +'!important}';
 		style += '.pear-collapsed-pe{background-color:'+color+'!important}'

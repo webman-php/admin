@@ -45,7 +45,7 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">端口</label>
                                         <div class="layui-input-block">
-                                            <input type="number" placeholder="请填写入数据库端口" class="layui-input" required value="3306" />
+                                            <input type="number" placeholder="请填写入数据库端口" name="port" class="layui-input" required value="3306" />
                                         </div>
                                     </div>
                                     <div class="layui-form-item">
@@ -115,9 +115,19 @@
     </div>
 
 </div>
+
+<script>
+    var color = localStorage.getItem("theme-color-color");
+    var second = localStorage.getItem("theme-color-second");
+    if (!color || !second) {
+        localStorage.setItem("theme-color-color", "#2d8cf0");
+        localStorage.setItem("theme-color-second", "#ecf5ff");
+    }
+</script>
+
 <script src="/app/admin/component/layui/layui.js"></script>
 <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
+
 <script>
     layui.use(["form", "step","code","element", "popup"], function() {
         var $ = layui.$,

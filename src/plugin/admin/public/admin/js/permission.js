@@ -18,7 +18,9 @@ layui.$(function () {
             layui.each(codes, function (k, code) {
                 codes[k] = '*[permission^="'+code+'"]';
             });
-            $("head").append("<style>"+codes.join(",")+"{display: initial}</style>");
+            if (codes.length) {
+                $("head").append("<style>" + codes.join(",") + "{display: initial}</style>");
+            }
         }
     });
 });
