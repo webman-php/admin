@@ -208,7 +208,7 @@ EOF;
             <i class="layui-icon layui-icon-upload"></i>上传文件
         </button>
         <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-$id" permission="app.admin.upload.attachment">
-            <i class="layui-icon layui-icon-align-left"></i>选择图片
+            <i class="layui-icon layui-icon-align-left"></i>选择文件
         </button>
     </div>
 </div>
