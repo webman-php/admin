@@ -323,7 +323,7 @@ layui.define(['layer', 'form'], function(exports) {
 
 	function upload(size) {
 		let uploadWords = size === "block" ? "上传文件" : "上传";
-		let selectWords = size === "block" ? "选择附件" : "选择";
+		let selectWords = size === "block" ? "选择文件" : "选择";
 		var html = '  <div class="layui-form-item">\n' +
 			'    <label class="layui-form-label">上传文件</label>\n' +
 			'    <div class="layui-input-' + size + '">\n' +
@@ -342,7 +342,7 @@ layui.define(['layer', 'form'], function(exports) {
 
 	function uploadImg(size) {
 		let uploadWords = size === "block" ? "上传文件" : "上传";
-		let selectWords = size === "block" ? "选择附件" : "选择";
+		let selectWords = size === "block" ? "选择图片" : "选择";
 		var html = '  <div class="layui-form-item">\n' +
 			'    <label class="layui-form-label">上传图片</label>\n' +
 			'    <div class="layui-input-' + size + '">\n' +
