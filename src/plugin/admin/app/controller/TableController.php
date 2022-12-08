@@ -4,7 +4,7 @@ namespace plugin\admin\app\controller;
 
 use Doctrine\Inflector\InflectorFactory;
 use Illuminate\Database\Schema\Blueprint;
-use plugin\admin\app\common\LayuiForm;
+use plugin\admin\app\common\Layui;
 use plugin\admin\app\common\Util;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
@@ -40,7 +40,7 @@ class TableController extends Base
     {
         $table = $request->get('table');
         $table = Util::filterAlphaNum($table);
-        $form = LayuiForm::buildForm($table, 'search');
+        $form = Layui::buildForm($table, 'search');
         $table_info = Util::getSchema($table, 'table');
         $primary_key = $table_info['primary_key'][0] ?? null;
         return view("table/view", [
@@ -704,7 +704,7 @@ EOF;
         $this->mkdir($template_file_path . '/index.html');
         $code_base = Util::controllerToUrlPath($controller_class_with_namespace);
         $code_base = str_replace('/', '.', trim($code_base, '/'));
-        $form = LayuiForm::buildForm($table, 'search');
+        $form = Layui::buildForm($table, 'search');
         $html = $form->html(3);
         $html = $html ? <<<EOF
 <div class="layui-card">
@@ -731,7 +731,7 @@ EOF
             : '';
         $html = str_replace("\n", "\n" . str_repeat('    ', 2), $html);
         $js = $form->js(3);
-        $table_js = LayuiForm::buildTable($table, 4);
+        $table_js = Layui::buildTable($table, 4);
         $template_content = <<<EOF
 
 <!DOCTYPE html>
@@ -919,7 +919,7 @@ EOF
 EOF;
         file_put_contents("$template_file_path/index.html", $template_content);
 
-        $form = LayuiForm::buildForm($table);
+        $form = Layui::buildForm($table);
         $html = $form->html(5);
         $js = $form->js(3);
         $template_content = <<<EOF
@@ -995,7 +995,7 @@ EOF;
 
         file_put_contents("$template_file_path/insert.html", $template_content);
 
-        $form = LayuiForm::buildForm($table, 'update');
+        $form = Layui::buildForm($table, 'update');
         $html = $form->html(5);
         $js = $form->js(6);
         $template_content = <<<EOF
@@ -1194,7 +1194,7 @@ EOF;
     {
         if ($request->method() === 'GET') {
             $table = $request->get('table');
-            $form = LayuiForm::buildForm($table);
+            $form = Layui::buildForm($table);
             return view("table/insert", [
                 'form' => $form,
                 'table' => $table
@@ -1248,7 +1248,7 @@ EOF;
             $table_info = Util::getSchema($table, 'table');
             $primary_key = $table_info['primary_key'][0] ?? null;
             $value = htmlspecialchars($request->get($primary_key, ''));
-            $form = LayuiForm::buildForm($table,'update');
+            $form = Layui::buildForm($table,'update');
             return view("table/update", [
                 'primary_key' => $primary_key,
                 'value' => $value,

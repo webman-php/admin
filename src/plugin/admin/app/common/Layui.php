@@ -3,7 +3,7 @@ namespace plugin\admin\app\common;
 
 use support\exception\BusinessException;
 
-class LayuiForm
+class Layui
 {
 
     /**
@@ -681,16 +681,16 @@ EOF;
      * 构建表单
      * @param $table
      * @param string $type
-     * @return LayuiForm
+     * @return Layui
      * @throws BusinessException
      */
-    static public function buildForm($table, string $type = 'insert'): LayuiForm
+    static public function buildForm($table, string $type = 'insert'): Layui
     {
         if (!in_array($type, ['insert', 'update', 'search'])) {
             $type = 'insert';
         }
         $filter = $type === 'search' ? 'searchable' : 'form_show';
-        $form = new LayuiForm();
+        $form = new Layui();
         $schema = Util::getSchema($table);
         $forms = $schema['forms'];
         $columns = $schema['columns'];
