@@ -437,6 +437,9 @@ class TableController extends Base
 
         $explode = explode('/', trim(strtolower($controller_path), '/'));
         $plugin = '';
+        if (strpos($controller_path, '/controller/') === false) {
+            return $this->json(2, '控制器必须在controller目录下');
+        }
         if ($explode[0] === 'plugin') {
             if (count($explode) < 4) {
                 return $this->json(2, '控制器参数非法');
