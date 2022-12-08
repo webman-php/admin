@@ -448,6 +448,7 @@ class TableController extends Base
             }
             $plugin = $match[1];
         }
+
         $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
         $controller_class = $controller_file_name;
         $controller_namespace = str_replace('/' , '\\', trim($controller_path, '/'));
@@ -473,7 +474,7 @@ class TableController extends Base
         $template_file_path = ($plugin ? "/plugin/$plugin" : '') . "/app/view/$template_path";
         $model_class_with_namespace = "$model_namespace\\$model_class";
         $primary_key = (new $model_class_with_namespace)->getKeyName();
-        $url_path_base = $plugin ? "/app/$plugin" : '';
+        $url_path_base = $plugin ? "/app/$plugin" : '/';
         $this->createTemplate(base_path($template_file_path), $table_name, $template_path, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
 
         $menu = Rule::where('key', $controller_class_with_namespace)->first();
@@ -763,11 +764,11 @@ EOF
 
             // 相关常量
             const PRIMARY_KEY = "$primary_key";
-            const SELECT_API = "$url_path_base/$template_path/select";
-            const UPDATE_API = "$url_path_base/$template_path/update";
-            const DELETE_API = "$url_path_base/$template_path/delete";
-            const INSERT_URL = "$url_path_base/$template_path/insert";
-            const UPDATE_URL = "$url_path_base/$template_path/update";
+            const SELECT_API = "$url_path_base$template_path/select";
+            const UPDATE_API = "$url_path_base$template_path/update";
+            const DELETE_API = "$url_path_base$template_path/delete";
+            const INSERT_URL = "$url_path_base$template_path/insert";
+            const UPDATE_URL = "$url_path_base$template_path/update";
             $js
             // 表格渲染
             layui.use(["table", "form", "common", "popup", "util"], function() {
@@ -946,7 +947,7 @@ EOF;
         <script>
 
             // 相关接口
-            const INSERT_API = "$url_path_base/$template_path/insert";
+            const INSERT_API = "$url_path_base$template_path/insert";
             $js
             //提交事件
             layui.use(["form", "popup"], function () {
@@ -1022,8 +1023,8 @@ EOF;
 
             // 相关接口
             const PRIMARY_KEY = "$primary_key";
-            const SELECT_API = "$url_path_base/$template_path/select" + location.search;
-            const UPDATE_API = "$url_path_base/$template_path/update";
+            const SELECT_API = "$url_path_base$template_path/select" + location.search;
+            const UPDATE_API = "$url_path_base$template_path/update";
 
             // 获取数据库记录
             layui.use(["form", "util"], function () {
