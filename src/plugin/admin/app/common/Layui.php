@@ -871,6 +871,7 @@ let cols = [
 		toolbar: "#table-bar",
 		align: "center",
 		fixed: "right",
+		width: 120,
 	}
 ];
 

@@ -383,33 +383,39 @@ class TableController extends Base
      */
     public function crud(Request $request): Response
     {
-        if ($request->method() === 'GET') {
-            return view("table/crud", ['table' => $request->get('table')]);
-        }
         $table_name = $request->input('table');
         Util::checkTableName($table_name);
+        $table_basename = strpos($table_name, 'wa_') === 0 ? substr($table_name, 3) : $table_name;
+        $inflector = InflectorFactory::create()->build();
+        $model_class = $inflector->classify($inflector->singularize($table_basename));
+        $base_path = '/plugin/admin/app';
+        if ($request->method() === 'GET') {
+            return view("table/crud", [
+                'table' => $table_name,
+                'model' => "$base_path/model/$model_class.php",
+                'controller' => "$base_path/controller/{$model_class}Controller.php",
+            ]);
+        }
         $title = $request->post('title');
         $pid = $request->post('pid', 0);
         $icon = $request->post('icon', '');
-        $controller_path = $request->post('controller', '');
-        $model_path = $request->post('model', '');
+        $controller_file = trim($request->post('controller', ''), '/');
+        $model_file = trim($request->post('model', ''), '');
         $overwrite = $request->post('overwrite');
-
-        $controller_namespace_base = 'plugin\\admin\\';
-        $model_namespace_base = 'plugin\\admin\\';
-        $controller_path_base = base_path() . '/plugin/admin';
-        $url_path_base = '/app/admin';
-
-        // 控制器生成到主项目
-        if ($controller_path && $controller_path[0] === '/') {
-            $controller_namespace_base = '';
-            $controller_path_base = base_path();
-            $url_path_base = '';
+        if (!$controller_file || !$model_file) {
+            return $this->json(1, '控制器和model不能为空');
         }
 
-        // model生成到主项目
-        if ($model_path && $model_path[0] === '/') {
-            $model_namespace_base = '';
+        $controller_info = pathinfo($controller_file);
+        $model_info = pathinfo($model_file);
+        $controller_path = '/' . Util::filterPath($controller_info['dirname'] ?? '');
+        $model_path = '/' . Util::filterPath($model_info['dirname'] ?? '');
+
+        $controller_file_name = Util::filterAlphaNum($controller_info['filename'] ?? '');
+        $model_file_name = Util::filterAlphaNum($model_info['filename'] ?? '');
+
+        if ($controller_info['extension'] !== 'php' || $model_info['extension'] !== 'php' ) {
+            return $this->json(1, '控制器和model必须以.php为后缀');
         }
 
         $pid = (int)$pid;
@@ -420,86 +426,65 @@ class TableController extends Base
             }
         }
 
-        $table_basename = strpos($table_name, 'wa_') === 0 ? substr($table_name, 3) : $table_name;
-        $inflector = InflectorFactory::create()->build();
-        $model_class = $inflector->classify($inflector->singularize($table_basename));
-        $controller_suffix = $controller_namespace_base === '' ? config('app.controller_suffix') : config('plugin.admin.app.controller_suffix');
-        $controller_class = "$model_class$controller_suffix";
-        if ($controller_path && substr($controller_path, -1) === '/') {
-            $controller_path .= $controller_class;
-        }
-        if ($model_path && substr($model_path, -1) === '/') {
-            $model_path .= $model_class;
-        }
-
-        if ($controller_path) {
-            $controller_path = trim($controller_path, '/');
-            $controller_class = ucfirst(basename($controller_path));
-            if (!strpos($controller_class, $controller_suffix)) {
-                $controller_class = "$controller_class$controller_suffix";
-            }
-            $controller_path = pathinfo($controller_path, PATHINFO_DIRNAME);
-            $controller_path = $controller_path === '.' ? '' : $controller_path;
-        }
-
-        $path_backslash = str_replace('/', '\\', trim($controller_path, '/'));
-        if ($path_backslash) {
-            $controller_namespace = "{$controller_namespace_base}app\\controller\\$path_backslash";
-        } else {
-            $controller_namespace = "{$controller_namespace_base}app\\controller";
-        }
-        $controller_file = base_path() . '/' . str_replace('\\', '/', $controller_namespace) . "/$controller_class.php";
-
-        if ($model_path) {
-            $model_path = trim($model_path, '/');
-            $model_class = ucfirst(basename($model_path));
-            $model_path = pathinfo($model_path, PATHINFO_DIRNAME);
-            $model_path = $model_path === '.' ? '' : $model_path;
-        }
-        $path_backslash = str_replace('/', '\\', trim($model_path, '/'));
-        if ($path_backslash) {
-            $model_namespace = "{$model_namespace_base}app\\model\\$path_backslash";
-        } else {
-            $model_namespace = "{$model_namespace_base}app\\model";
-        }
-
-        $model_file = base_path() . '/' . str_replace('\\', '/', $model_namespace) . "/$model_class.php";
         if (!$overwrite) {
             if (is_file($controller_file)) {
-                return $this->json(1, substr($controller_file, strlen(base_path())) . '已经存在');
+                return $this->json(1, "/$controller_file 已经存在");
             }
             if (is_file($model_file)) {
-                return $this->json(1, substr($model_file, strlen(base_path())) . '已经存在');
+                return $this->json(1, "/$model_file 已经存在");
             }
         }
-        // 创建model
-        $this->createModel($model_class, $model_namespace, $model_file, $table_name);
 
+        $model_class = $model_file_name;
+        $model_namespace = str_replace('/' , '\\', trim($model_path, '/'));
+
+        // 创建model
+        $this->createModel($model_class, $model_namespace, base_path($model_file), $table_name);
+
+        $plugin = '';
+        if (strpos('/plugin/', $controller_file) === 0) {
+            if (!preg_match('/\/plugin\/(.*?)\//', $controller_file, $match)) {
+                return $this->json(2, '参数非法');
+            }
+            $plugin = $match[1];
+        }
+        $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
+        $controller_class = $controller_file_name;
+        $controller_namespace = str_replace('/' , '\\', trim($controller_path, '/'));
         // 创建controller
-        $controller_url_name = $controller_suffix ? substr($controller_class, 0, -strlen($controller_suffix)) : $controller_class;
+        $controller_url_name = $controller_suffix && substr($controller_class, -strlen($controller_suffix)) === $controller_suffix ? substr($controller_class, 0, -strlen($controller_suffix)) : $controller_class;
         $controller_url_name = str_replace('_', '-', $inflector->tableize($controller_url_name));
-        $template_path = $controller_path ? "$controller_path/$controller_url_name" : $controller_url_name;
-        $this->createController($controller_class, $controller_namespace, $controller_file, $model_class, $model_namespace, $title, $template_path);
+        $explode = explode('/', trim(strtolower($controller_path), '/'));
+        if ($plugin) {
+            array_splice($explode, 0, 2);
+        }
+        array_shift($explode);
+        foreach ($explode as $index => $item) {
+            if ($item === 'controller') {
+                unset($explode[$index]);
+            }
+        }
+        $controller_base = implode('/', $explode);
+        $controller_class_with_namespace = "$controller_namespace\\$controller_class";
+        $template_path = $controller_base ? "$controller_base/$controller_url_name" : $controller_url_name;
+        $this->createController($controller_class, $controller_namespace, base_path($controller_file), $model_class, $model_namespace, $title, $template_path);
 
         // 创建模版
-        $template_file_path = "$controller_path_base/app/view/$template_path";
+        $template_file_path = ($plugin ? "/plugin/$plugin" : '') . "/app/view/$template_path";
         $model_class_with_namespace = "$model_namespace\\$model_class";
         $primary_key = (new $model_class_with_namespace)->getKeyName();
-        $this->createTemplate($template_file_path, $table_name, $template_path, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
+        $url_path_base = $plugin ? "/app/$plugin" : '';
+        $this->createTemplate(base_path($template_file_path), $table_name, $template_path, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
 
-        $reflection = new \ReflectionClass("$controller_namespace\\$controller_class");
-        $controller_class_with_nsp = $reflection->getName();
-
-        $menu = Rule::where('key', $controller_class_with_nsp)->first();
+        $menu = Rule::where('key', $controller_class_with_namespace)->first();
         if (!$menu) {
             $menu = new Rule;
         }
         $menu->pid = $pid;
-        $menu->key = $controller_class_with_nsp;
+        $menu->key = $controller_class_with_namespace;
         $menu->title = $title;
         $menu->icon = $icon;
-        $controller_path = $controller_path ? "$controller_path/" : '';
-        $menu->href = "$url_path_base/$controller_path$controller_url_name/index";
+        $menu->href = "$url_path_base$template_path/index";
         $menu->save();
 
         $roles = admin('roles');
@@ -619,12 +604,11 @@ EOF;
 
 namespace $namespace;
 
-use plugin\admin\app\controller\Base;
-use plugin\admin\app\controller\Crud;
-use $model_namespace\\$model_class;
-use support\\exception\BusinessException;
 use support\Request;
 use support\Response;
+use $model_namespace\\$model_class;
+use plugin\admin\app\controller\Crud;
+use support\\exception\BusinessException;
 
 /**
  * $name 

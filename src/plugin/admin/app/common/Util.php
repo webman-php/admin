@@ -125,6 +125,20 @@ class Util
     }
 
     /**
+     * 检测是否是合法Path
+     * @param $var
+     * @return string
+     * @throws BusinessException
+     */
+    static public function filterPath($var): string
+    {
+        if (!is_string($var) || !preg_match('/^[a-zA-Z0-9_\-\/]+$/', $var)) {
+            throw new BusinessException('参数不合法');
+        }
+        return $var;
+    }
+
+    /**
      * 类转换为url path
      * @param $controller_class
      * @return false|string
