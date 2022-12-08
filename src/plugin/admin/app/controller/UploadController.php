@@ -22,6 +22,12 @@ class UploadController extends Crud
     protected $model = null;
 
     /**
+     * 按照admin_id字段限制返回数据
+     * @var string
+     */
+    protected $dataLimit = 'admin_id';
+
+    /**
      * 构造函数
      * @return void
      */

@@ -17,7 +17,7 @@ class Base
     protected $model = null;
 
     /**
-     * 无需登录的方法及鉴权
+     * 无需登录及鉴权的方法
      * @var array
      */
     protected $noNeedLogin = [];
@@ -27,6 +27,13 @@ class Base
      * @var array
      */
     protected $noNeedAuth = [];
+
+    /**
+     * 数据限制
+     * 例如当$dataLimit='admin_id'时将只返回当前管理员的数据
+     * @var string
+     */
+    protected $dataLimit = null;
 
     /**
      * 返回格式化json数据

@@ -117,6 +117,10 @@ class Crud extends Base
                 unset($where[$column]);
             }
         }
+        // 按照数据限制字段返回数据
+        if ($this->dataLimit) {
+            $where[$this->dataLimit] = admin_id();
+        }
 
         return [$where, $format, $page_size, $field, $order];
     }
