@@ -399,10 +399,10 @@ class TableController extends Base
         $title = $request->post('title');
         $pid = $request->post('pid', 0);
         $icon = $request->post('icon', '');
-        $controller_file = trim($request->post('controller', ''), '/');
-        $model_file = trim($request->post('model', ''), '');
+        $controller_file = '/' . trim($request->post('controller', ''), '/');
+        $model_file = '/' . trim($request->post('model', ''), '');
         $overwrite = $request->post('overwrite');
-        if (!$controller_file || !$model_file) {
+        if ($controller_file === '/' || $model_file === '/') {
             return $this->json(1, '控制器和model不能为空');
         }
 
@@ -427,12 +427,21 @@ class TableController extends Base
         }
 
         if (!$overwrite) {
-            if (is_file($controller_file)) {
+            if (is_file(base_path($controller_file))) {
                 return $this->json(1, "/$controller_file 已经存在");
             }
-            if (is_file($model_file)) {
+            if (is_file(base_path($model_file))) {
                 return $this->json(1, "/$model_file 已经存在");
             }
+        }
+
+        $plugin = '';
+        if (strpos($controller_file, '/plugin/') === 0) {
+            echo "innn?";
+            if (!preg_match('/^\/plugin\/(.*?)\//', $controller_file, $match)) {
+                return $this->json(2, '参数非法');
+            }
+            $plugin = $match[1];
         }
 
         $model_class = $model_file_name;
@@ -441,14 +450,6 @@ class TableController extends Base
         // 创建model
         $this->createModel($model_class, $model_namespace, base_path($model_file), $table_name);
 
-        $plugin = '';
-        if (strpos('/plugin/', $controller_file) === 0) {
-            if (!preg_match('/\/plugin\/(.*?)\//', $controller_file, $match)) {
-                return $this->json(2, '参数非法');
-            }
-            $plugin = $match[1];
-        }
-
         $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
         $controller_class = $controller_file_name;
         $controller_namespace = str_replace('/' , '\\', trim($controller_path, '/'));
@@ -456,6 +457,7 @@ class TableController extends Base
         $controller_url_name = $controller_suffix && substr($controller_class, -strlen($controller_suffix)) === $controller_suffix ? substr($controller_class, 0, -strlen($controller_suffix)) : $controller_class;
         $controller_url_name = str_replace('_', '-', $inflector->tableize($controller_url_name));
         $explode = explode('/', trim(strtolower($controller_path), '/'));
+
         if ($plugin) {
             array_splice($explode, 0, 2);
         }
@@ -465,6 +467,7 @@ class TableController extends Base
                 unset($explode[$index]);
             }
         }
+
         $controller_base = implode('/', $explode);
         $controller_class_with_namespace = "$controller_namespace\\$controller_class";
         $template_path = $controller_base ? "$controller_base/$controller_url_name" : $controller_url_name;
@@ -474,7 +477,7 @@ class TableController extends Base
         $template_file_path = ($plugin ? "/plugin/$plugin" : '') . "/app/view/$template_path";
         $model_class_with_namespace = "$model_namespace\\$model_class";
         $primary_key = (new $model_class_with_namespace)->getKeyName();
-        $url_path_base = $plugin ? "/app/$plugin" : '/';
+        $url_path_base = $plugin ? "/app/$plugin/" : '/';
         $this->createTemplate(base_path($template_file_path), $table_name, $template_path, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
 
         $menu = Rule::where('key', $controller_class_with_namespace)->first();
