@@ -20,9 +20,9 @@
                 <div class="main-container">
                     <input type="hidden" name="table" value="<?=htmlspecialchars($table)?>">
                     <div class="layui-form-item">
-                        <label class="layui-form-label">菜单名</label>
+                        <label class="layui-form-label required">菜单名</label>
                         <div class="layui-input-block">
-                            <input type="text" name="title" value="" class="layui-input">
+                            <input type="text" name="title" value="" required lay-verify="required" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
@@ -38,15 +38,15 @@
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">控制器</label>
+                        <label class="layui-form-label required">控制器</label>
                         <div class="layui-input-block">
-                            <input type="text" name="controller" value="<?=$controller?>" class="layui-input" placeholder="自动生成请留空">
+                            <input type="text" name="controller" value="<?=$controller?>" class="layui-input" required lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <label class="layui-form-label">模型</label>
+                        <label class="layui-form-label required">模型</label>
                         <div class="layui-input-block">
-                            <input type="text" name="model" value="<?=$model?>" class="layui-input" placeholder="自动生成请留空">
+                            <input type="text" name="model" value="<?=$model?>" class="layui-input" required lay-verify="required">
                         </div>
                     </div>
                     <div class="layui-form-item">

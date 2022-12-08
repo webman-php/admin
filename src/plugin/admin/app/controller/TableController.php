@@ -400,7 +400,7 @@ class TableController extends Base
         $pid = $request->post('pid', 0);
         $icon = $request->post('icon', '');
         $controller_file = '/' . trim($request->post('controller', ''), '/');
-        $model_file = '/' . trim($request->post('model', ''), '');
+        $model_file = '/' . trim($request->post('model', ''), '/');
         $overwrite = $request->post('overwrite');
         if ($controller_file === '/' || $model_file === '/') {
             return $this->json(1, '控制器和model不能为空');
@@ -408,8 +408,8 @@ class TableController extends Base
 
         $controller_info = pathinfo($controller_file);
         $model_info = pathinfo($model_file);
-        $controller_path = '/' . Util::filterPath($controller_info['dirname'] ?? '');
-        $model_path = '/' . Util::filterPath($model_info['dirname'] ?? '');
+        $controller_path = Util::filterPath($controller_info['dirname'] ?? '');
+        $model_path = Util::filterPath($model_info['dirname'] ?? '');
 
         $controller_file_name = Util::filterAlphaNum($controller_info['filename'] ?? '');
         $model_file_name = Util::filterAlphaNum($model_info['filename'] ?? '');
@@ -428,20 +428,32 @@ class TableController extends Base
 
         if (!$overwrite) {
             if (is_file(base_path($controller_file))) {
-                return $this->json(1, "/$controller_file 已经存在");
+                return $this->json(1, "$controller_file 已经存在");
             }
             if (is_file(base_path($model_file))) {
-                return $this->json(1, "/$model_file 已经存在");
+                return $this->json(1, "$model_file 已经存在");
             }
         }
 
+        $explode = explode('/', trim(strtolower($controller_path), '/'));
         $plugin = '';
-        if (strpos($controller_file, '/plugin/') === 0) {
-            echo "innn?";
-            if (!preg_match('/^\/plugin\/(.*?)\//', $controller_file, $match)) {
-                return $this->json(2, '参数非法');
+        if ($explode[0] === 'plugin') {
+            if (count($explode) < 4) {
+                return $this->json(2, '控制器参数非法');
             }
-            $plugin = $match[1];
+            $plugin = $explode[1];
+            if ($explode[2] !== 'app') {
+                return $this->json(2, '控制器必须在app目录');
+            }
+            $app = $explode[3] !== 'controller' ? $explode[3] : '';
+        } else {
+            if (count($explode) < 3) {
+                return $this->json(2, '控制器参数非法');
+            }
+            if ($explode[0] !== 'app') {
+                return $this->json(2, '控制器必须在app目录');
+            }
+            $app = $explode[1] !== 'controller' ? $explode[1] : '';
         }
 
         $model_class = $model_file_name;
@@ -456,12 +468,14 @@ class TableController extends Base
         // 创建controller
         $controller_url_name = $controller_suffix && substr($controller_class, -strlen($controller_suffix)) === $controller_suffix ? substr($controller_class, 0, -strlen($controller_suffix)) : $controller_class;
         $controller_url_name = str_replace('_', '-', $inflector->tableize($controller_url_name));
-        $explode = explode('/', trim(strtolower($controller_path), '/'));
 
         if ($plugin) {
             array_splice($explode, 0, 2);
         }
         array_shift($explode);
+        if ($app) {
+            array_shift($explode);
+        }
         foreach ($explode as $index => $item) {
             if ($item === 'controller') {
                 unset($explode[$index]);
@@ -474,11 +488,12 @@ class TableController extends Base
         $this->createController($controller_class, $controller_namespace, base_path($controller_file), $model_class, $model_namespace, $title, $template_path);
 
         // 创建模版
-        $template_file_path = ($plugin ? "/plugin/$plugin" : '') . "/app/view/$template_path";
+        $template_file_path = ($plugin ? "/plugin/$plugin" : '') . '/app/' . ($app ? "$app/" : '') . 'view/' . $template_path;
+
         $model_class_with_namespace = "$model_namespace\\$model_class";
         $primary_key = (new $model_class_with_namespace)->getKeyName();
-        $url_path_base = $plugin ? "/app/$plugin/" : '/';
-        $this->createTemplate(base_path($template_file_path), $table_name, $template_path, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
+        $url_path_base = ($plugin ? "/app/$plugin/" : '/') . ($app ? "$app/" : '') . $template_path;
+        $this->createTemplate(base_path($template_file_path), $table_name, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
 
         $menu = Rule::where('key', $controller_class_with_namespace)->first();
         if (!$menu) {
@@ -488,7 +503,7 @@ class TableController extends Base
         $menu->key = $controller_class_with_namespace;
         $menu->title = $title;
         $menu->icon = $icon;
-        $menu->href = "$url_path_base$template_path/index";
+        $menu->href = "$url_path_base/index";
         $menu->save();
 
         $roles = admin('roles');
@@ -687,7 +702,7 @@ EOF;
      * @param $controller_class_with_namespace
      * @return void
      */
-    protected function createTemplate($template_file_path, $table, $template_path, $url_path_base, $primary_key, $controller_class_with_namespace)
+    protected function createTemplate($template_file_path, $table, $url_path_base, $primary_key, $controller_class_with_namespace)
     {
         $this->mkdir($template_file_path . '/index.html');
         $code_base = Util::controllerToUrlPath($controller_class_with_namespace);
@@ -767,11 +782,11 @@ EOF
 
             // 相关常量
             const PRIMARY_KEY = "$primary_key";
-            const SELECT_API = "$url_path_base$template_path/select";
-            const UPDATE_API = "$url_path_base$template_path/update";
-            const DELETE_API = "$url_path_base$template_path/delete";
-            const INSERT_URL = "$url_path_base$template_path/insert";
-            const UPDATE_URL = "$url_path_base$template_path/update";
+            const SELECT_API = "$url_path_base/select";
+            const UPDATE_API = "$url_path_base/update";
+            const DELETE_API = "$url_path_base/delete";
+            const INSERT_URL = "$url_path_base/insert";
+            const UPDATE_URL = "$url_path_base/update";
             $js
             // 表格渲染
             layui.use(["table", "form", "common", "popup", "util"], function() {
@@ -950,7 +965,7 @@ EOF;
         <script>
 
             // 相关接口
-            const INSERT_API = "$url_path_base$template_path/insert";
+            const INSERT_API = "$url_path_base/insert";
             $js
             //提交事件
             layui.use(["form", "popup"], function () {
@@ -1026,8 +1041,8 @@ EOF;
 
             // 相关接口
             const PRIMARY_KEY = "$primary_key";
-            const SELECT_API = "$url_path_base$template_path/select" + location.search;
-            const UPDATE_API = "$url_path_base$template_path/update";
+            const SELECT_API = "$url_path_base/select" + location.search;
+            const UPDATE_API = "$url_path_base/update";
 
             // 获取数据库记录
             layui.use(["form", "util"], function () {
