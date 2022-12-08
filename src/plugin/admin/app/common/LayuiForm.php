@@ -1,6 +1,8 @@
 <?php
 namespace plugin\admin\app\common;
 
+use support\exception\BusinessException;
+
 class LayuiForm
 {
 
@@ -21,7 +23,7 @@ class LayuiForm
      * @param $indent
      * @return string
      */
-    public function html($indent = 0)
+    public function html($indent = 0): string
     {
         return str_replace("\n", "\n" . str_repeat('    ', $indent), $this->htmlContent);
     }
@@ -31,7 +33,7 @@ class LayuiForm
      * @param $indent
      * @return string
      */
-    public function js($indent = 0)
+    public function js($indent = 0): string
     {
         return str_replace("\n", "\n" . str_repeat('    ', $indent), $this->jsContent);
     }
@@ -41,7 +43,7 @@ class LayuiForm
      * @param $options
      * @return array
      */
-    protected function options($options)
+    protected function options($options): array
     {
         array_walk_recursive($options, function(&$item, $key){
             if (is_string($item)) {
@@ -572,10 +574,11 @@ EOF;
         $options['props']['clickClose'] = $options['props']['clickClose'] ?? true;
         $options['props']['radio'] = $options['props']['radio'] ?? true;
         $options['props']['tree'] = array_merge_recursive([
-            'show' => true,
-            'strict' => false,
-            'clickCheck' => true,
-            'clickExpand' => false
+            '$show' => true,
+            '$strict' => false,
+            '$clickCheck' => true,
+            '$clickExpand' => false,
+            '$expandedKeys' => '$initValue'
         ], $options['props']['tree'] ?? []);
         $this->apiSelect($options);
     }
@@ -586,10 +589,11 @@ EOF;
      */
     public function treeSelectMulti($options)
     {
-        $options['props']['tree'] = array_merge_recursive(['show' => true], $options['props']['tree'] ?? []);
+        $options['props']['tree'] = array_merge_recursive(['show' => true,
+            '$expandedKeys' => '$initValue'], $options['props']['tree'] ?? []);
         $options['props']['toolbar'] = array_merge_recursive([
-            'show' => true,
-            'list' => [ 'ALL', 'CLEAR', 'REVERSE' ]
+            '$show' => true,
+            '$list' => [ 'ALL', 'CLEAR', 'REVERSE' ]
         ], $options['props']['toolbar'] ?? []);
         $this->apiSelect($options);
     }
@@ -611,6 +615,7 @@ EOF;
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
+                $item = preg_replace('/"\$([^"]+)"/', '$1', $item);
                 $options_string .= "\n".($url?'                ':'        ')."$key: $item,";
             } else if (is_string($item)) {
                 $options_string .= "\n".($url?'                ':'        ')."$key: \"$item\",";
@@ -675,10 +680,11 @@ EOF;
     /**
      * 构建表单
      * @param $table
-     * @param $type
+     * @param string $type
      * @return LayuiForm
+     * @throws BusinessException
      */
-    static public function buildForm($table, $type = 'insert')
+    static public function buildForm($table, string $type = 'insert'): LayuiForm
     {
         if (!in_array($type, ['insert', 'update', 'search'])) {
             $type = 'insert';
@@ -735,10 +741,11 @@ EOF;
     /**
      * 构建表格
      * @param $table
-     * @param $indent
+     * @param int $indent
      * @return array|string|string[]
+     * @throws BusinessException
      */
-    static public function buildTable($table, $indent = 0)
+    static public function buildTable($table, int $indent = 0)
     {
         $schema = Util::getSchema($table);
         $forms = $schema['forms'];

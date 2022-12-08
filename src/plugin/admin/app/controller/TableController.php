@@ -9,8 +9,8 @@ use plugin\admin\app\common\Util;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
 use plugin\admin\app\model\Option;
-use Support\Exception\BusinessException;
-use Support\Request;
+use support\exception\BusinessException;
+use support\Request;
 use support\Response;
 
 class TableController extends Base

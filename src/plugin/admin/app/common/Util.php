@@ -6,7 +6,7 @@ use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Builder;
 use plugin\admin\app\model\Option;
 use support\Db;
-use Support\Exception\BusinessException;
+use support\exception\BusinessException;
 use Throwable;
 use function config;
 
