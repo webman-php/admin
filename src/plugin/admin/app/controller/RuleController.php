@@ -239,9 +239,11 @@ class RuleController extends Crud
         if (!$row = $this->model->find($id)) {
             return $this->json(2, '记录不存在');
         }
-        $data['pid'] = $data['pid'] ?: 0;
-        if ($data['pid'] == $row['id']) {
-            return $this->json(2, '不能将自己设置为上级菜单');
+        if (isset($data['pid'])) {
+            $data['pid'] = $data['pid'] ?: 0;
+            if ($data['pid'] == $row['id']) {
+                return $this->json(2, '不能将自己设置为上级菜单');
+            }
         }
         if (isset($data['key'])) {
             $data['key'] = str_replace('\\\\', '\\', $data['key']);
