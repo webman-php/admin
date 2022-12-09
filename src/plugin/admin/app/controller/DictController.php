@@ -35,7 +35,11 @@ class DictController extends Base
     public function insert(Request $request): Response
     {
         if ($request->method() === 'POST') {
-            $option_name = $this->dictNameToOptionName($request->post('name'));
+            $name = $request->post('name');
+            if (!preg_match('/[a-zA-Z]/', $name)) {
+                return $this->json(1, '字典名只能包含字母');
+            }
+            $option_name = $this->dictNameToOptionName($name);
             if (Option::where('name', $option_name)->first()) {
                 return $this->json(1, '字典已经存在' . $option_name);
             }
@@ -59,14 +63,18 @@ class DictController extends Base
     public function update(Request $request): Response
     {
         if ($request->method() === 'POST') {
-            $name = $this->dictNameToOptionName($request->post('name', ''));
+            $name = $request->post('name');
+            if (!preg_match('/[a-zA-Z]/', $name)) {
+                return $this->json(1, '字典名只能包含字母');
+            }
+            $name = $this->dictNameToOptionName($name);
             $option = Option::where('name', $name)->first();
             if (!$option) {
                 return $this->json(1, '字典不存在');
             }
             $format_values = $this->filterValue($request->post('value'));
             $option->name = $this->dictNameToOptionName($request->post('name'));
-            $option->value = $format_values;
+            $option->value = json_encode($format_values, JSON_UNESCAPED_UNICODE);
             $option->save();
         }
         return view('dict/update');
