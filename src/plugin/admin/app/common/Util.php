@@ -276,18 +276,18 @@ class Util
     static public function typeToControl($type): string
     {
         if (stripos($type, 'int') !== false) {
-            return 'InputNumber';
+            return 'inputNumber';
         }
         if (stripos($type, 'time') !== false || stripos($type, 'date') !== false) {
-            return 'DatePicker';
+            return 'dateTimePicker';
         }
         if (stripos($type, 'text') !== false) {
-            return 'InputTextArea';
+            return 'textArea';
         }
         if ($type === 'enum') {
-            return 'Select';
+            return 'select';
         }
-        return 'Input';
+        return 'input';
     }
 
     /**
