@@ -435,9 +435,9 @@ class TableController extends Base
             }
         }
 
-        $explode = explode('/', trim(strtolower($controller_path), '/'));
+        $explode = explode('/', trim($controller_path, '/'));
         $plugin = '';
-        if (strpos($controller_path, '/controller/') === false) {
+        if (strpos(strtolower($controller_file), '/controller/') === false) {
             return $this->json(2, '控制器必须在controller目录下');
         }
         if ($explode[0] === 'plugin') {
@@ -445,18 +445,18 @@ class TableController extends Base
                 return $this->json(2, '控制器参数非法');
             }
             $plugin = $explode[1];
-            if ($explode[2] !== 'app') {
+            if (strtolower($explode[2]) !== 'app') {
                 return $this->json(2, '控制器必须在app目录');
             }
-            $app = $explode[3] !== 'controller' ? $explode[3] : '';
+            $app = strtolower($explode[3]) !== 'controller' ? $explode[3] : '';
         } else {
-            if (count($explode) < 3) {
-                return $this->json(2, '控制器参数非法');
+            if (count($explode) < 2) {
+                return $this->json(3, '控制器参数非法');
             }
-            if ($explode[0] !== 'app') {
-                return $this->json(2, '控制器必须在app目录');
+            if (strtolower($explode[0]) !== 'app') {
+                return $this->json(3, '控制器必须在app目录');
             }
-            $app = $explode[1] !== 'controller' ? $explode[1] : '';
+            $app = strtolower($explode[1]) !== 'controller' ? $explode[1] : '';
         }
 
         $model_class = $model_file_name;
@@ -480,7 +480,7 @@ class TableController extends Base
             array_shift($explode);
         }
         foreach ($explode as $index => $item) {
-            if ($item === 'controller') {
+            if (strtolower($item) === 'controller') {
                 unset($explode[$index]);
             }
         }
@@ -620,6 +620,11 @@ EOF;
      */
     protected function createController($controller_class, $namespace, $file, $model_class, $model_namespace, $name, $template_path)
     {
+        $model_class_alias = $model_class;
+        if (strtolower($model_class) === strtolower($controller_class)) {
+            $model_class_alias = "$model_class as {$model_class}Model";
+            $model_class = "{$model_class}Model";
+        }
         $this->mkdir($file);
         $controller_content = <<<EOF
 <?php
@@ -628,7 +633,7 @@ namespace $namespace;
 
 use support\Request;
 use support\Response;
-use $model_namespace\\$model_class;
+use $model_namespace\\$model_class_alias;
 use plugin\admin\app\controller\Crud;
 use support\\exception\BusinessException;
 
@@ -1516,8 +1521,6 @@ EOF;
         if ($comment !== null) {
             $sql .= "COMMENT $comment ";
         }
-
-        echo "$sql\n";
 
         Util::db()->statement($sql);
     }
