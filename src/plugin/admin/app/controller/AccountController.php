@@ -166,6 +166,9 @@ class AccountController extends Crud
         if (!$password) {
             return $this->json(2, '密码不能为空');
         }
+        if ($request->post('password_confirm') !== $password) {
+            return $this->json(3, '两次密码输入不一致');
+        }
         if (!Util::passwordVerify($request->post('old_password'), $hash)) {
             return $this->json(1, '原始密码不正确');
         }
