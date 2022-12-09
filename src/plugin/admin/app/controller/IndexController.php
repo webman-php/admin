@@ -5,6 +5,7 @@ namespace plugin\admin\app\controller;
 use plugin\admin\app\common\Util;
 use plugin\admin\app\model\User;
 use support\Db;
+use support\exception\BusinessException;
 use support\Request;
 use support\Response;
 use think\db\Where;
@@ -29,6 +30,7 @@ class IndexController
      * 后台主页
      * @param Request $request
      * @return Response
+     * @throws BusinessException
      */
     public function index(Request $request): Response
     {

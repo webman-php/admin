@@ -93,14 +93,17 @@ function refresh_admin_session(bool $force = false)
     if (!$force && $time_now - $session_last_update_time < $session_ttl) {
         return null;
     }
-    $admin = Admin::find($admin_id)->toArray();
+    $session = request()->session();
+    $admin = Admin::find($admin_id);
     if (!$admin) {
-        throw new BusinessException('当前账户不存在或已被禁用');
+        $session->forget('admin');
+        return null;
     }
+    $admin = $admin->toArray();
     unset($admin['password']);
     $admin['roles'] = $admin['roles'] ? explode(',', $admin['roles']) : [];
     $admin['session_last_update_time'] = $time_now;
-    request()->session()->set('admin', $admin);
+    $session->set('admin', $admin);
 }
 
 
@@ -122,11 +125,14 @@ function refresh_user_session(bool $force = false)
     if (!$force && $time_now - $session_last_update_time < $session_ttl) {
         return null;
     }
-    $user = User::find($user_id)->toArray();
+    $session = request()->session();
+    $user = User::find($user_id);
     if (!$user) {
-        throw new BusinessException('当前账户不存在或已被禁用');
+        $session->forget('user');
+        return null;
     }
+    $user = $user->toArray();
     unset($user['password']);
     $user['session_last_update_time'] = $time_now;
-    request()->session()->set('user', $user);
+    $session->set('user', $user);
 }

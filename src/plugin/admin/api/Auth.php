@@ -17,7 +17,7 @@ class Auth
      * @param string $controller
      * @param string $action
      * @return void
-     * @throws \ReflectionException
+     * @throws \ReflectionException|BusinessException
      */
     public static function access(string $controller, string $action)
     {
@@ -35,10 +35,15 @@ class Auth
      * @param int $code
      * @param string $msg
      * @return bool
-     * @throws \ReflectionException
+     * @throws \ReflectionException|BusinessException
      */
     public static function canAccess(string $controller, string $action, int &$code = 0, string &$msg = ''): bool
     {
+        if (!$controller) {
+            $msg = '无法识别当前控制器';
+            $code = 3;
+            return false;
+        }
         // 获取控制器鉴权信息
         $class = new \ReflectionClass($controller);
         $properties = $class->getDefaultProperties();

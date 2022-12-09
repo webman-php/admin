@@ -43,7 +43,7 @@ class InstallController extends Base
         $password = $request->post('password');
         $database = $request->post('database');
         $host = $request->post('host');
-        $port = $request->post('port');
+        $port = (int)$request->post('port') ?: 3306;
         $overwrite = $request->post('overwrite');
 
         try {
@@ -74,6 +74,7 @@ class InstallController extends Base
             'wa_rules',
             'wa_options',
             'wa_users',
+            'wa_uploads',
         ];
 
         if (!$overwrite) {
@@ -127,6 +128,46 @@ return  [
 EOF;
 
         file_put_contents($database_config_file, $config_content);
+
+        $think_orm_config = <<<EOF
+<?php
+return [
+    'default' => 'mysql',
+    'connections' => [
+        'mysql' => [
+            // 数据库类型
+            'type' => 'mysql',
+            // 服务器地址
+            'hostname' => '$host',
+            // 数据库名
+            'database' => '$database',
+            // 数据库用户名
+            'username' => '$user',
+            // 数据库密码
+            'password' => '$password',
+            // 数据库连接端口
+            'hostport' => $port,
+            // 数据库连接参数
+            'params' => [
+                // 连接超时3秒
+                \PDO::ATTR_TIMEOUT => 3,
+            ],
+            // 数据库编码默认采用utf8
+            'charset' => 'utf8mb4',
+            // 数据库表前缀
+            'prefix' => '',
+            // 断线重连
+            'break_reconnect' => true,
+            // 关闭SQL监听日志
+            'trigger_sql' => true,
+            // 自定义分页类
+            'bootstrap' =>  ''
+        ],
+    ],
+];
+EOF;
+        file_put_contents(base_path() . '/plugin/admin/config/thinkorm.php', $think_orm_config);
+
 
         // 尝试reload
         if (function_exists('posix_kill')) {

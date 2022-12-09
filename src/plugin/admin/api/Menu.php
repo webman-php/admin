@@ -14,7 +14,6 @@ class Menu
 
     /**
      * 根据key获取菜单
-     *
      * @param $key
      * @return array
      */
@@ -26,7 +25,6 @@ class Menu
 
     /**
      * 根据id获得菜单
-     *
      * @param $id
      * @return array
      */
@@ -37,7 +35,6 @@ class Menu
 
     /**
      * 添加菜单
-     *
      * @param array $menu
      * @return int
      */
@@ -53,7 +50,6 @@ class Menu
 
     /**
      * 导入菜单
-     *
      * @param array $menu_tree
      * @return void
      */
@@ -81,7 +77,6 @@ class Menu
 
     /**
      * 删除菜单
-     *
      * @param $key
      * @return void
      */
@@ -103,7 +98,6 @@ class Menu
 
     /**
      * 获取菜单中某个(些)字段的值
-     *
      * @param $menu
      * @param null $column
      * @param null $index
