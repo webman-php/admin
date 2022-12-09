@@ -211,6 +211,9 @@ class RuleController extends Crud
             return view('rule/insert');
         }
         $data = $this->insertInput($request);
+        if (empty($data['type'])) {
+            $data['type'] = strpos($data['key'], '\\') ? 1 : 0;
+        }
         $data['key'] = str_replace('\\\\', '\\', $data['key']);
         $key = $data['key'] ?? '';
         if ($this->model->where('key', $key)->first()) {
