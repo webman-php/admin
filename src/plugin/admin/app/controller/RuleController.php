@@ -59,6 +59,7 @@ class RuleController extends Crud
      * 获取菜单
      * @param Request $request
      * @return Response
+     * @throws BusinessException
      */
     function get(Request $request): Response
     {
@@ -103,6 +104,7 @@ class RuleController extends Crud
      * 获取控制器详细权限
      * @param Request $request
      * @return Response
+     * @throws BusinessException
      */
     public function permissionCodes(Request $request): Response
     {
