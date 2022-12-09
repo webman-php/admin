@@ -161,7 +161,7 @@ CREATE TABLE `wa_users` (
   `mobile` varchar(16) DEFAULT NULL COMMENT '手机',
   `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '等级',
   `birthday` date DEFAULT NULL COMMENT '生日',
-  `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '余额',
+  `money` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '余额(分)',
   `score` int(11) NOT NULL DEFAULT '0' COMMENT '积分',
   `last_time` datetime DEFAULT NULL COMMENT '登录时间',
   `last_ip` varchar(50) DEFAULT NULL COMMENT '登录ip',
