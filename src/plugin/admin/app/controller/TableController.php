@@ -947,7 +947,7 @@ EOF;
         <form class="layui-form" action="">
 
             <div class="mainBox">
-                <div class="main-container">
+                <div class="main-container mr-5">
                     $html
                 </div>
             </div>
@@ -1023,7 +1023,7 @@ EOF;
         <form class="layui-form">
 
             <div class="mainBox">
-                <div class="main-container">
+                <div class="main-container mr-5">
                     $html
                 </div>
             </div>

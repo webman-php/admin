@@ -274,7 +274,7 @@ EOF;
 <div class="layui-form-item">
     $label
     <div class="$class">
-        <img style="max-width:90px;max-height:90px;" src=""/>
+        <img class="img-3" src=""/>
         <input type="text" style="display:none" name="$field" value="$value" />
         <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="$id"  permission="app.admin.upload.image">
             <i class="layui-icon layui-icon-upload"></i>上传图片

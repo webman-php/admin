@@ -346,7 +346,7 @@ layui.define(['layer', 'form'], function(exports) {
 		var html = '  <div class="layui-form-item">\n' +
 			'    <label class="layui-form-label">上传图片</label>\n' +
 			'    <div class="layui-input-' + size + '">\n' +
-			'      <img style="max-width:90px;max-height:90px;" src=""/>\n' +
+			'      <img class="img-3" src=""/>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
 			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'" permission="app.admin.upload.image">\n' +
 			'        <i class="layui-icon layui-icon-upload"></i>'+uploadWords+'\n' +

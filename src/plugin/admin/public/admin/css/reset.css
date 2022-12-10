@@ -1,4 +1,3 @@
-
 button {
     line-height: 100% !important;
 }
@@ -94,6 +93,61 @@ a {
 
 *[permission] {
     display: none;
+}
+
+@media screen and (max-width:768px) {
+    /**  **/
+    .layui-table-tool-self .layui-inline:nth-child(3){
+        display: none;
+    }
+}
+
+/** 右间隔 **/
+.mr-1
+{
+    margin-right: 4px;
+}
+.mr-2
+{
+    margin-right: 8px;
+}
+.mr-3
+{
+    margin-right: 16px;
+}
+.mr-4
+{
+    margin-right: 24px;
+}
+.mr-5
+{
+    margin-right: 48px;
+}
+
+/** 图片尺寸 **/
+.img-1
+{
+    max-width: 16px;
+    max-height: 16px;
+    border-radius: 6px;
+}
+.img-2
+{
+    max-width: 32px;
+    max-height: 32px;
+    border-radius: 6px;
+}
+.img-3
+{
+    max-width: 64px;
+    max-height: 64px;
+    border-radius: 6px;
+}
+.img-4
+{
+    max-width: 128px;
+    max-height: 128px;
+    border-radius: 6px;
 }
 
 /** 左侧菜单 Start **/
