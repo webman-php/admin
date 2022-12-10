@@ -6,7 +6,7 @@ function toggleSearchFormShow()
     let $ = layui.$;
     let items = $('.top-search-from .layui-form-item');
     if (items.length <= 2) {
-        if (items.length <= 1) $('.top-search-from').remove();
+        if (items.length <= 1) $('.top-search-from').parent().parent().remove();
         return;
     }
     let btns = $('.top-search-from .toggle-btn a');
