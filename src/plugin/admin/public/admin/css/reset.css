@@ -111,6 +111,7 @@ a {
 
 
 /** 表详情顶部搜索框 Start **/
+
 .top-search-from .layui-form-item {
     position: relative;
     display: inline-block;
@@ -157,6 +158,17 @@ a {
 }
 .top-search-from .toggle-btn a:hover {
     color: #333;
+}
+@media screen and (max-width:768px) {
+    .top-search-from .layui-input {
+        max-width: 234px;
+    }
+    .top-search-from .layui-input.inline-block {
+        max-width: 110px;
+    }
+    .layui-table-tool-self .layui-inline:nth-child(3){
+        display: none;
+    }
 }
 
 /** 表详情顶部搜索框 End **/
