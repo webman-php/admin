@@ -187,7 +187,7 @@ class RuleController extends Crud
      */
     protected function selectInput(Request $request): array
     {
-        [$where, $format, $page_size, $field, $order] = parent::selectInput($request);
+        [$where, $format, $limit, $field, $order] = parent::selectInput($request);
         // 允许通过type=0,1格式传递菜单类型
         $types = $request->get('type');
         if ($types && is_string($types)) {
@@ -198,7 +198,7 @@ class RuleController extends Crud
             $field = 'weight';
             $order = 'desc';
         }
-        return [$where, $format, $page_size, $field, $order];
+        return [$where, $format, $limit, $field, $order];
     }
 
     /**

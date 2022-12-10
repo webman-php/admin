@@ -26,9 +26,9 @@ class Crud extends Base
      */
     public function select(Request $request): Response
     {
-        [$where, $format, $page_size, $field, $order] = $this->selectInput($request);
+        [$where, $format, $limit, $field, $order] = $this->selectInput($request);
         $query = $this->doSelect($where, $field, $order);
-        return $this->doFormat($query, $format, $page_size);
+        return $this->doFormat($query, $format, $limit);
     }
 
     /**
@@ -98,7 +98,7 @@ class Crud extends Base
         $field = $request->get('field');
         $order = $request->get('order', 'asc');
         $format = $request->get('format', 'normal');
-        $page_size = $request->get('limit', $format === 'tree' ? 1000 : 10);
+        $limit = $request->get('limit', $format === 'tree' ? 1000 : 10);
         $order = $order === 'asc' ? 'asc' : 'desc';
         $where = $request->get();
         $table = $this->model->getTable();
@@ -122,7 +122,7 @@ class Crud extends Base
             $where[$this->dataLimitField] = admin_id();
         }
 
-        return [$where, $format, $page_size, $field, $order];
+        return [$where, $format, $limit, $field, $order];
     }
 
     /**
@@ -157,10 +157,10 @@ class Crud extends Base
     /**
      * @param $query
      * @param $format
-     * @param $page_size
+     * @param $limit
      * @return Response
      */
-    protected function doFormat($query, $format, $page_size): Response
+    protected function doFormat($query, $format, $limit): Response
     {
         if (in_array($format, ['select', 'tree', 'table_tree'])) {
             $items = $query->get();
@@ -171,7 +171,7 @@ class Crud extends Base
             }
             return $this->formatTableTree($items);
         }
-        $paginator = $query->paginate($page_size);
+        $paginator = $query->paginate($limit);
         return json(['code' => 0, 'msg' => 'ok', 'count' => $paginator->total(), 'data' => $paginator->items()]);
     }
 

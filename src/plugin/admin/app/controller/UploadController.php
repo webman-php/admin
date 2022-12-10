@@ -62,7 +62,7 @@ class UploadController extends Crud
      */
     public function select(Request $request): Response
     {
-        [$where, $format, $page_size, $field, $order] = $this->selectInput($request);
+        [$where, $format, $limit, $field, $order] = $this->selectInput($request);
         if (!empty($where['ext']) && is_string($where['ext'])) {
             $where['ext'] = ['in', explode(',', $where['ext'])];
         }
@@ -70,7 +70,7 @@ class UploadController extends Crud
             $where['name'] = ['like', "%{$where['name']}%"];
         }
         $query = $this->doSelect($where, $field, $order);
-        return $this->doFormat($query, $format, $page_size);
+        return $this->doFormat($query, $format, $limit);
     }
 
     /**

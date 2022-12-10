@@ -1142,7 +1142,7 @@ EOF;
         $order = $request->get('order', 'asc');
         $table = Util::filterAlphaNum($request->get('table', ''));
         $format = $request->get('format', 'normal');
-        $page_size = $request->get('limit', $format === 'tree' ? 5000 : 10);
+        $limit = $request->get('limit', $format === 'tree' ? 5000 : 10);
 
         $allow_column = Util::db()->select("desc $table");
         if (!$allow_column) {
@@ -1169,7 +1169,7 @@ EOF;
                 }
             }
         }
-        $paginator = $paginator->orderBy($field, $order)->paginate($page_size, '*', 'page', $page);
+        $paginator = $paginator->orderBy($field, $order)->paginate($limit, '*', 'page', $page);
 
         $items = $paginator->items();
         if ($format == 'tree') {
