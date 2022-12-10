@@ -118,8 +118,8 @@ class Crud extends Base
             }
         }
         // 按照数据限制字段返回数据
-        if ($this->dataLimit) {
-            $where[$this->dataLimit] = admin_id();
+        if ($this->dataLimit === 'personal') {
+            $where[$this->dataLimitField] = admin_id();
         }
 
         return [$where, $format, $page_size, $field, $order];

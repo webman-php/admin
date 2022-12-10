@@ -30,10 +30,15 @@ class Base
 
     /**
      * 数据限制
-     * 例如当$dataLimit='admin_id'时将只返回当前管理员的数据
+     * 例如当$dataLimit='personal'时将只返回当前管理员的数据
      * @var string
      */
     protected $dataLimit = null;
+
+    /**
+     * 数据限制字段
+     */
+    protected $dataLimitField = 'admin_id';
 
     /**
      * 返回格式化json数据
