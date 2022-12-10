@@ -70,24 +70,6 @@ class Crud extends Base
     }
 
     /**
-     * 摘要
-     * @param Request $request
-     * @return Response
-     */
-    /*public function schema(Request $request): Response
-    {
-        $table = $this->model->getTable();
-        $data = Util::getSchema($table);
-
-        return $this->json(0, 'ok', [
-            'table' => $data['table'],
-            'columns' => array_values($data['columns']),
-            'forms' => array_values($data['forms']),
-            'keys' => array_values($data['keys']),
-        ]);
-    }*/
-
-    /**
      * 查询前置
      * @param Request $request
      * @return array
@@ -101,6 +83,8 @@ class Crud extends Base
         $limit = $request->get('limit', $format === 'tree' ? 1000 : 10);
         $order = $order === 'asc' ? 'asc' : 'desc';
         $where = $request->get();
+        $page = (int)$request->get('page');
+        $page = $page > 0 ? $page : 1;
         $table = $this->model->getTable();
 
         $allow_column = Util::db()->select("desc `$table`");
@@ -122,7 +106,7 @@ class Crud extends Base
             $where[$this->dataLimitField] = admin_id();
         }
 
-        return [$where, $format, $limit, $field, $order];
+        return [$where, $format, $limit, $field, $order, $page];
     }
 
     /**
