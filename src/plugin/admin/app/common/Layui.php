@@ -835,6 +835,8 @@ EOF;
                         }
                     }
                     $api_result .= "\napiResults[\"$field\"] = " . json_encode($options, JSON_UNESCAPED_UNICODE) . ";";
+                } else {
+                    $api_result .= "\napiResults[\"$field\"] = [];";
                 }
 
                 $templet = <<<EOF
