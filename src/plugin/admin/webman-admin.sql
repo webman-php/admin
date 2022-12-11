@@ -78,6 +78,7 @@ CREATE TABLE `wa_roles` (
   `rules` text COMMENT '权限',
   `created_at` datetime NOT NULL COMMENT '创建时间',
   `updated_at` datetime NOT NULL COMMENT '更新时间',
+  `pid` int(10) unsigned DEFAULT NULL COMMENT '上级id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员角色';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -88,7 +89,7 @@ CREATE TABLE `wa_roles` (
 
 LOCK TABLES `wa_roles` WRITE;
 /*!40000 ALTER TABLE `wa_roles` DISABLE KEYS */;
-INSERT INTO `wa_roles` VALUES (1,'超级管理员','*','2022-08-13 16:15:01','2022-11-29 16:45:36');
+INSERT INTO `wa_roles` VALUES (1,'超级管理员','*','2022-08-13 16:15:01','2022-11-29 16:45:36',NULL);
 /*!40000 ALTER TABLE `wa_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
