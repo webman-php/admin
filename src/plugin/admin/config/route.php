@@ -15,10 +15,12 @@
 use plugin\admin\app\controller\AccountController;
 use plugin\admin\app\controller\DictController;
 use Webman\Route;
+use support\Request;
 
 Route::any('/app/admin/account/captcha/{type}', [AccountController::class, 'captcha']);
-Route::any('/app/admin', function () {
-    return redirect('/app/admin/');
-});
 
 Route::any('/app/admin/dict/get/{name}', [DictController::class, 'get']);
+
+Route::fallback(function (Request $request) {
+    return response($request->uri() . ' not found' , 404);
+}, 'admin');

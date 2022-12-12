@@ -2,6 +2,8 @@
 namespace plugin\admin\app\middleware;
 
 use plugin\admin\api\Auth;
+use ReflectionException;
+use support\exception\BusinessException;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\MiddlewareInterface;
@@ -12,7 +14,7 @@ class AccessControl implements MiddlewareInterface
      * @param Request $request
      * @param callable $handler
      * @return Response
-     * @throws \ReflectionException
+     * @throws ReflectionException|BusinessException
      */
     public function process(Request $request, callable $handler): Response
     {

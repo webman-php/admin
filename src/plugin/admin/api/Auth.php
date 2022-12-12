@@ -39,10 +39,9 @@ class Auth
      */
     public static function canAccess(string $controller, string $action, int &$code = 0, string &$msg = ''): bool
     {
+        // 无控制器信息说明是函数调用，函数不属于任何控制器，鉴权操作应该在函数内部完成。
         if (!$controller) {
-            $msg = '无法识别当前控制器';
-            $code = 3;
-            return false;
+            return true;
         }
         // 获取控制器鉴权信息
         $class = new \ReflectionClass($controller);
