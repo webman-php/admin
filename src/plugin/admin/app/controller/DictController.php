@@ -2,6 +2,7 @@
 
 namespace plugin\admin\app\controller;
 
+use plugin\admin\app\model\Dict;
 use plugin\admin\app\model\Option;
 use support\exception\BusinessException;
 use support\Request;
@@ -27,6 +28,25 @@ class DictController extends Base
     }
 
     /**
+     * 查询
+     * @param Request $request
+     * @return Response
+     */
+    public function select(Request $request): Response
+    {
+        $name = $request->get('name', '');
+        if ($name && is_string($name)) {
+            $items = Option::where('name', 'like', "dict_$name%")->get()->toArray();
+        } else {
+            $items = Option::where('name', 'like', 'dict_%')->get()->toArray();
+        }
+        foreach ($items as &$item) {
+            $item['name'] = Dict::optionNameTodictName($item['name']);
+        }
+        return $this->json(0, 'ok', $items);
+    }
+
+    /**
      * 插入
      * @param Request $request
      * @return Response
@@ -36,20 +56,11 @@ class DictController extends Base
     {
         if ($request->method() === 'POST') {
             $name = $request->post('name');
-            if (!preg_match('/[a-zA-Z]/', $name)) {
-                return $this->json(1, '字典名只能包含字母');
-            }
-            $option_name = $this->dictNameToOptionName($name);
-            if (Option::where('name', $option_name)->first()) {
-                return $this->json(1, '字典已经存在' . $option_name);
+            if (Dict::get($name)) {
+                return $this->json(1, '字典已经存在');
             }
             $values = (array)$request->post('value', []);
-            $format_values = $this->filterValue($values);
-            $option = new Option;
-            $option->name = $option_name;
-            $option->value = json_encode($format_values, JSON_UNESCAPED_UNICODE);
-            $option->save();
-            return $this->json(0);
+            Dict::save($name, $values);
         }
         return view('dict/insert');
     }
@@ -64,53 +75,24 @@ class DictController extends Base
     {
         if ($request->method() === 'POST') {
             $name = $request->post('name');
-            if (!preg_match('/[a-zA-Z]/', $name)) {
-                return $this->json(1, '字典名只能包含字母');
-            }
-            $name = $this->dictNameToOptionName($name);
-            $option = Option::where('name', $name)->first();
-            if (!$option) {
+            if (!Dict::get($name)) {
                 return $this->json(1, '字典不存在');
             }
-            $format_values = $this->filterValue($request->post('value'));
-            $option->name = $this->dictNameToOptionName($request->post('name'));
-            $option->value = json_encode($format_values, JSON_UNESCAPED_UNICODE);
-            $option->save();
+            Dict::save($name, $request->post('value'));
         }
         return view('dict/update');
     }
 
     /**
+     * 删除
      * @param Request $request
      * @return Response
      */
-    public function delete(Request $request)
+    public function delete(Request $request): Response
     {
         $names = (array)$request->post('name');
-        foreach ($names as $index => $name) {
-            $names[$index] = $this->dictNameToOptionName($name);
-        }
-        Option::whereIn('name', $names)->delete();
+        Dict::delete($names);
         return $this->json(0);
-    }
-
-    /**
-     * 查询
-     * @param Request $request
-     * @return Response
-     */
-    public function select(Request $request): Response
-    {
-        $name = $request->get('name', '');
-        if ($name && is_string($name)) {
-            $items = Option::where('name', 'like', "dict_$name%")->get()->toArray();
-        } else {
-            $items = Option::where('name', 'like', 'dict_%')->get()->toArray();
-        }
-        foreach ($items as &$item) {
-            $item['name'] = $this->optionNameTodictName($item['name']);
-        }
-        return $this->json(0, 'ok', $items);
     }
 
     /**
@@ -121,47 +103,7 @@ class DictController extends Base
      */
     public function get(Request $request, $name): Response
     {
-        $value = Option::where('name', $this->dictNameToOptionName($name))->value('value');
-        if ($value === null) {
-            return $this->json(1, '字典不存在');
-        }
-        return $this->json(1, 'ok', json_decode($value, true));
-    }
-
-    /**
-     * 过滤字典选项
-     * @param array $values
-     * @return array
-     * @throws BusinessException
-     */
-    protected function filterValue(array $values): array
-    {
-        $format_values = [];
-        foreach ($values as $item) {
-            if (!isset($item['value']) || !isset($item['name'])) {
-                throw new BusinessException('格式错误', 1);
-            }
-            $format_values[] =  ['value' => $item['value'], 'name' => $item['name']];
-        }
-        return $format_values;
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    protected function dictNameToOptionName(string $name): string
-    {
-        return "dict_$name";
-    }
-
-    /**
-     * @param string $name
-     * @return string
-     */
-    protected function optionNameToDictName(string $name): string
-    {
-        return substr($name, 5);
+        return $this->json(0, 'ok', Dict::get($name));
     }
 
 }
