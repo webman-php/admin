@@ -306,19 +306,4 @@ class UploadController extends Crud
         ];
     }
 
-    /**
-     * 格式化文件大小
-     * @param $file_size
-     * @return string
-     */
-    protected function formatSize($file_size): string
-    {
-        $size = sprintf("%u", $file_size);
-        if($size == 0) {
-            return("0 Bytes");
-        }
-        $size_name = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
-        return round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $size_name[$i];
-    }
-
 }

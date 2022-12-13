@@ -5,13 +5,13 @@
 
 use app\model\User;
 use plugin\admin\app\model\Admin;
-use support\exception\BusinessException;
+use plugin\admin\app\model\Role;
 
 /**
  * 当前管理员id
  * @return integer|null
  */
-function admin_id()
+function admin_id(): ?int
 {
     return session('admin.id');
 }
@@ -20,7 +20,6 @@ function admin_id()
  * 当前管理员
  * @param null|array|string $fields
  * @return array|mixed|null
- * @throws BusinessException
  */
 function admin($fields = null)
 {
@@ -42,10 +41,24 @@ function admin($fields = null)
 }
 
 /**
+ * 是否是超级管理员
+ * @return bool
+ */
+function is_supper_admin(): bool
+{
+    $roles = admin('roles');
+    if (!$roles) {
+        return false;
+    }
+    $rules = Role::whereIn('id', $roles)->pluck('rules');
+    return $rules && in_array('*', $rules->toArray());
+}
+
+/**
  * 当前登录用户id
  * @return integer|null
  */
-function user_id()
+function user_id(): ?int
 {
     return session('user.id');
 }
@@ -54,7 +67,6 @@ function user_id()
  * 当前登录用户
  * @param null|array|string $fields
  * @return array|mixed|null
- * @throws BusinessException
  */
 function user($fields = null)
 {
@@ -79,7 +91,6 @@ function user($fields = null)
  * 刷新当前管理员session
  * @param bool $force
  * @return void
- * @throws BusinessException
  */
 function refresh_admin_session(bool $force = false)
 {
@@ -111,7 +122,6 @@ function refresh_admin_session(bool $force = false)
  * 刷新当前用户session
  * @param bool $force
  * @return void
- * @throws BusinessException
  */
 function refresh_user_session(bool $force = false)
 {

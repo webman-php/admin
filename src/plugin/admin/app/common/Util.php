@@ -2,23 +2,22 @@
 
 namespace plugin\admin\app\common;
 
+use Throwable;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Builder;
 use plugin\admin\app\model\Option;
-use support\Db;
 use support\exception\BusinessException;
-use Throwable;
-use function config;
+use support\Db;
 
 class Util
 {
     /**
      * 密码哈希
      * @param $password
-     * @param $algo
+     * @param string $algo
      * @return false|string|null
      */
-    public static function passwordHash($password, $algo = PASSWORD_DEFAULT)
+    public static function passwordHash($password, string $algo = PASSWORD_DEFAULT)
     {
         return password_hash($password, $algo);
     }
@@ -29,7 +28,7 @@ class Util
      * @param $hash
      * @return bool
      */
-    public static function passwordVerify($password, $hash): bool
+    public static function passwordVerify(string $password, string $hash): bool
     {
         return password_verify($password, $hash);
     }
@@ -38,7 +37,7 @@ class Util
      * 获取webman-admin数据库连接
      * @return Connection
      */
-    static function db(): Connection
+    public static function db(): Connection
     {
         return Db::connection('plugin.admin.mysql');
     }
@@ -47,9 +46,57 @@ class Util
      * 获取SchemaBuilder
      * @return Builder
      */
-    static function schema(): Builder
+    public static function schema(): Builder
     {
         return Db::schema('plugin.admin.mysql');
+    }
+
+    /**
+     * 获取语义化时间
+     * @param $time
+     * @return false|string
+     */
+    public static function humanDate($time)
+    {
+        $timestamp = is_numeric($time) ? $time : strtotime($time);
+        $dur = time() - $timestamp;
+        if ($dur < 0) {
+            return date('Y-m-d', $timestamp);
+        } else {
+            if ($dur < 60) {
+                return $dur . '秒前';
+            } else {
+                if ($dur < 3600) {
+                    return floor($dur / 60) . '分钟前';
+                } else {
+                    if ($dur < 86400) {
+                        return floor($dur / 3600) . '小时前';
+                    } else {
+                        if ($dur < 2592000) { // 30天内
+                            return floor($dur / 86400) . '天前';
+                        } else {
+                            return date('Y-m-d', $timestamp);;
+                        }
+                    }
+                }
+            }
+        }
+        return date('Y-m-d', $timestamp);
+    }
+
+    /**
+     * 格式化文件大小
+     * @param $file_size
+     * @return string
+     */
+    public static function formatBytes($file_size): string
+    {
+        $size = sprintf("%u", $file_size);
+        if($size == 0) {
+            return("0 Bytes");
+        }
+        $size_name = array(" Bytes", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
+        return round($size/pow(1024, ($i = floor(log($size, 1024)))), 2) . $size_name[$i];
     }
 
     /**
