@@ -159,13 +159,14 @@ EOF;
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
 
         $placeholder_string = !empty($props['placeholder']) ? ' placeholder="'.$props['placeholder'].'"' : '';
+        $disabled_string = !empty($props['disabled']) ? ' disabled' : '';
 
         $this->htmlContent .= <<<EOF
 
 <div class="layui-form-item">
     $label
     <div class="$class">
-        <textarea name="$field"$required_string$verify_string$placeholder_string class="layui-textarea">$value</textarea>
+        <textarea name="$field"$required_string$verify_string$placeholder_string$disabled_string class="layui-textarea">$value</textarea>
     </div>
 </div>
 

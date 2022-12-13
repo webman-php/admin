@@ -159,7 +159,7 @@ class DictController extends Base
      * @param string $name
      * @return string
      */
-    protected function optionNameTodictName(string $name): string
+    protected function optionNameToDictName(string $name): string
     {
         return substr($name, 5);
     }
