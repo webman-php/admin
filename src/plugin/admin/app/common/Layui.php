@@ -685,7 +685,7 @@ EOF;
      * @return Layui
      * @throws BusinessException
      */
-    static public function buildForm($table, string $type = 'insert'): Layui
+    public static function buildForm($table, string $type = 'insert'): Layui
     {
         if (!in_array($type, ['insert', 'update', 'search'])) {
             $type = 'insert';
@@ -746,7 +746,7 @@ EOF;
      * @return array|string|string[]
      * @throws BusinessException
      */
-    static public function buildTable($table, int $indent = 0)
+    public static function buildTable($table, int $indent = 0)
     {
         $schema = Util::getSchema($table);
         $forms = $schema['forms'];

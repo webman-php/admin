@@ -18,7 +18,7 @@ class Util
      * @param $algo
      * @return false|string|null
      */
-    static public function passwordHash($password, $algo = PASSWORD_DEFAULT)
+    public static function passwordHash($password, $algo = PASSWORD_DEFAULT)
     {
         return password_hash($password, $algo);
     }
@@ -29,7 +29,7 @@ class Util
      * @param $hash
      * @return bool
      */
-    static public function passwordVerify($password, $hash): bool
+    public static function passwordVerify($password, $hash): bool
     {
         return password_verify($password, $hash);
     }
@@ -57,7 +57,7 @@ class Util
      * @param $var
      * @return false|string
      */
-    static public function pdoQuote($var)
+    public static function pdoQuote($var)
     {
         return Util::db()->getPdo()->quote($var, \PDO::PARAM_STR);
     }
@@ -68,7 +68,7 @@ class Util
      * @return string
      * @throws BusinessException
      */
-    static public function checkTableName(string $table): string
+    public static function checkTableName(string $table): string
     {
         if (!preg_match('/^[a-zA-Z_0-9]+$/', $table)) {
             throw new BusinessException('表名不合法');
@@ -82,7 +82,7 @@ class Util
      * @return mixed
      * @throws BusinessException
      */
-    static public function filterAlphaNum($var)
+    public static function filterAlphaNum($var)
     {
         $vars = (array)$var;
         array_walk_recursive($vars, function ($item) {
@@ -99,7 +99,7 @@ class Util
      * @return mixed
      * @throws BusinessException
      */
-    static public function filterNum($var)
+    public static function filterNum($var)
     {
         $vars = (array)$var;
         array_walk_recursive($vars, function ($item) {
@@ -116,7 +116,7 @@ class Util
      * @return string
      * @throws BusinessException
      */
-    static public function filterUrlPath($var): string
+    public static function filterUrlPath($var): string
     {
         if (!is_string($var) || !preg_match('/^[a-zA-Z0-9_\-\/&?.]+$/', $var)) {
             throw new BusinessException('参数不合法');
@@ -130,7 +130,7 @@ class Util
      * @return string
      * @throws BusinessException
      */
-    static public function filterPath($var): string
+    public static function filterPath($var): string
     {
         if (!is_string($var) || !preg_match('/^[a-zA-Z0-9_\-\/]+$/', $var)) {
             throw new BusinessException('参数不合法');
@@ -183,7 +183,7 @@ class Util
      * @param string $value
      * @return string
      */
-    static public function camel(string $value): string
+    public static function camel(string $value): string
     {
         static $cache = [];
         $key = $value;
@@ -202,7 +202,7 @@ class Util
      * @param $value
      * @return string
      */
-    static public function smCamel($value): string
+    public static function smCamel($value): string
     {
         return lcfirst(static::camel($value));
     }
@@ -212,7 +212,7 @@ class Util
      * @param $comment
      * @return false|mixed|string
      */
-    static public function getCommentFirstLine($comment)
+    public static function getCommentFirstLine($comment)
     {
         if ($comment === false) {
             return false;
@@ -229,7 +229,7 @@ class Util
      * 表单类型到插件的映射
      * @return \string[][]
      */
-    static public function methodControlMap(): array
+    public static function methodControlMap(): array
     {
         return  [
             //method=>[控件]
@@ -273,7 +273,7 @@ class Util
      * @param $type
      * @return string
      */
-    static public function typeToControl($type): string
+    public static function typeToControl($type): string
     {
         if (stripos($type, 'int') !== false) {
             return 'inputNumber';
@@ -296,7 +296,7 @@ class Util
      * @param $unsigned
      * @return string
      */
-    static public function typeToMethod($type, $unsigned = false)
+    public static function typeToMethod($type, $unsigned = false)
     {
         if (stripos($type, 'int') !== false) {
             $type = str_replace('int', 'Integer', $type);
@@ -319,7 +319,7 @@ class Util
      * @return array|mixed
      * @throws BusinessException
      */
-    static public function getSchema($table, $section = null)
+    public static function getSchema($table, $section = null)
     {
         Util::checkTableName($table);
         $database = config('database.connections')['plugin.admin.mysql']['database'];
@@ -395,7 +395,7 @@ class Util
      * @param $schema
      * @return mixed|string
      */
-    static public function getLengthValue($schema)
+    public static function getLengthValue($schema)
     {
         $type = $schema->DATA_TYPE;
         if (in_array($type, ['float', 'decimal', 'double'])) {
@@ -421,7 +421,7 @@ class Util
      * @param $control_args
      * @return array
      */
-    static public function getControlProps($control, $control_args): array
+    public static function getControlProps($control, $control_args): array
     {
         if (!$control_args) {
             return [];
@@ -461,7 +461,7 @@ class Util
      * @param string $package
      * @return mixed|string
      */
-    static public function getPackageVersion(string $package)
+    public static function getPackageVersion(string $package)
     {
         $installed_php = base_path('vendor/composer/installed.php');
         if (is_file($installed_php)) {
@@ -475,7 +475,7 @@ class Util
      * reload webman (不支持windows)
      * @return bool
      */
-    static public function reloadWebman()
+    public static function reloadWebman()
     {
         if (function_exists('posix_kill')) {
             try {
