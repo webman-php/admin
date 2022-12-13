@@ -6,6 +6,7 @@
 use app\model\User;
 use plugin\admin\app\model\Admin;
 use plugin\admin\app\model\Role;
+use plugin\admin\app\model\Rule;
 
 /**
  * 当前管理员id
@@ -41,7 +42,7 @@ function admin($fields = null)
 }
 
 /**
- * 是否是超级管理员
+ * 当前是否是超级管理员
  * @return bool
  */
 function is_supper_admin(): bool
@@ -52,6 +53,36 @@ function is_supper_admin(): bool
     }
     $rules = Role::whereIn('id', $roles)->pluck('rules');
     return $rules && in_array('*', $rules->toArray());
+}
+
+/**
+ * 获取当前管理员权限
+ * @return array
+ */
+function admin_rules(): array
+{
+    $roles = admin('roles');
+    if (!$roles) {
+        return [];
+    }
+    $rule_ids = Role::whereIn('id', $roles)->pluck('rules');
+    if (!$rule_ids) {
+        return [];
+    }
+    $rule_id_strings = $rule_ids->toArray();
+    $rule_ids = [];
+    foreach ($rule_id_strings as $id_string) {
+        if (!$id_string) {
+            continue;
+        }
+        $rule_ids = array_merge($rule_ids, explode(',', $id_string));
+    }
+    if (in_array('*', $rule_ids)) {
+        $rules = Rule::pluck('key', 'id');
+    } else {
+        $rules = Rule::whereIn('id', $rule_ids)->pluck('key', 'id');
+    }
+    return $rules ? $rules->toArray() : [];
 }
 
 /**
