@@ -31,8 +31,10 @@
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
+            {{# if(d.id!==1){ }}
             <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.role.update">编辑</button>
             <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.role.delete">删除</button>
+            {{# } }}
         </script>
 
         <script src="/app/admin/component/layui/layui.js"></script>
@@ -66,7 +68,7 @@
 						title: "主键",
 						field: "id",
 					},{
-						title: "角色名",
+						title: "角色组",
 						field: "name",
 					},{
 						title: "权限",
@@ -79,7 +81,8 @@
 								items.push(apiResults[field][v] || v);
 							});
 							return util.escape(items.join(","));
-						}
+						},
+                        hide: true,
 					},{
 						title: "创建时间",
 						field: "created_at",
@@ -87,7 +90,7 @@
 						title: "更新时间",
 						field: "updated_at",
 					},{
-						title: "上级id",
+						title: "父级",
 						field: "pid",
 						templet: function (d) {
 							let field = "pid";
@@ -97,7 +100,8 @@
 								items.push(apiResults[field][v] || v);
 							});
 							return util.escape(items.join(","));
-						}
+						},
+                        hide: true,
 					},{
 						title: "操作",
 						toolbar: "#table-bar",

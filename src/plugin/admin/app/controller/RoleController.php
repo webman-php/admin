@@ -43,7 +43,12 @@ class RoleController extends Crud
     public function insert(Request $request): Response
     {
         if ($request->method() === 'POST') {
-            return parent::insert($request);
+            $data = $this->insertInput($request);
+            if (isset($data['pid']) && $data['pid'] == 0) {
+                return $this->json(1, '请选择父级权限组');
+            }
+            $id = $this->doInsert($data);
+            return $this->json(0, 'ok', ['id' => $id]);
         }
         return view('role/insert');
     }
@@ -67,6 +72,14 @@ class RoleController extends Crud
         // id为1的上级pid固定为0
         if (isset($data['pid']) && $id == 1) {
             $data['pid'] = 0;
+        }
+        if (isset($data['pid'])) {
+            if ($data['pid'] == $id) {
+                return $this->json(1, '父集不能是自己');
+            }
+            if ($data['pid'] == 0) {
+                return $this->json(1, '请选择父级权限组');
+            }
         }
         $this->doUpdate($id, $data);
         return $this->json(0);
