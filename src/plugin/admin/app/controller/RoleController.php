@@ -75,7 +75,7 @@ class RoleController extends Crud
         }
         if (isset($data['pid'])) {
             if ($data['pid'] == $id) {
-                return $this->json(1, '父集不能是自己');
+                return $this->json(1, '父级不能是自己');
             }
             if ($data['pid'] == 0) {
                 return $this->json(1, '请选择父级权限组');

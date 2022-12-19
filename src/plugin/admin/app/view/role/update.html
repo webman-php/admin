@@ -96,7 +96,7 @@
                                         el: "#rules",
                                         name: "rules",
                                         initValue: initValue,
-                                        data: e.data, 
+                                        data: e.data,
                                         tree: {"show":true,expandedKeys:initValue},
                                         toolbar: {show:true,list:["ALL","CLEAR","REVERSE"]},
                                     })
@@ -104,7 +104,7 @@
                             });
                         });
                         
-                        // 字段 上级id pid
+                        // 字段 父级角色组 pid
                         layui.use(["jquery", "xmSelect"], function() {
                             layui.$.ajax({
                                 url: "/app/admin/role/select?format=tree",
@@ -116,10 +116,14 @@
                                         el: "#pid",
                                         name: "pid",
                                         initValue: initValue,
-                                        data: e.data, 
+                                        tips: "请选择",
+                                        toolbar: {show: true, list: ["CLEAR"]},
+                                        data: e.data,
+                                        value: "0",
                                         model: {"icon":"hidden","label":{"type":"text"}},
                                         clickClose: true,
                                         radio: true,
+                                        tree: {show: true,"strict":false,"clickCheck":true,"clickExpand":false,expandedKeys:true},
                                     })
                                 }
                             });
