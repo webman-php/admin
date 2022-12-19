@@ -27,6 +27,13 @@
                         </div>
                     </div>
                     
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">上级id</label>
+                        <div class="layui-input-block">
+                            <div name="pid" id="pid" value="" ></div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
 
@@ -46,6 +53,7 @@
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
         <script src="/app/admin/admin/js/permission.js"></script>
+        
         <script>
 
             // 相关接口
@@ -89,8 +97,29 @@
                                         name: "rules",
                                         initValue: initValue,
                                         data: e.data, 
-                                        tree: {show: true, expandedKeys: initValue},
-                                        toolbar: {show: true, list: ["ALL","CLEAR","REVERSE"]},
+                                        tree: {"show":true,expandedKeys:initValue},
+                                        toolbar: {show:true,list:["ALL","CLEAR","REVERSE"]},
+                                    })
+                                }
+                            });
+                        });
+                        
+                        // 字段 上级id pid
+                        layui.use(["jquery", "xmSelect"], function() {
+                            layui.$.ajax({
+                                url: "/app/admin/role/select?format=tree",
+                                dataType: "json",
+                                success: function (e) {
+                                    let value = layui.$("#pid").attr("value");
+                                    let initValue = value ? value.split(",") : [];
+                                    layui.xmSelect.render({
+                                        el: "#pid",
+                                        name: "pid",
+                                        initValue: initValue,
+                                        data: e.data, 
+                                        model: {"icon":"hidden","label":{"type":"text"}},
+                                        clickClose: true,
+                                        radio: true,
                                     })
                                 }
                             });

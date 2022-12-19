@@ -10,44 +10,7 @@
     <body class="pear-container">
     
         <!-- 顶部查询表单 -->
-        <div class="layui-card">
-            <div class="layui-card-body">
-                <form class="layui-form top-search-from">
-                    
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">角色名</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="name" value="" class="layui-input">
-                        </div>
-                    </div>
-                    
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">创建时间</label>
-                        <div class="layui-input-block">
-                            <div class="layui-input-block" id="created_at">
-                                <input type="text" autocomplete="off" name="created_at[]" id="created_at-date-start" class="layui-input inline-block" placeholder="开始时间">
-                                -
-                                <input type="text" autocomplete="off" name="created_at[]" id="created_at-date-end" class="layui-input inline-block" placeholder="结束时间">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="layui-form-item layui-inline">
-                        <label class="layui-form-label"></label>
-                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
-                            <i class="layui-icon layui-icon-search"></i>查询
-                        </button>
-                        <button type="reset" class="pear-btn pear-btn-md" lay-submit lay-filter="table-reset">
-                            <i class="layui-icon layui-icon-refresh"></i>重置
-                        </button>
-                    </div>
-                    <div class="toggle-btn">
-                        <a class="layui-hide">展开<i class="layui-icon layui-icon-down"></i></a>
-                        <a class="layui-hide">收起<i class="layui-icon layui-icon-up"></i></a>
-                    </div>
-                </form>
-            </div>
-        </div>
+        
         
         <!-- 数据表格 -->
         <div class="layui-card">
@@ -76,6 +39,7 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script src="/app/admin/admin/js/permission.js"></script>
         <script src="/app/admin/admin/js/common.js"></script>
+        
         <script>
 
             // 相关常量
@@ -85,14 +49,6 @@
             const DELETE_API = "/app/admin/role/delete";
             const INSERT_URL = "/app/admin/role/insert";
             const UPDATE_URL = "/app/admin/role/update";
-            
-            // 字段 创建时间 created_at
-            layui.use(["laydate"], function() {
-                layui.laydate.render({
-                    elem: "#created_at",
-                    range: ["#created_at-date-start", "#created_at-date-end"],
-                });
-            })
             
             // 表格渲染
             layui.use(["table", "form", "common", "popup", "util"], function() {
@@ -109,7 +65,6 @@
 					},{
 						title: "主键",
 						field: "id",
-						hide: true,
 					},{
 						title: "角色名",
 						field: "name",
@@ -132,11 +87,23 @@
 						title: "更新时间",
 						field: "updated_at",
 					},{
+						title: "上级id",
+						field: "pid",
+						templet: function (d) {
+							let field = "pid";
+							if (typeof d[field] == "undefined") return "";
+							let items = [];
+							layui.each((d[field] + "").split(","), function (k , v) {
+								items.push(apiResults[field][v] || v);
+							});
+							return util.escape(items.join(","));
+						}
+					},{
 						title: "操作",
 						toolbar: "#table-bar",
 						align: "center",
 						fixed: "right",
-                        width: 130,
+						width: 120,
 					}
 				];
 				
@@ -166,8 +133,10 @@
 				// 获取表格中下拉或树形组件数据
 				let apis = [];
 				apis.push(["rules", "/app/admin/rule/get?type=0,1,2"]);
+				apis.push(["pid", "/app/admin/role/select?format=tree"]);
 				let apiResults = {};
 				apiResults["rules"] = [];
+				apiResults["pid"] = [];
 				let count = apis.length;
 				layui.each(apis, function (k, item) {
 				    let [field, url] = item;

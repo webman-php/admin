@@ -60,9 +60,13 @@ class RoleController extends Crud
             return view('role/update');
         }
         [$id, $data] = $this->updateInput($request);
-        // id为1的管理员权限固定为*
+        // id为1的权限权限固定为*
         if (isset($data['rules']) && $id == 1) {
             $data['rules'] = '*';
+        }
+        // id为1的上级pid固定为0
+        if (isset($data['pid']) && $id == 1) {
+            $data['pid'] = 0;
         }
         $this->doUpdate($id, $data);
         return $this->json(0);

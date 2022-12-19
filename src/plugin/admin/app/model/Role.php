@@ -10,6 +10,7 @@ use plugin\admin\app\model\Base;
  * @property string $rules 权限
  * @property string $created_at 创建时间
  * @property string $updated_at 更新时间
+ * @property integer $pid 上级id
  */
 class Role extends Base
 {
