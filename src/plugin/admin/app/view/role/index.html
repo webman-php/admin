@@ -53,7 +53,8 @@
             const UPDATE_URL = "/app/admin/role/update";
             
             // 表格渲染
-            layui.use(["table", "form", "common", "popup", "util"], function() {
+            layui.use(["table", "treetable", "form", "common", "popup", "util"], function() {
+                let treeTable = layui.treetable;
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -65,11 +66,11 @@
 					{
 						type: "checkbox"
 					},{
+                        title: "角色组",
+                        field: "name",
+                    },{
 						title: "主键",
 						field: "id",
-					},{
-						title: "角色组",
-						field: "name",
 					},{
 						title: "权限",
 						field: "rules",
@@ -114,23 +115,23 @@
 				// 渲染表格
 				function render()
 				{
-				    table.render({
+                    treeTable.render({
 				        elem: "#data-table",
 				        url: SELECT_API,
-				        page: true,
-				        cols: [cols],
-				        skin: "line",
-				        size: "lg",
-				        toolbar: "#table-toolbar",
-				        autoSort: false,
-				        defaultToolbar: [{
-				            title: "刷新",
-				            layEvent: "refresh",
-				            icon: "layui-icon-refresh",
-				        }, "filter", "print", "exports"],
-				        done: function () {
-				            layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
-				        }
+                        treeColIndex: 1,
+                        treeSpid: 0,
+                        treeIdName: "id",
+                        treePidName: "pid",
+                        treeDefaultClose: false,
+                        cols: [cols],
+                        skin: "line",
+                        size: "lg",
+                        toolbar: "#table-toolbar",
+                        defaultToolbar: [{
+                            title: "刷新",
+                            layEvent: "refresh",
+                            icon: "layui-icon-refresh",
+                        }, "filter", "print", "exports"]
 				    });
 				}
 				
