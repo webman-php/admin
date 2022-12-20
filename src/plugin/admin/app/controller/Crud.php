@@ -309,6 +309,7 @@ class Crud extends Base
             $items_map[] = [
                 'name' => $item->title ?? $item->name ?? $item->id,
                 'value' => (string)$item->id,
+                'id' => $item->id,
                 'pid' => $item->pid,
             ];
         }
