@@ -2,7 +2,9 @@
 
 namespace plugin\admin\app\controller;
 
+use plugin\admin\app\common\Tree;
 use plugin\admin\app\model\Role;
+use plugin\admin\app\model\Rule;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
@@ -98,6 +100,31 @@ class RoleController extends Crud
         }
         $this->doDelete($ids);
         return $this->json(0);
+    }
+
+
+    /**
+     * 获取角色权限
+     * @param Request $request
+     * @return Response
+     */
+    public function rules(Request $request): Response
+    {
+        $role_id = $request->get('role');
+        if (empty($role_id)) {
+            return $this->json(0, 'ok', []);
+        }
+        $rule_id_string = Role::where('id', $role_id)->value('rules');
+        if ($rule_id_string === '') {
+            return $this->json(0, 'ok', []);
+        }
+        $rules = Rule::get();
+        $ids = [];
+        if ($rule_id_string !== '*') {
+            $ids = explode(',', $rule_id_string);
+        }
+        $tree = new Tree($rules);
+        return $this->json(0, 'ok', $tree->getTree($ids));
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace plugin\admin\app\controller;
 
+use plugin\admin\app\common\Tree;
 use plugin\admin\app\common\Util;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
@@ -59,7 +60,6 @@ class RuleController extends Crud
      * 获取菜单
      * @param Request $request
      * @return Response
-     * @throws BusinessException
      */
     function get(Request $request): Response
     {
@@ -67,44 +67,31 @@ class RuleController extends Crud
         $items = Rule::orderBy('weight', 'desc')->get()->toArray();
         $types = $request->get('type', '0,1');
         $types = is_string($types) ? explode(',', $types) : [0, 1];
-        $items_map = [];
+
+        $formatted_items = [];
         foreach ($items as $item) {
             $item['pid'] = (int)$item['pid'];
             $item['name'] = $item['title'];
             $item['value'] = $item['id'];
-            $items_map[$item['id']] = $item;
+            $item['icon'] = $item['icon'] ? "layui-icon {$item['icon']}" : '';
+            $formatted_items[] = $item;
         }
-        $formatted_items = [];
-        foreach ($items_map as $index => $item) {
-            //$items_map[$index]['type'] = $items_map[$index]['href'] ? 1 : 0;
-            $items_map[$index]['icon'] = $items_map[$index]['icon'] ? "layui-icon {$items_map[$index]['icon']}" : '';
-            if ($item['pid'] && isset($items_map[$item['pid']])) {
-                $items_map[$item['pid']]['children'][] = &$items_map[$index];
-            }
-        }
-        foreach ($items_map as $item) {
-            if (!$item['pid']) {
-                $formatted_items[] = $item;
-            }
-        }
+
+        $tree = new Tree($formatted_items);
+        $tree_items = $tree->getTree();
 
         // 超级管理员权限为 *
         if (!in_array('*', $rules)) {
-            $this->removeUncontain($formatted_items, 'id', $rules);
+            $this->removeNotContain($tree_items, 'id', $rules);
         }
-        $this->removeUncontain($formatted_items, 'type', $types);
-        $formatted_items = array_values($formatted_items);
-        foreach ($formatted_items as &$item) {
-            $this->arrayValues($item);
-        }
-        return $this->json(0, 'ok', $formatted_items);
+        $this->removeNotContain($tree_items, 'type', $types);
+        return $this->json(0, 'ok', $tree_items);
     }
 
     /**
      * 获取控制器详细权限
      * @param Request $request
      * @return Response
-     * @throws BusinessException
      */
     public function permissionCodes(Request $request): Response
     {
@@ -279,7 +266,7 @@ class RuleController extends Crud
      * @param $values
      * @return void
      */
-    protected function removeUncontain(&$array, $key, $values)
+    protected function removeNotContain(&$array, $key, $values)
     {
         foreach ($array as $k => &$item) {
             if (!is_array($item)) {
@@ -291,7 +278,7 @@ class RuleController extends Crud
                 if (!isset($item['children'])) {
                     continue;
                 }
-                $this->removeUncontain($item['children'], $key, $values);
+                $this->removeNotContain($item['children'], $key, $values);
             }
         }
     }
@@ -357,22 +344,6 @@ class RuleController extends Crud
             $rules = array_merge($rules, explode(',', $rule_string));
         }
         return $rules;
-    }
-
-    /**
-     * 递归重建数组下标
-     * @return void
-     */
-    protected function arrayValues(&$array)
-    {
-        if (!is_array($array) || !isset($array['children'])) {
-            return;
-        }
-        $array['children'] = array_values($array['children']);
-
-        foreach ($array['children'] as &$child) {
-            $this->arrayValues($child);
-        }
     }
 
 }

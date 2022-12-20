@@ -5,6 +5,7 @@
 
 use app\model\User;
 use plugin\admin\app\model\Admin;
+use plugin\admin\app\model\AdminRole;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
 
@@ -143,7 +144,7 @@ function refresh_admin_session(bool $force = false)
     }
     $admin = $admin->toArray();
     unset($admin['password']);
-    $admin['roles'] = $admin['roles'] ? explode(',', $admin['roles']) : [];
+    $admin['roles'] = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
     $admin['session_last_update_time'] = $time_now;
     $session->set('admin', $admin);
 }

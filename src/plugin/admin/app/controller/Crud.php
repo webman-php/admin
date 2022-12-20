@@ -4,6 +4,7 @@ namespace plugin\admin\app\controller;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use plugin\admin\app\common\Tree;
 use plugin\admin\app\common\Util;
 use support\exception\BusinessException;
 use support\Model;
@@ -305,24 +306,14 @@ class Crud extends Base
     {
         $items_map = [];
         foreach ($items as $item) {
-            $items_map[$item->id] = [
+            $items_map[] = [
                 'name' => $item->title ?? $item->name ?? $item->id,
                 'value' => (string)$item->id,
                 'pid' => $item->pid,
             ];
         }
-        $formatted_items = [];
-        foreach ($items_map as $index => $item) {
-            if ($item['pid'] && isset($items_map[$item['pid']])) {
-                $items_map[$item['pid']]['children'][] = &$items_map[$index];
-            }
-        }
-        foreach ($items_map as $item) {
-            if (!$item['pid']) {
-                $formatted_items[] = $item;
-            }
-        }
-        return  $this->json(0, 'ok', $formatted_items);
+        $tree = new Tree($items_map);
+        return  $this->json(0, 'ok', $tree->getTree());
     }
 
     /**
@@ -332,22 +323,8 @@ class Crud extends Base
      */
     protected function formatTableTree($items): Response
     {
-        $items_map = [];
-        foreach ($items as $item) {
-            $items_map[$item->id] = $item->toArray();
-        }
-        $formatted_items = [];
-        foreach ($items_map as $index => $item) {
-            if ($item['pid'] && isset($items_map[$item['pid']])) {
-                $items_map[$item['pid']]['children'][] = &$items_map[$index];
-            }
-        }
-        foreach ($items_map as $item) {
-            if (!$item['pid']) {
-                $formatted_items[] = $item;
-            }
-        }
-        return $this->json(0, 'ok', $formatted_items);
+        $tree = new Tree($items);
+        return $this->json(0, 'ok', $tree->getTree());
     }
 
     /**
