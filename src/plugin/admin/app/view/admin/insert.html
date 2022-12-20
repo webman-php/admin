@@ -127,7 +127,7 @@
             // 字段 角色 roles
             layui.use(["jquery", "xmSelect"], function() {
                 layui.$.ajax({
-                    url: "/app/admin/role/select?format=select",
+                    url: "/app/admin/role/select?format=tree",
                     dataType: "json",
                     success: function (e) {
                         let value = layui.$("#roles").attr("value");
@@ -136,9 +136,9 @@
                             el: "#roles",
                             name: "roles",
                             initValue: initValue,
-                            data: e.data, 
-                            tree: {"show":true},
-                            toolbar: {"show":true,"list":["ALL","CLEAR","REVERSE"]},
+                            data: e.data,
+                            tree: {"show":true, expandedKeys:true, strict:false},
+                            toolbar: {show:true, list:["ALL","CLEAR","REVERSE"]},
                         })
                     }
                 });
