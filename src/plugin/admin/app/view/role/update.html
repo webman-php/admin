@@ -87,7 +87,7 @@
                         // 字段 权限 rules
                         layui.use(["jquery", "xmSelect"], function() {
                             layui.$.ajax({
-                                url: "/app/admin/rule/get?type=0,1,2",
+                                url: "/app/admin/role/rules" + location.search,
                                 dataType: "json",
                                 success: function (e) {
                                     let value = layui.$("#rules").attr("value");
@@ -124,6 +124,17 @@
                                         clickClose: true,
                                         radio: true,
                                         tree: {show: true,"strict":false,"clickCheck":true,"clickExpand":false,expandedKeys:true},
+                                        on: function(data){
+                                            let id = data.arr[0] ? data.arr[0].value : "";
+                                            if (!id) return;
+                                            layui.$.ajax({
+                                                url: '/app/admin/role/rules?id=' + id,
+                                                dataType: 'json',
+                                                success: function (res) {
+                                                    layui.xmSelect.get('#rules')[0].update({data:res.data});
+                                                }
+                                            });
+                                        }
                                     })
                                 }
                             });

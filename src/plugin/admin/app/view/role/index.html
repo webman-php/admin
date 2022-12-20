@@ -284,9 +284,7 @@
 
                 // 刷新表格数据
                 window.refreshTable = function(param) {
-                    table.reloadData("data-table", {
-                        scrollPos: "fixed"
-                    });
+                    treeTable.reload("#data-table");
                 }
             })
 

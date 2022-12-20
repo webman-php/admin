@@ -110,7 +110,7 @@ class RoleController extends Crud
      */
     public function rules(Request $request): Response
     {
-        $role_id = $request->get('role');
+        $role_id = $request->get('id');
         if (empty($role_id)) {
             return $this->json(0, 'ok', []);
         }
@@ -119,12 +119,11 @@ class RoleController extends Crud
             return $this->json(0, 'ok', []);
         }
         $rules = Rule::get();
-        $ids = [];
+        $include = [];
         if ($rule_id_string !== '*') {
-            $ids = explode(',', $rule_id_string);
+            $include = explode(',', $rule_id_string);
         }
-        $tree = new Tree($rules);
-        return $this->json(0, 'ok', $tree->getTree($ids));
+        return $this->formatTree($rules, $include);
     }
 
 }

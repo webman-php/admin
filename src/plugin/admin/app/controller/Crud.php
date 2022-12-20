@@ -302,7 +302,7 @@ class Crud extends Base
      * @param $items
      * @return Response
      */
-    protected function formatTree($items): Response
+    protected function formatTree($items, array $include = []): Response
     {
         $items_map = [];
         foreach ($items as $item) {
@@ -314,7 +314,7 @@ class Crud extends Base
             ];
         }
         $tree = new Tree($items_map);
-        return  $this->json(0, 'ok', $tree->getTree());
+        return  $this->json(0, 'ok', $tree->getTree($include));
     }
 
     /**
