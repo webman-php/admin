@@ -3,6 +3,7 @@
 namespace plugin\admin\app\controller;
 
 use plugin\admin\app\model\Admin;
+use plugin\admin\app\model\AdminRole;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
@@ -45,6 +46,17 @@ class AdminController extends Crud
     public function insert(Request $request): Response
     {
         if ($request->method() === 'POST') {
+            $data = $this->insertInput($request);
+            $admin_id = $this->doInsert($data);
+            $role_ids = $request->post('roles');
+            $role_ids = $role_ids ? explode(',', $role_ids) : [];
+            AdminRole::where('admin_id', $admin_id)->delete();
+            foreach ($role_ids as $id) {
+                $admin_role = new AdminRole;
+                $admin_role->admin_id = $admin_id;
+                $admin_role->role_id = $id;
+                $admin_role->save();
+            }
             return parent::insert($request);
         }
         return view('admin/insert');
@@ -59,6 +71,24 @@ class AdminController extends Crud
     public function update(Request $request): Response
     {
         if ($request->method() === 'POST') {
+            $role_ids = $request->post('roles');
+            $admin_id = $request->post('id');
+            if (!$admin_id) {
+                return $this->json(1, '缺少参数');
+            }
+            $role_ids = $role_ids ? explode(',', $role_ids) : [];
+            $exist_role_ids = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
+            // 删除
+            $delete_ids = array_diff($exist_role_ids, $role_ids);
+            AdminRole::whereIn('role_id', $delete_ids)->where('admin_id', $admin_id)->delete();
+            // 添加
+            $add_ids = array_diff($role_ids, $exist_role_ids);
+            foreach ($add_ids as $id) {
+                $admin_role = new AdminRole;
+                $admin_role->admin_id = $admin_id;
+                $admin_role->role_id = $id;
+                $admin_role->save();
+            }
             return parent::update($request);
         }
         return view('admin/update');
@@ -81,6 +111,7 @@ class AdminController extends Crud
             return $this->json(1, '不能删除自己');
         }
         $this->model->whereIn($primary_key, $ids)->delete();
+        AdminRole::whereIn('admin_id', $ids)->delete();
         return $this->json(0);
     }
 

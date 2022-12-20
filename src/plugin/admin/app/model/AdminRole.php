@@ -26,6 +26,6 @@ class AdminRole extends Base
     protected $primaryKey = 'id';
     
     
-    
+    public $timestamps = false;
     
 }

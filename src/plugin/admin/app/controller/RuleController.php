@@ -64,9 +64,9 @@ class RuleController extends Crud
     function get(Request $request): Response
     {
         $rules = $this->getRules(admin('roles'));
-        $items = Rule::orderBy('weight', 'desc')->get()->toArray();
         $types = $request->get('type', '0,1');
         $types = is_string($types) ? explode(',', $types) : [0, 1];
+        $items = Rule::orderBy('weight', 'desc')->get()->toArray();
 
         $formatted_items = [];
         foreach ($items as $item) {
@@ -79,13 +79,12 @@ class RuleController extends Crud
 
         $tree = new Tree($formatted_items);
         $tree_items = $tree->getTree();
-
         // 超级管理员权限为 *
         if (!in_array('*', $rules)) {
             $this->removeNotContain($tree_items, 'id', $rules);
         }
         $this->removeNotContain($tree_items, 'type', $types);
-        return $this->json(0, 'ok', $tree_items);
+        return $this->json(0, 'ok', Tree::arrayValues($tree_items));
     }
 
     /**

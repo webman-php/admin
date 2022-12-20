@@ -39,25 +39,29 @@ class Tree
 
     /**
      * 获取子孙节点
-     * @param int $id
+     * @param array $include
      * @param bool $with_self
      * @return array
      */
-    public function getDescendants(int $id, bool $with_self = false): array
+    public function getDescendants(array $include, bool $with_self = false): array
     {
-        if (!isset($this->hashTree[$id])) {
-            return [];
-        }
         $items = [];
-        if ($with_self) {
-            $item = $this->hashTree[$id];
-            unset($item['children']);
-            $items[$item['id']] = $item;
-        }
-        foreach ($this->hashTree[$id]['children'] ?? [] as $item) {
-            unset($item['children']);
-            $items[$item['id']] = $item;
-            $items = array_merge($items, $this->getDescendants($item['id']));
+        foreach ($include as $id) {
+            if (!isset($this->hashTree[$id])) {
+                return [];
+            }
+            if ($with_self) {
+                $item = $this->hashTree[$id];
+                unset($item['children']);
+                $items[$item['id']] = $item;
+            }
+            foreach ($this->hashTree[$id]['children'] ?? [] as $item) {
+                unset($item['children']);
+                $items[$item['id']] = $item;
+                foreach ($this->getDescendants([$item['id']]) as $it) {
+                    $items[$it['id']] = $it;
+                }
+            }
         }
         return array_values($items);
     }
@@ -120,26 +124,36 @@ class Tree
                 $formatted_items[] = $item;
             }
         }
-        $formatted_items = array_values($formatted_items);
-        foreach ($formatted_items as &$item) {
-            $this->arrayValues($item);
-        }
-        return $formatted_items;
+
+        return static::arrayValues($formatted_items);
     }
 
     /**
      * 递归重建数组下标
-     * @return void
+     * @param $array
+     * @return array
      */
-    protected function arrayValues(&$array)
+    public static function arrayValues($array): array
     {
-        if (!is_array($array) || !isset($array['children'])) {
-            return;
+        if (!$array) {
+            return [];
+        }
+        if (!isset($array['children'])) {
+            $current = current($array);
+            if (!is_array($current) || !isset($current['children'])) {
+                return $array;
+            }
+            $tree = array_values($array);
+            foreach ($tree as $index => $item) {
+                $tree[$index] = static::arrayValues($item);
+            }
+            return $tree;
         }
         $array['children'] = array_values($array['children']);
-        foreach ($array['children'] as &$child) {
-            $this->arrayValues($child);
+        foreach ($array['children'] as $index => $child) {
+            $array['children'][$index] = static::arrayValues($child);
         }
+        return $array;
     }
 
 }

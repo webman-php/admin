@@ -76,7 +76,6 @@ class AccountController extends Crud
         $admin = $admin->toArray();
         $session = $request->session();
         unset($admin['password']);
-        $admin['roles'] = $admin['roles'] ? explode(',', $admin['roles']) : [];
         $session->set('admin', $admin);
         return $this->json(0, '登录成功', [
             'nickname' => $admin['nickname'],

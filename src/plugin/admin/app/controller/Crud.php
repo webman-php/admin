@@ -4,6 +4,7 @@ namespace plugin\admin\app\controller;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use plugin\admin\app\common\Auth;
 use plugin\admin\app\common\Tree;
 use plugin\admin\app\common\Util;
 use support\exception\BusinessException;
@@ -105,8 +106,9 @@ class Crud extends Base
         // 按照数据限制字段返回数据
         if ($this->dataLimit === 'personal') {
             $where[$this->dataLimitField] = admin_id();
+        } elseif ($this->dataLimit === 'auth') {
+            $where[$this->dataLimitField] = ['in', Auth::getAdminIds()];
         }
-
         return [$where, $format, $limit, $field, $order, $page];
     }
 
