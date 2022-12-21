@@ -43,7 +43,7 @@ class Tree
      * @param bool $with_self
      * @return array
      */
-    public function getDescendants(array $include, bool $with_self = false): array
+    public function getDescendant(array $include, bool $with_self = false): array
     {
         $items = [];
         foreach ($include as $id) {
@@ -58,7 +58,7 @@ class Tree
             foreach ($this->hashTree[$id]['children'] ?? [] as $item) {
                 unset($item['children']);
                 $items[$item['id']] = $item;
-                foreach ($this->getDescendants([$item['id']]) as $it) {
+                foreach ($this->getDescendant([$item['id']]) as $it) {
                     $items[$it['id']] = $it;
                 }
             }

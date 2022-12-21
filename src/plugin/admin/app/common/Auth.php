@@ -13,7 +13,7 @@ class Auth
      * @param array $admin_ids
      * @return array
      */
-    public static function getAdminIds(array $admin_ids = []): array
+    public static function getDescendantRoleIds(array $admin_ids = []): array
     {
         if (!$admin_ids) {
             $admin = admin();
@@ -31,9 +31,18 @@ class Auth
 
         $roles = Role::get();
         $tree = new Tree($roles);
-        $descendants = $tree->getDescendants($role_ids, true);
-        $role_ids = array_column($descendants, 'id');
-        return AdminRole::whereIn('role_id', $role_ids)->pluck('admin_id')->toArray();
+        $descendants = $tree->getDescendant($role_ids, true);
+        return array_column($descendants, 'id');
+    }
+
+    /**
+     * 获取管理员及子管理员id数组
+     * @param array $admin_ids
+     * @return array
+     */
+    public static function getDescendantAdminIds(array $admin_ids = []): array
+    {
+        return AdminRole::whereIn('role_id', static::getDescendantRoleIds())->pluck('admin_id')->toArray();
     }
 
     /**
