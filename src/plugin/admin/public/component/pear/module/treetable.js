@@ -63,7 +63,7 @@ layui.define(['layer', 'table'], function (exports) {
             };
             sort(param.treeSpid, tNodes);*/
 
-            var map = {};
+            var map = {}; // 变更
             for (var k in data) {
                 map[data[k].id] = data[k];
             }
@@ -80,6 +80,7 @@ layui.define(['layer', 'table'], function (exports) {
             var tree = [];
             for (var l in map) {
                 if (!map[l].pid || !map[map[l].pid]) {
+                    map[l].isRoot = true;
                     tree.push(map[l]);
                 }
             }
@@ -95,7 +96,7 @@ layui.define(['layer', 'table'], function (exports) {
             for (var h in tree) {
                 travel(tree[h]);
             }
-            
+
             param.prevUrl = param.url;
             param.url = undefined;
             param.data = mData;

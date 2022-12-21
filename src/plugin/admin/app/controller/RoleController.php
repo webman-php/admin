@@ -2,6 +2,7 @@
 
 namespace plugin\admin\app\controller;
 
+use plugin\admin\app\common\Auth;
 use plugin\admin\app\common\Tree;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
@@ -37,6 +38,48 @@ class RoleController extends Crud
     }
 
     /**
+     * 查询
+     * @param Request $request
+     * @return Response
+     * @throws BusinessException
+     */
+    public function select(Request $request): Response
+    {
+        $id = $request->get('id');
+        [$where, $format, $limit, $field, $order] = $this->selectInput($request);
+        $role_ids = Auth::getDescendantRoleIds(true);
+        if (!$id) {
+            $where['id'] = ['in', $role_ids];
+        } elseif (!in_array($id, $role_ids)) {
+            throw new BusinessException('无权限');
+        }
+        $query = $this->doSelect($where, $field, $order);
+        return $this->doFormat($query, $format, $limit);
+    }
+
+    /**
+     * 格式化数据
+     * @param $query
+     * @param $format
+     * @param $limit
+     * @return Response
+     */
+    protected function doFormat($query, $format, $limit): Response
+    {
+        if (in_array($format, ['select', 'tree', 'table_tree'])) {
+            $items = $query->get();
+            if ($format == 'select') {
+                return $this->formatSelect($items);
+            } elseif ($format == 'tree') {
+                return $this->formatTree($items);
+            }
+            return $this->formatTableTree($items);
+        }
+        $paginator = $query->paginate($limit);
+        return json(['code' => 0, 'msg' => 'ok', 'count' => $paginator->total(), 'data' => $paginator->items()]);
+    }
+
+    /**
      * 插入
      * @param Request $request
      * @return Response
@@ -46,9 +89,14 @@ class RoleController extends Crud
     {
         if ($request->method() === 'POST') {
             $data = $this->insertInput($request);
-            if (isset($data['pid']) && $data['pid'] == 0) {
-                return $this->json(1, '请选择父级权限组');
+            $pid = $data['pid'] ?? null;
+            if ($pid) {
+                return $this->json(1, '请选择父级角色组');
             }
+            if (!Auth::isSupperAdmin() && !in_array($pid, Auth::getDescendantRoleIds(true))) {
+                return $this->json(1, '父级角色组超出权限范围');
+            }
+
             $id = $this->doInsert($data);
             return $this->json(0, 'ok', ['id' => $id]);
         }
@@ -67,6 +115,11 @@ class RoleController extends Crud
             return view('role/update');
         }
         [$id, $data] = $this->updateInput($request);
+        $is_supper_admin = Auth::isSupperAdmin();
+        $descendant_role_ids = Auth::getDescendantRoleIds();
+        if (!$is_supper_admin && !in_array($id, $descendant_role_ids)) {
+            return $this->json(1, '无数据权限');
+        }
         // id为1的权限权限固定为*
         if (isset($data['rules']) && $id == 1) {
             $data['rules'] = '*';
@@ -75,14 +128,20 @@ class RoleController extends Crud
         if (isset($data['pid']) && $id == 1) {
             $data['pid'] = 0;
         }
-        if (isset($data['pid'])) {
-            if ($data['pid'] == $id) {
+
+        if (key_exists('pid', $data)) {
+            $pid = $data['pid'];
+            if (!$pid) {
+                return $this->json(1, '请选择父级角色组');
+            }
+            if ($pid == $id) {
                 return $this->json(1, '父级不能是自己');
             }
-            if ($data['pid'] == 0) {
-                return $this->json(1, '请选择父级权限组');
+            if (!$is_supper_admin && !in_array($pid, Auth::getDescendantRoleIds(true))) {
+                return $this->json(1, '父级超出权限范围');
             }
         }
+
         $this->doUpdate($id, $data);
         return $this->json(0);
     }
@@ -91,6 +150,7 @@ class RoleController extends Crud
      * 删除
      * @param Request $request
      * @return Response
+     * @throws BusinessException
      */
     public function delete(Request $request): Response
     {
@@ -98,10 +158,12 @@ class RoleController extends Crud
         if (in_array(1, $ids)) {
             return $this->json(1, '无法删除超级管理员角色');
         }
+        if (!Auth::isSupperAdmin() && array_diff($ids, Auth::getDescendantRoleIds())) {
+            return $this->json(1, '无删除权限');
+        }
         $this->doDelete($ids);
         return $this->json(0);
     }
-
 
     /**
      * 获取角色权限
@@ -113,6 +175,9 @@ class RoleController extends Crud
         $role_id = $request->get('id');
         if (empty($role_id)) {
             return $this->json(0, 'ok', []);
+        }
+        if (!Auth::isSupperAdmin() && !in_array($role_id, Auth::getDescendantRoleIds(true))) {
+            return $this->json(1, '角色组超出权限范围');
         }
         $rule_id_string = Role::where('id', $role_id)->value('rules');
         if ($rule_id_string === '') {

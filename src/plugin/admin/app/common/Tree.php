@@ -4,6 +4,17 @@ namespace plugin\admin\app\common;
 
 class Tree
 {
+
+    /**
+     * 获取完整的树结构，包含祖先节点
+     */
+    const INCLUDE_ANCESTORS = 0;
+
+    /**
+     * 获取部分树，不包含祖先节点
+     */
+    const EXCLUDE_ANCESTORS = 1;
+
     /**
      * 数据
      * @var array
@@ -89,10 +100,24 @@ class Tree
     /**
      * 获取树
      * @param array $include
+     * @param int $type
      * @return array|null
      */
-    public function getTree(array $include = []): ?array
+    public function getTree(array $include = [], int $type = 0): ?array
     {
+        if ($type === static::EXCLUDE_ANCESTORS) {
+            $items = [];
+            $include = array_unique($include);
+            foreach ($include as $id) {
+                if (!isset($this->hashTree[$id])) {
+                    return [];
+                }
+                $items[] = $this->hashTree[$id];
+            }
+            return static::arrayValues($items);
+        }
+
+        // $type === static::INCLUDE_ANCESTORS
         $hash_tree = $this->hashTree;
         $items = [];
         if ($include) {
@@ -120,7 +145,7 @@ class Tree
         }
         $formatted_items = [];
         foreach ($items as $item) {
-            if (!$item[$this->pidName]) {
+            if (!$item[$this->pidName] || !isset($hash_tree[$item[$this->pidName]])) {
                 $formatted_items[] = $item;
             }
         }

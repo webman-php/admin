@@ -147,6 +147,7 @@ class Crud extends Base
     }
 
     /**
+     * 格式化数据
      * @param $query
      * @param $format
      * @param $limit
@@ -335,9 +336,11 @@ class Crud extends Base
     /**
      * 格式化树
      * @param $items
+     * @param array $include
+     * @param int $type
      * @return Response
      */
-    protected function formatTree($items, array $include = []): Response
+    protected function formatTree($items, array $include = [], int $type = 0): Response
     {
         $items_map = [];
         foreach ($items as $item) {
@@ -349,7 +352,7 @@ class Crud extends Base
             ];
         }
         $tree = new Tree($items_map);
-        return  $this->json(0, 'ok', $tree->getTree($include));
+        return  $this->json(0, 'ok', $tree->getTree($include, $type));
     }
 
     /**

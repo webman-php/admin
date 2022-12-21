@@ -31,7 +31,7 @@
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
-            {{# if(d.id!==1){ }}
+            {{# if(d.id!==1&&d.pid&&!d.isRoot){ }}
             <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.role.update">编辑</button>
             <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.role.delete">删除</button>
             {{# } }}

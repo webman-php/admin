@@ -87,7 +87,7 @@
                         // 字段 权限 rules
                         layui.use(["jquery", "xmSelect"], function() {
                             layui.$.ajax({
-                                url: "/app/admin/role/rules" + location.search,
+                                url: "/app/admin/role/rules?id=" + e.data[0].pid,
                                 dataType: "json",
                                 success: function (e) {
                                     let value = layui.$("#rules").attr("value");

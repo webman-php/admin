@@ -309,25 +309,6 @@ class RuleController extends Crud
     }
 
     /**
-     * 递归删除某些key
-     * @param $array
-     * @param $keys
-     * @return void
-     */
-    protected function recursiveRemove(&$array, $keys)
-    {
-        if (!is_array($array)) {
-            return;
-        }
-        foreach ($keys as $key) {
-            unset($array[$key]);
-        }
-        foreach ($array as &$item) {
-            $this->recursiveRemove($item, $keys);
-        }
-    }
-
-    /**
      * 获取权限规则
      * @param $roles
      * @return array
