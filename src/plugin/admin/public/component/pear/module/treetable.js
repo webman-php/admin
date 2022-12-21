@@ -49,7 +49,7 @@ layui.define(['layer', 'table'], function (exports) {
                 }
             }
 
-            var sort = function (s_pid, data) {
+            /*var sort = function (s_pid, data) {
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].pid == s_pid) {
                         var len = mData.length;
@@ -61,8 +61,41 @@ layui.define(['layer', 'table'], function (exports) {
                     }
                 }
             };
-            sort(param.treeSpid, tNodes);
+            sort(param.treeSpid, tNodes);*/
 
+            var map = {};
+            for (var k in data) {
+                map[data[k].id] = data[k];
+            }
+            for (var j in map) {
+                if(map[j].pid && map[map[j].pid]) {
+                    var parent = map[map[j].pid];
+                    if (!parent.children) {
+                        parent.children = [];
+                        parent.isParent = true;
+                    }
+                    parent.children.push(map[j]);
+                }
+            }
+            var tree = [];
+            for (var l in map) {
+                if (!map[l].pid || !map[map[l].pid]) {
+                    tree.push(map[l]);
+                }
+            }
+            function travel(item)
+            {
+                mData.push(item);
+                if (item.children) {
+                    for (var g in item.children) {
+                        travel(item.children[g]);
+                    }
+                }
+            }
+            for (var h in tree) {
+                travel(tree[h]);
+            }
+            
             param.prevUrl = param.url;
             param.url = undefined;
             param.data = mData;
