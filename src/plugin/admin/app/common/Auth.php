@@ -9,40 +9,38 @@ use plugin\admin\app\model\Role;
 class Auth
 {
     /**
-     * 获取管理员及子管理员id数组
+     * 获取子管理员角色id数组
+     * @param bool $with_self
      * @param array $admin_ids
      * @return array
      */
-    public static function getDescendantRoleIds(array $admin_ids = []): array
+    public static function getDescendantRoleIds(bool $with_self = false): array
     {
-        if (!$admin_ids) {
-            $admin = admin();
-            if (!$admin) {
-                return [];
-            }
-            $role_ids = $admin['roles'];
-            $rules = Role::whereIn('id', $role_ids)->pluck('rules')->toArray();
-            if ($rules && in_array('*', $rules)) {
-                return Admin::pluck('id')->toArray();
-            }
-        } else {
-            $role_ids = AdminRole::whereIn('admin_id', $admin_ids)->pluck('role_id');
+        if (!$admin = admin()) {
+            return [];
+        }
+        $role_ids = $admin['roles'];
+        $rules = Role::whereIn('id', $role_ids)->pluck('rules')->toArray();
+        if ($rules && in_array('*', $rules)) {
+            return Role::pluck('id')->toArray();
         }
 
         $roles = Role::get();
         $tree = new Tree($roles);
-        $descendants = $tree->getDescendant($role_ids, true);
+        $descendants = $tree->getDescendant($role_ids, $with_self);
         return array_column($descendants, 'id');
     }
 
     /**
      * 获取管理员及子管理员id数组
+     * @param bool $with_self
      * @param array $admin_ids
      * @return array
      */
-    public static function getDescendantAdminIds(array $admin_ids = []): array
+    public static function getDescendantAdminIds(bool $with_self = false, array $admin_ids = []): array
     {
-        return AdminRole::whereIn('role_id', static::getDescendantRoleIds())->pluck('admin_id')->toArray();
+        $role_ids = static::getDescendantRoleIds($with_self);
+        return AdminRole::whereIn('role_id', $role_ids)->pluck('admin_id')->toArray();
     }
 
     /**
@@ -53,8 +51,7 @@ class Auth
     public static function isSupperAdmin(int $admin_id = 0): bool
     {
         if (!$admin_id) {
-            $roles = admin('roles');
-            if (!$roles) {
+            if (!$roles = admin('roles')) {
                 return false;
             }
         } else {

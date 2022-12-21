@@ -63,6 +63,7 @@ class Crud extends Base
      * 删除
      * @param Request $request
      * @return Response
+     * @throws BusinessException
      */
     public function delete(Request $request): Response
     {
@@ -82,7 +83,8 @@ class Crud extends Base
         $field = $request->get('field');
         $order = $request->get('order', 'asc');
         $format = $request->get('format', 'normal');
-        $limit = $request->get('limit', $format === 'tree' ? 1000 : 10);
+        $limit = (int)$request->get('limit', $format === 'tree' ? 1000 : 10);
+        $limit = $limit <= 0 ? 10 : $limit;
         $order = $order === 'asc' ? 'asc' : 'desc';
         $where = $request->get();
         $page = (int)$request->get('page');
@@ -107,7 +109,10 @@ class Crud extends Base
         if ($this->dataLimit === 'personal') {
             $where[$this->dataLimitField] = admin_id();
         } elseif ($this->dataLimit === 'auth') {
-            $where[$this->dataLimitField] = ['in', Auth::getAdminIds()];
+            $primary_key = $this->model->getKeyName();
+            if (!Auth::isSupperAdmin() && (!isset($where[$primary_key]) || $this->dataLimitField != $primary_key)) {
+                $where[$this->dataLimitField] = ['in', Auth::getDescendantAdminIds(true)];
+            }
         }
         return [$where, $format, $limit, $field, $order, $page];
     }
@@ -175,6 +180,17 @@ class Crud extends Base
         if (isset($data[$password_filed])) {
             $data[$password_filed] = Util::passwordHash($data[$password_filed]);
         }
+
+        if (!Auth::isSupperAdmin() && $this->dataLimit) {
+            if (empty($data[$this->dataLimitField])) {
+                $data[$this->dataLimitField] = admin_id();;
+            } else {
+                $admin_id = $data[$this->dataLimitField];
+                if (!in_array($admin_id, Auth::getDescendantAdminIds(true))) {
+                    throw new BusinessException('无数据权限');
+                }
+            }
+        }
         return $data;
     }
 
@@ -206,6 +222,12 @@ class Crud extends Base
         $primary_key = $this->model->getKeyName();
         $id = $request->post($primary_key);
         $data = $this->inputFilter($request->post());
+        if (!Auth::isSupperAdmin() && $this->dataLimit && !empty($data[$this->dataLimitField])) {
+            $admin_id = $data[$this->dataLimitField];
+            if (!in_array($admin_id, Auth::getDescendantAdminIds(true))) {
+                throw new BusinessException('无数据权限');
+            }
+        }
         $password_filed = 'password';
         if (isset($data[$password_filed])) {
             // 密码为空，则不更新密码
@@ -278,11 +300,22 @@ class Crud extends Base
      * 删除前置方法
      * @param Request $request
      * @return array
+     * @throws BusinessException
      */
     protected function deleteInput(Request $request): array
     {
         $primary_key = $this->model->getKeyName();
-        return (array)$request->post($primary_key, []);
+        if (!$primary_key) {
+            throw new BusinessException('该表无主键，不支持删除');
+        }
+        $ids = (array)$request->post($primary_key, []);
+        if (!Auth::isSupperAdmin() && $this->dataLimit) {
+            $admin_ids = $this->model->where($primary_key, $ids)->pluck($this->dataLimitField)->toArray();
+            if (array_diff($admin_ids, Auth::getDescendantAdminIds(true))) {
+                throw new BusinessException('无数据权限');
+            }
+        }
+        return $ids;
     }
 
     /**
