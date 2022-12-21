@@ -38,6 +38,31 @@ class AdminController extends Crud
     }
 
     /**
+     * 查询
+     * @param Request $request
+     * @return Response
+     * @throws BusinessException
+     */
+    public function select(Request $request): Response
+    {
+        [$where, $format, $limit, $field, $order] = $this->selectInput($request);
+        $query = $this->doSelect($where, $field, $order);
+        $paginator = $query->paginate($limit);
+        $items = $paginator->items();
+        $admin_ids = array_column($items, 'id');
+        $roles = AdminRole::whereIn('admin_id', $admin_ids)->get();
+        $roles_map = [];
+        foreach ($roles as $role) {
+            $roles_map[$role['admin_id']][] = $role['role_id'];
+        }
+        foreach ($items as $index => $item) {
+            $admin_id = $item['id'];
+            $items[$index]['roles'] = isset($roles_map[$admin_id]) ? implode(',', $roles_map[$admin_id]) : '';
+        }
+        return json(['code' => 0, 'msg' => 'ok', 'count' => $paginator->total(), 'data' => $items]);
+    }
+
+    /**
      * 插入
      * @param Request $request
      * @return Response
