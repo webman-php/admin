@@ -155,17 +155,17 @@ class Crud extends Base
      */
     protected function doFormat($query, $format, $limit): Response
     {
-        if (in_array($format, ['select', 'tree', 'table_tree'])) {
-            $items = $query->get();
-            if ($format == 'select') {
-                return $this->formatSelect($items);
-            } elseif ($format == 'tree') {
-                return $this->formatTree($items);
-            }
-            return $this->formatTableTree($items);
-        }
+        $methods = [
+            'select' => 'formatSelect',
+            'tree' => 'formatTree',
+            'table_tree' => 'formatTableTree',
+            'normal' => 'formatNormal',
+        ];
         $paginator = $query->paginate($limit);
-        return json(['code' => 0, 'msg' => 'ok', 'count' => $paginator->total(), 'data' => $paginator->items()]);
+        $total = $paginator->total();
+        $items = $paginator->items();
+        $format_function = $methods[$format] ?? 'formatNormal';
+        return call_user_func([$this, $format_function], $items, $total);
     }
 
     /**
@@ -381,6 +381,17 @@ class Crud extends Base
             ];
         }
         return  $this->json(0, 'ok', $formatted_items);
+    }
+
+    /**
+     * 通用格式化
+     * @param $items
+     * @param $total
+     * @return Response
+     */
+    protected function formatNormal($items, $total): Response
+    {
+        return json(['code' => 0, 'msg' => 'ok', 'count' => $total, 'data' => $items]);
     }
 
 }

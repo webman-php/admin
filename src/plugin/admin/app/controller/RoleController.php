@@ -58,28 +58,6 @@ class RoleController extends Crud
     }
 
     /**
-     * 格式化数据
-     * @param $query
-     * @param $format
-     * @param $limit
-     * @return Response
-     */
-    protected function doFormat($query, $format, $limit): Response
-    {
-        if (in_array($format, ['select', 'tree', 'table_tree'])) {
-            $items = $query->get();
-            if ($format == 'select') {
-                return $this->formatSelect($items);
-            } elseif ($format == 'tree') {
-                return $this->formatTree($items);
-            }
-            return $this->formatTableTree($items);
-        }
-        $paginator = $query->paginate($limit);
-        return json(['code' => 0, 'msg' => 'ok', 'count' => $paginator->total(), 'data' => $paginator->items()]);
-    }
-
-    /**
      * 插入
      * @param Request $request
      * @return Response
