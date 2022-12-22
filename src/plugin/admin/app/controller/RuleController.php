@@ -20,7 +20,7 @@ class RuleController extends Crud
      *
      * @var string[]
      */
-    protected $noNeedAuth = ['get', 'permissionCodes'];
+    protected $noNeedAuth = ['get', 'auth'];
 
     /**
      * @var Rule
@@ -88,11 +88,11 @@ class RuleController extends Crud
     }
 
     /**
-     * 获取控制器详细权限
+     * 获取权限
      * @param Request $request
      * @return Response
      */
-    public function permissionCodes(Request $request): Response
+    public function auth(Request $request): Response
     {
         $rules = $this->getRules(admin('roles'));
         // 超级管理员

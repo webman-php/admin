@@ -94,6 +94,12 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <!-- 框 架 初 始 化 -->
         <script>
+
+            // Admin
+            window.Admin = {
+                Account: {}
+            };
+
             layui.use(["admin","jquery","popup","drawer"], function() {
                 var $ = layui.$;
                 var admin = layui.admin;
@@ -121,9 +127,18 @@
                     return false;
                 })
 
+                $.ajax({
+                    url: "/app/admin/account/info",
+                    dataType: 'json',
+                    success: function (res) {
+                        window.Admin.Account = res.data;
+                    }
+                });
+
                 // 消息点击回调
                 //admin.message(function(id, title, context, form) {});
-            })
+            });
+
         </script>
     </body>
 </html>

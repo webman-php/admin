@@ -87,7 +87,7 @@
 
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
+        <script src="/app/admin/admin/js/auth.js"></script>
         <script>
 
             // 相关接口
@@ -155,12 +155,17 @@
                                 success: function (e) {
                                     let value = layui.$("#roles").attr("value");
                                     let initValue = value ? value.split(",") : [];
+                                    if (!top.Admin.Account.isSupperAdmin) {
+                                        layui.each(e.data, function (k, v) {
+                                            v.disabled = true;
+                                        });
+                                    }
                                     layui.xmSelect.render({
                                         el: "#roles",
                                         name: "roles",
                                         initValue: initValue,
                                         data: e.data,
-                                        tree: {show: true, expandedKeys: initValue, strict: false},
+                                        tree: {show: true, expandedKeys: true, strict: false},
                                         toolbar: {show: true, list: ["ALL","CLEAR","REVERSE"]},
                                     })
                                 }

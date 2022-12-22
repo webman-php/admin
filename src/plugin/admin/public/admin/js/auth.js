@@ -4,16 +4,24 @@
 layui.$(function () {
     let $ = layui.$;
     $.ajax({
-        url: "/app/admin/rule/permission-codes",
+        url: "/app/admin/rule/auth",
         dataType: "json",
         success: function (res) {
             let style = '';
             let codes = res.data || [];
+            let isSupperAdmin = false;
             // codes里有*，说明是超级管理员，拥有所有权限
             if (codes.indexOf('*') !== -1) {
                 $("head").append("<style>*[permission]{display: initial}</style>");
-                return;
+                isSupperAdmin = true;
             }
+            if (self !== top) {
+                top.Admin.Account.isSupperAdmin = isSupperAdmin;
+            } else {
+                window.Admin.Account.isSupperAdmin = isSupperAdmin;
+            }
+            if (isSupperAdmin) return;
+
             // 细分权限
             layui.each(codes, function (k, code) {
                 codes[k] = '*[permission^="'+code+'"]';
