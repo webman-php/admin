@@ -2,6 +2,7 @@
 
 namespace plugin\admin\app\controller;
 
+use plugin\admin\app\common\Auth;
 use plugin\admin\app\common\Util;
 use plugin\admin\app\model\Admin;
 use support\exception\BusinessException;
@@ -107,14 +108,13 @@ class AccountController extends Crud
         }
         $info = [
             'nickname' => $admin['nickname'],
-            'desc' => 'manager',
             'avatar' => $admin['avatar'],
             'token' => $request->sessionId(),
             'userId' => $admin['id'],
             'username' => $admin['username'],
             'email' => $admin['email'],
             'mobile' => $admin['mobile'],
-            'roles' => []
+            'isSupperAdmin' => Auth::isSupperAdmin()
         ];
         return $this->json(0, 'ok', $info);
     }

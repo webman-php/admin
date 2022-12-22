@@ -336,23 +336,21 @@ class Crud extends Base
     /**
      * 格式化树
      * @param $items
-     * @param array $include
-     * @param int $type
      * @return Response
      */
-    protected function formatTree($items, array $include = [], int $type = 0): Response
+    protected function formatTree($items): Response
     {
-        $items_map = [];
+        $format_items = [];
         foreach ($items as $item) {
-            $items_map[] = [
+            $format_items[] = [
                 'name' => $item->title ?? $item->name ?? $item->id,
                 'value' => (string)$item->id,
                 'id' => $item->id,
                 'pid' => $item->pid,
             ];
         }
-        $tree = new Tree($items_map);
-        return  $this->json(0, 'ok', $tree->getTree($include, $type));
+        $tree = new Tree($format_items);
+        return $this->json(0, 'ok', $tree->getTree());
     }
 
     /**

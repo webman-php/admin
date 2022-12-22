@@ -166,7 +166,18 @@ class RoleController extends Crud
         if ($rule_id_string !== '*') {
             $include = explode(',', $rule_id_string);
         }
-        return $this->formatTree($rules, $include);
+        $items = [];
+        foreach ($rules as $item) {
+            $items[] = [
+                'name' => $item->title ?? $item->name ?? $item->id,
+                'value' => (string)$item->id,
+                'id' => $item->id,
+                'pid' => $item->pid,
+            ];
+        }
+        $tree = new Tree($items);
+        return $this->json(0, 'ok', $tree->getTree($include));
     }
+
 
 }
