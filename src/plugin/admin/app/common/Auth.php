@@ -9,12 +9,12 @@ use plugin\admin\app\model\Role;
 class Auth
 {
     /**
-     * 获取子管理员角色id数组
+     * 获取权限范围内的所有角色id
      * @param bool $with_self
      * @param array $admin_ids
      * @return array
      */
-    public static function getDescendantRoleIds(bool $with_self = false): array
+    public static function getScopeRoleIds(bool $with_self = false): array
     {
         if (!$admin = admin()) {
             return [];
@@ -32,14 +32,14 @@ class Auth
     }
 
     /**
-     * 获取管理员及子管理员id数组
+     * 获取权限范围内的所有管理员id
      * @param bool $with_self
      * @param array $admin_ids
      * @return array
      */
-    public static function getDescendantAdminIds(bool $with_self = false, array $admin_ids = []): array
+    public static function getScopeAdminIds(bool $with_self = false, array $admin_ids = []): array
     {
-        $role_ids = static::getDescendantRoleIds($with_self);
+        $role_ids = static::getScopeRoleIds($with_self);
         return AdminRole::whereIn('role_id', $role_ids)->pluck('admin_id')->toArray();
     }
 

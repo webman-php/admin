@@ -93,7 +93,10 @@ class AdminController extends Crud
             $admin_id = $this->doInsert($data);
             $role_ids = $request->post('roles');
             $role_ids = $role_ids ? explode(',', $role_ids) : [];
-            if (!Auth::isSupperAdmin() && array_diff($role_ids, Auth::getDescendantRoleIds())) {
+            if (!$role_ids) {
+                return $this->json(1, '至少选择一个角色组');
+            }
+            if (!Auth::isSupperAdmin() && array_diff($role_ids, Auth::getScopeRoleIds())) {
                 return $this->json(1, '角色超出权限范围');
             }
             AdminRole::where('admin_id', $admin_id)->delete();
@@ -103,7 +106,7 @@ class AdminController extends Crud
                 $admin_role->role_id = $id;
                 $admin_role->save();
             }
-            return parent::insert($request);
+            return $this->json(0, 'ok', ['id' => $admin_id]);
         }
         return view('admin/insert');
     }
@@ -123,9 +126,12 @@ class AdminController extends Crud
                 return $this->json(1, '缺少参数');
             }
             $role_ids = $role_ids ? explode(',', $role_ids) : [];
+            if (!$role_ids) {
+                return $this->json(1, '至少选择一个角色组');
+            }
             $is_supper_admin = Auth::isSupperAdmin();
             $exist_role_ids = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
-            $descendant_role_ids = Auth::getDescendantRoleIds();
+            $descendant_role_ids = Auth::getScopeRoleIds();
             if (!$is_supper_admin && !array_intersect($exist_role_ids, $descendant_role_ids)) {
                 return $this->json(1, '无权限更改该记录');
             }
@@ -165,7 +171,7 @@ class AdminController extends Crud
         if (in_array(admin_id(), $ids)) {
             return $this->json(1, '不能删除自己');
         }
-        if (!Auth::isSupperAdmin() && array_diff($ids, Auth::getDescendantAdminIds())) {
+        if (!Auth::isSupperAdmin() && array_diff($ids, Auth::getScopeAdminIds())) {
             return $this->json(1, '无数据权限');
         }
         $this->model->whereIn($primary_key, $ids)->delete();

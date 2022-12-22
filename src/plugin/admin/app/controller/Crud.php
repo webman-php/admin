@@ -111,7 +111,7 @@ class Crud extends Base
         } elseif ($this->dataLimit === 'auth') {
             $primary_key = $this->model->getKeyName();
             if (!Auth::isSupperAdmin() && (!isset($where[$primary_key]) || $this->dataLimitField != $primary_key)) {
-                $where[$this->dataLimitField] = ['in', Auth::getDescendantAdminIds(true)];
+                $where[$this->dataLimitField] = ['in', Auth::getScopeAdminIds(true)];
             }
         }
         return [$where, $format, $limit, $field, $order, $page];
@@ -183,11 +183,9 @@ class Crud extends Base
         }
 
         if (!Auth::isSupperAdmin() && $this->dataLimit) {
-            if (empty($data[$this->dataLimitField])) {
-                $data[$this->dataLimitField] = admin_id();;
-            } else {
+            if (!empty($data[$this->dataLimitField])) {
                 $admin_id = $data[$this->dataLimitField];
-                if (!in_array($admin_id, Auth::getDescendantAdminIds(true))) {
+                if (!in_array($admin_id, Auth::getScopeAdminIds(true))) {
                     throw new BusinessException('无数据权限');
                 }
             }
@@ -225,7 +223,7 @@ class Crud extends Base
         $data = $this->inputFilter($request->post());
         if (!Auth::isSupperAdmin() && $this->dataLimit && !empty($data[$this->dataLimitField])) {
             $admin_id = $data[$this->dataLimitField];
-            if (!in_array($admin_id, Auth::getDescendantAdminIds(true))) {
+            if (!in_array($admin_id, Auth::getScopeAdminIds(true))) {
                 throw new BusinessException('无数据权限');
             }
         }
@@ -312,7 +310,7 @@ class Crud extends Base
         $ids = (array)$request->post($primary_key, []);
         if (!Auth::isSupperAdmin() && $this->dataLimit) {
             $admin_ids = $this->model->where($primary_key, $ids)->pluck($this->dataLimitField)->toArray();
-            if (array_diff($admin_ids, Auth::getDescendantAdminIds(true))) {
+            if (array_diff($admin_ids, Auth::getScopeAdminIds(true))) {
                 throw new BusinessException('无数据权限');
             }
         }
