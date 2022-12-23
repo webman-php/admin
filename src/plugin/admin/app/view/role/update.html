@@ -62,7 +62,7 @@
             const UPDATE_API = "/app/admin/role/update";
 
             // 获取数据库记录
-            layui.use(["form", "util"], function () {
+            layui.use(["form", "util", "popup"], function () {
                 let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,
@@ -85,7 +85,7 @@
                         });
                         
                         // 字段 权限 rules
-                        layui.use(["jquery", "xmSelect"], function() {
+                        layui.use(["jquery", "xmSelect", "popup"], function() {
                             layui.$.ajax({
                                 url: "/app/admin/role/rules?id=" + res.data[0].pid,
                                 dataType: "json",
@@ -100,12 +100,15 @@
                                         tree: {"show":true,expandedKeys:initValue},
                                         toolbar: {show:true,list:["ALL","CLEAR","REVERSE"]},
                                     })
+                                    if (res.code) {
+                                        layui.popup.failure(res.msg);
+                                    }
                                 }
                             });
                         });
                         
                         // 字段 父级角色组 pid
-                        layui.use(["jquery", "xmSelect"], function() {
+                        layui.use(["jquery", "xmSelect", "popup"], function() {
                             layui.$.ajax({
                                 url: "/app/admin/role/select?format=tree",
                                 dataType: "json",
@@ -131,15 +134,25 @@
                                                 url: '/app/admin/role/rules?id=' + id,
                                                 dataType: 'json',
                                                 success: function (res) {
+                                                    if (res.code) {
+                                                        return layui.popup.failure(res.msg);
+                                                    }
                                                     layui.xmSelect.get('#rules')[0].update({data:res.data});
                                                 }
                                             });
                                         }
-                                    })
+                                    });
+                                    if (res.code) {
+                                        layui.popup.failure(res.msg);
+                                    }
                                 }
                             });
                         });
-                        
+
+                        // ajax产生错误
+                        if (res.code) {
+                            layui.popup.failure(res.msg);
+                        }
 
                     }
                 });

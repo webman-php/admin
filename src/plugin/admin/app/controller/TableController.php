@@ -1053,7 +1053,7 @@ EOF;
             const UPDATE_API = "$url_path_base/update";
 
             // 获取数据库记录
-            layui.use(["form", "util"], function () {
+            layui.use(["form", "util, "popup"], function () {
                 let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,
@@ -1075,7 +1075,12 @@ EOF;
                             }
                         });
                         $js
-
+                        
+                        // ajax返回失败
+                        if (res.code) {
+                            layui.popup.failure(res.msg);
+                        }
+                        
                     }
                 });
             });

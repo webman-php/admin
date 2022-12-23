@@ -135,6 +135,10 @@
                 layui.each(data, function (k, v) {
                     data[k]["_field_id"] = _field_id++;
                 })
+                // ajax产生错误
+                if (res.code) {
+                    layui.popup.failure(res.msg);
+                }
             }
         });
 

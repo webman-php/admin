@@ -226,12 +226,17 @@
             const SCHEMA_API = "/app/admin/table/schema";
             const TABLE_NAME = "<?=htmlspecialchars($table)?>";
 
-            layui.use(["jquery"], function () {
+            layui.use(["popup"], function () {
                 let $ = layui.$;
                 $.ajax({
                     url: SCHEMA_API + "?table=" + TABLE_NAME,
                     dataType: "json",
                     success: function (res) {
+
+                        if (res.code) {
+                            return layui.popup.failure(res.msg);
+                        }
+
                         // 表信息
                         $('input[name="table"]').val(res.data.table.name);
                         $('input[name="table_comment"]').val(res.data.table.comment);

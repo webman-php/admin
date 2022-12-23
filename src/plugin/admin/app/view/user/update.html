@@ -160,7 +160,7 @@
             const UPDATE_API = "/app/admin/user/update";
 
             // 获取数据库记录
-            layui.use(["form", "util"], function () {
+            layui.use(["form", "util", "popup"], function () {
                 let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,
@@ -183,7 +183,7 @@
                         });
                         
                         // 字段 性别 sex
-                        layui.use(["jquery", "xmSelect"], function() {
+                        layui.use(["jquery", "xmSelect", "popup"], function() {
                             layui.$.ajax({
                                 url: "/app/admin/dict/get/sex",
                                 dataType: "json",
@@ -198,7 +198,10 @@
                                         model: {"icon":"hidden","label":{"type":"text"}},
                                         clickClose: true,
                                         radio: true,
-                                    })
+                                    });
+                                    if (res.code) {
+                                        layui.popup.failure(res.msg);
+                                    }
                                 }
                             });
                         });
@@ -263,7 +266,11 @@
                                 layui.$('input[name="status"]').val(this.checked ? 1 : 0);
                             });
                         })
-                        
+
+                        // ajax产生错误
+                        if (res.code) {
+                            layui.popup.failure(res.msg);
+                        }
 
                     }
                 });

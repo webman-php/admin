@@ -630,7 +630,7 @@ EOF;
             $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
-layui.use(["jquery", "xmSelect"], function() {
+layui.use(["jquery", "xmSelect", "popup"], function() {
     layui.$.ajax({
         url: "$url",
         dataType: "json",
@@ -642,7 +642,10 @@ layui.use(["jquery", "xmSelect"], function() {
                 name: "$field",
                 initValue: initValue,
                 data: res.data, $options_string
-            })
+            });
+            if (res.code) {
+                layui.popup.failure(res.msg);
+            }
         }
     });
 });
@@ -931,6 +934,9 @@ layui.each(apis, function (k, item) {
         url: url,
         dateType: "json",
         success: function (res) {
+            if (res.code) {
+                return layui.popup.failure(res.msg);
+            }
             function travel(items) {
                 for (let k in items) {
                     let item = items[k];

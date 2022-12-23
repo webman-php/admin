@@ -81,6 +81,9 @@
                     url: SCHEMA_API,
                     dataType: "json",
                     success: function (res) {
+                        if (res.code) {
+                            return layui.popup.failure(res.msg);
+                        }
                         let forms = res.data.forms;
                         let cols = [{
                             type: "checkbox"
@@ -185,6 +188,9 @@
                                     url: url,
                                     dateType: "json",
                                     success: function (res) {
+                                        if (res.code) {
+                                            return layui.popup.failure(res.msg);
+                                        }
                                         function travel(items) {
                                             for (let k in items) {
                                                 let item = items[k];

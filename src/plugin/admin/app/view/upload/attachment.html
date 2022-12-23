@@ -265,6 +265,9 @@
 				        url: url,
 				        dateType: "json",
 				        success: function (res) {
+                            if (res.code) {
+                                return layui.popup.failure(res.msg);
+                            }
 				            function travel(items) {
 				                for (let k in items) {
 				                    let item = items[k];

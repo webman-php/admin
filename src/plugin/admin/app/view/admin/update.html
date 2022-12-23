@@ -96,7 +96,7 @@
             const UPDATE_API = "/app/admin/admin/update";
 
             // 获取数据库记录
-            layui.use(["form", "util"], function () {
+            layui.use(["form", "util", "popup"], function () {
                 let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,
@@ -169,12 +169,16 @@
                                         tree: {show: true, expandedKeys: true, strict: false},
                                         toolbar: {show: true, list: ["ALL","CLEAR","REVERSE"]},
                                     })
+                                    if (res.code) {
+                                        layui.popup.failure(res.msg);
+                                    }
                                 }
                             });
                         });
 
+                        // ajax产生错误
                         if (res.code) {
-                            return layui.popup.failure(res.msg);
+                            layui.popup.failure(res.msg);
                         }
 
                     }

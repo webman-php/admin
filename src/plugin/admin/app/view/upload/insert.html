@@ -77,7 +77,10 @@
                             model: {"icon":"hidden","label":{"type":"text"}},
                             clickClose: true,
                             radio: true,
-                        })
+                        });
+                        if (res.code) {
+                            return layui.popup.failure(res.msg);
+                        }
                     }
                 });
             });

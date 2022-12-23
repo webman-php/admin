@@ -290,6 +290,9 @@
                     url: "/app/admin/config/get",
                     dataType: "json",
                     success: function (res) {
+                        if (res.code) {
+                            return layui.popup.failure(res.msg);
+                        }
                         form.val("baseInfo", res.logo);
                         $("#image").prev().val(res.logo.image).prev().attr("src", res.logo.image);
                         form.val("menuInfo", res.menu);

@@ -78,7 +78,7 @@
 
             const CRUD_API = "/app/admin/table/crud";
 
-            layui.use(["jquery", "xmSelect"], function() {
+            layui.use(["jquery", "xmSelect", "popup"], function() {
                 layui.$.ajax({
                     url: "/app/admin/rule/select?format=tree&type=0,1",
                     dataType: "json",
@@ -96,7 +96,10 @@
                             clickClose: true,
                             radio: true,
                             tree: {show:true, strict:false, clickCheck:true, clickExpand:false},
-                        })
+                        });
+                        if (res.code) {
+                            return layui.popup.failure(res.msg);
+                        }
                     }
                 });
             });

@@ -42,13 +42,14 @@
             const SELECT_API = "/app/admin/table/select" + location.search;
             const UPDATE_API = "/app/admin/table/update";
 
-            layui.use(["form", "util"], function () {
+            layui.use(["form", "util", "popup"], function () {
                 let $ = layui.$;
                 let util = layui.util;
                 $.ajax({
                     url: SELECT_API,
                     dataType: "json",
                     success: function (res) {
+
                         layui.each(res.data[0], function (key, value) {
                             let obj = $('*[name="'+key+'"]');
                             if (key === "password") {
@@ -64,6 +65,11 @@
                         });
 
                         <?=$form->js(6)?>
+
+                        // ajax返回失败
+                        if (res.code) {
+                            layui.popup.failure(res.msg);
+                        }
 
                     }
                 });
