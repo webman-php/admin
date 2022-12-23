@@ -1058,10 +1058,10 @@ EOF;
                 $.ajax({
                     url: SELECT_API,
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         
                         // 给表单初始化数据
-                        layui.each(e.data[0], function (key, value) {
+                        layui.each(res.data[0], function (key, value) {
                             let obj = $('*[name="'+key+'"]');
                             if (key === "password") {
                                 obj.attr("placeholder", "不更新密码请留空");

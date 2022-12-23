@@ -51,8 +51,8 @@
                 $.ajax({
                     url: SCHEMA_API,
                     dataType: "json",
-                    success: function (e) {
-                        let cols = e.data;
+                    success: function (res) {
+                        let cols = res.data;
                         layui.each(cols, function (k, v) {
                             if (v.field === "installed") {
                                 cols[k].templet = "#install";

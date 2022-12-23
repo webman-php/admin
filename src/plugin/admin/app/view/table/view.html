@@ -80,8 +80,8 @@
                 $.ajax({
                     url: SCHEMA_API,
                     dataType: "json",
-                    success: function (e) {
-                        let forms = e.data.forms;
+                    success: function (res) {
+                        let forms = res.data.forms;
                         let cols = [{
                             type: "checkbox"
                         }];

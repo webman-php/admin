@@ -52,10 +52,10 @@
                 $.ajax({
                     url: SELECT_API,
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         
                         // 给表单初始化数据
-                        layui.each(e.data[0], function (key, value) {
+                        layui.each(res.data[0], function (key, value) {
                             let obj = $('*[name="'+key+'"]');
                             if (typeof obj[0] === "undefined" || !obj[0].nodeName) return;
                             obj.attr("value", value);
@@ -82,14 +82,14 @@
                             layui.$.ajax({
                                 url: "/app/admin/dict/get/upload",
                                 dataType: "json",
-                                success: function (e) {
+                                success: function (res) {
                                     let value = layui.$("#category").attr("value");
                                     let initValue = value ? value.split(",") : [];
                                     layui.xmSelect.render({
                                         el: "#category",
                                         name: "category",
                                         initValue: initValue,
-                                        data: e.data, 
+                                        data: res.data,
                                         model: {"icon":"hidden","label":{"type":"text"}},
                                         clickClose: true,
                                         radio: true,

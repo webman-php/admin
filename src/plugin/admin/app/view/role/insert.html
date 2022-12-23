@@ -65,14 +65,14 @@
                 layui.$.ajax({
                     url: "/app/admin/role/rules?id=1",
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         let value = layui.$("#rules").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
                             el: "#rules",
                             name: "rules",
                             initValue: initValue,
-                            data: e.data,
+                            data: res.data,
                             tree: {"show":true,expandedKeys:initValue},
                             toolbar: {show:true,list:["ALL","CLEAR","REVERSE"]},
                         })
@@ -85,7 +85,7 @@
                 layui.$.ajax({
                     url: "/app/admin/role/select?format=tree",
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         let value = layui.$("#pid").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
@@ -93,7 +93,7 @@
                             name: "pid",
                             initValue: initValue,
                             tips: "请选择",
-                            data: e.data,
+                            data: res.data,
                             value: "0",
                             model: {"icon":"hidden","label":{"type":"text"}},
                             clickClose: true,

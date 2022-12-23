@@ -82,7 +82,7 @@
                 layui.$.ajax({
                     url: "/app/admin/rule/select?format=tree&type=0,1",
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         let value = layui.$("#pid").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
@@ -90,7 +90,7 @@
                             name: "pid",
                             initValue: initValue,
                             tips: "无",
-                            data: e.data,
+                            data: res.data,
                             toolbar: {show: true, list: ["CLEAR"]},
                             model: {"icon":"hidden","label":{"type":"text"}},
                             clickClose: true,

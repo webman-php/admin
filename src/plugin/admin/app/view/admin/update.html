@@ -101,10 +101,10 @@
                 $.ajax({
                     url: SELECT_API,
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         
                         // 给表单初始化数据
-                        layui.each(e.data[0], function (key, value) {
+                        layui.each(res.data[0], function (key, value) {
                             let obj = $('*[name="'+key+'"]');
                             if (key === "password") {
                                 obj.attr("placeholder", "不更新密码请留空");
@@ -152,11 +152,11 @@
                             layui.$.ajax({
                                 url: "/app/admin/role/select?format=tree",
                                 dataType: "json",
-                                success: function (e) {
+                                success: function (res) {
                                     let value = layui.$("#roles").attr("value");
                                     let initValue = value ? value.split(",") : [];
                                     if (!top.Admin.Account.isSupperAdmin) {
-                                        layui.each(e.data, function (k, v) {
+                                        layui.each(res.data, function (k, v) {
                                             v.disabled = true;
                                         });
                                     }
@@ -164,7 +164,7 @@
                                         el: "#roles",
                                         name: "roles",
                                         initValue: initValue,
-                                        data: e.data,
+                                        data: res.data,
                                         layVerify: "required",
                                         tree: {show: true, expandedKeys: true, strict: false},
                                         toolbar: {show: true, list: ["ALL","CLEAR","REVERSE"]},
@@ -172,6 +172,10 @@
                                 }
                             });
                         });
+
+                        if (res.code) {
+                            return layui.popup.failure(res.msg);
+                        }
 
                     }
                 });

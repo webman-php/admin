@@ -67,10 +67,10 @@
                 $.ajax({
                     url: SELECT_API,
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         
                         // 给表单初始化数据
-                        layui.each(e.data[0], function (key, value) {
+                        layui.each(res.data[0], function (key, value) {
                             let obj = $('*[name="'+key+'"]');
                             if (key === "password") {
                                 obj.attr("placeholder", "不更新密码请留空");
@@ -87,16 +87,16 @@
                         // 字段 权限 rules
                         layui.use(["jquery", "xmSelect"], function() {
                             layui.$.ajax({
-                                url: "/app/admin/role/rules?id=" + e.data[0].pid,
+                                url: "/app/admin/role/rules?id=" + res.data[0].pid,
                                 dataType: "json",
-                                success: function (e) {
+                                success: function (res) {
                                     let value = layui.$("#rules").attr("value");
                                     let initValue = value ? value.split(",") : [];
                                     layui.xmSelect.render({
                                         el: "#rules",
                                         name: "rules",
                                         initValue: initValue,
-                                        data: e.data,
+                                        data: res.data,
                                         tree: {"show":true,expandedKeys:initValue},
                                         toolbar: {show:true,list:["ALL","CLEAR","REVERSE"]},
                                     })
@@ -109,7 +109,7 @@
                             layui.$.ajax({
                                 url: "/app/admin/role/select?format=tree",
                                 dataType: "json",
-                                success: function (e) {
+                                success: function (res) {
                                     let value = layui.$("#pid").attr("value");
                                     let initValue = value ? value.split(",") : [];
                                     layui.xmSelect.render({
@@ -118,7 +118,7 @@
                                         initValue: initValue,
                                         tips: "请选择",
                                         toolbar: {show: true, list: ["CLEAR"]},
-                                        data: e.data,
+                                        data: res.data,
                                         value: "0",
                                         model: {"icon":"hidden","label":{"type":"text"}},
                                         clickClose: true,

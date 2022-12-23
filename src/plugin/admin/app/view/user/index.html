@@ -183,14 +183,14 @@
                 layui.$.ajax({
                     url: "/app/admin/dict/get/sex",
                     dataType: "json",
-                    success: function (e) {
+                    success: function (res) {
                         let value = layui.$("#sex").attr("value");
                         let initValue = value ? value.split(",") : [];
                         layui.xmSelect.render({
                             el: "#sex",
                             name: "sex",
                             initValue: initValue,
-                            data: e.data, 
+                            data: res.data,
                             model: {"icon":"hidden","label":{"type":"text"}},
                             clickClose: true,
                             radio: true,

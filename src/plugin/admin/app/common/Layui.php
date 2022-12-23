@@ -634,14 +634,14 @@ layui.use(["jquery", "xmSelect"], function() {
     layui.$.ajax({
         url: "$url",
         dataType: "json",
-        success: function (e) {
+        success: function (res) {
             let value = layui.$("#$id").attr("value");
             let initValue = value ? value.split(",") : [];
             layui.xmSelect.render({
                 el: "#$id",
                 name: "$field",
                 initValue: initValue,
-                data: e.data, $options_string
+                data: res.data, $options_string
             })
         }
     });
