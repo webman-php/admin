@@ -183,6 +183,32 @@
 							return util.escape(items.join(","));
 						}
 					},{
+                        title: "禁用",
+                        field: "status",
+                        templet: function (d) {
+                            let field = "status";
+                            form.on("switch("+field+")", function (data) {
+                                let load = layer.load();
+                                let postData = {};
+                                postData[field] = data.elem.checked ? 1 : 0;
+                                postData[PRIMARY_KEY] = this.value;
+                                $.post(UPDATE_API, postData, function (res) {
+                                    layer.close(load);
+                                    if (res.code) {
+                                        return layui.popup.failure(res.msg, function () {
+                                            data.elem.checked = !data.elem.checked;
+                                            form.render();
+                                        });
+                                    }
+                                    return layui.popup.success("操作成功");
+                                })
+                            });
+                            let checked = d[field] === 1 ? "checked" : "";
+                            if (parent.Admin.Account.id === d.id) return '';
+                            return '<input type="checkbox" value="'+util.escape(d[PRIMARY_KEY])+'" lay-filter="'+util.escape(field)+'" lay-skin="switch" lay-text="'+util.escape('')+'" '+checked+'/>';
+                        },
+                        width: 90,
+                    },{
 						title: "操作",
 						toolbar: "#table-bar",
 						align: "center",

@@ -73,6 +73,9 @@ class AccountController extends Crud
         if (!$admin || !Util::passwordVerify($password, $admin->password)) {
             return $this->json(1, '账户不存在或密码错误');
         }
+        if ($admin->status != 0) {
+            return $this->json(1, '当前账户暂时无法登录');
+        }
         $admin->login_at = date('Y-m-d H:i:s');
         $admin->save();
         $this->removeLoginLimit($username);
@@ -109,14 +112,14 @@ class AccountController extends Crud
             return $this->json(1);
         }
         $info = [
+            'id' => $admin['id'],
+            'username' => $admin['username'],
             'nickname' => $admin['nickname'],
             'avatar' => $admin['avatar'],
-            'token' => $request->sessionId(),
-            'userId' => $admin['id'],
-            'username' => $admin['username'],
             'email' => $admin['email'],
             'mobile' => $admin['mobile'],
-            'isSupperAdmin' => Auth::isSupperAdmin()
+            'isSupperAdmin' => Auth::isSupperAdmin(),
+            'token' => $request->sessionId(),
         ];
         return $this->json(0, 'ok', $info);
     }

@@ -100,6 +100,11 @@ function refresh_admin_session(bool $force = false)
     }
     $admin = $admin->toArray();
     unset($admin['password']);
+    // 账户被禁用
+    if ($admin['status'] != 0) {
+        $session->forget('admin');
+        return;
+    }
     $admin['roles'] = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
     $admin['session_last_update_time'] = $time_now;
     $session->set('admin', $admin);

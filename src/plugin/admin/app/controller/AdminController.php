@@ -125,38 +125,52 @@ class AdminController extends Crud
     public function update(Request $request): Response
     {
         if ($request->method() === 'POST') {
-            $role_ids = $request->post('roles');
+
+            [$id, $data] = $this->updateInput($request);
             $admin_id = $request->post('id');
             if (!$admin_id) {
                 return $this->json(1, '缺少参数');
             }
-            $role_ids = $role_ids ? explode(',', $role_ids) : [];
-            if (!$role_ids) {
-                return $this->json(1, '至少选择一个角色组');
-            }
-            $is_supper_admin = Auth::isSupperAdmin();
-            $exist_role_ids = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
-            $descendant_role_ids = Auth::getScopeRoleIds();
-            if (!$is_supper_admin && !array_intersect($exist_role_ids, $descendant_role_ids)) {
-                return $this->json(1, '无权限更改该记录');
-            }
-            if (!$is_supper_admin && array_diff($role_ids, $descendant_role_ids)) {
-                return $this->json(1, '角色超出权限范围');
+
+            // 不能禁用自己
+            if (isset($data['status']) && $data['status'] == 1 && $id == admin_id()) {
+                return $this->json(1, '不能禁用自己');
             }
 
-            // 删除
-            $delete_ids = array_diff($exist_role_ids, $role_ids);
-            AdminRole::whereIn('role_id', $delete_ids)->where('admin_id', $admin_id)->delete();
-            // 添加
-            $add_ids = array_diff($role_ids, $exist_role_ids);
-            foreach ($add_ids as $id) {
-                $admin_role = new AdminRole;
-                $admin_role->admin_id = $admin_id;
-                $admin_role->role_id = $id;
-                $admin_role->save();
+            // 需要更新角色
+            if (key_exists('roles', $data)) {
+                $role_ids = $data['roles'] ? explode(',', $data['roles']) : [];
+                if (!$role_ids) {
+                    return $this->json(1, '至少选择一个角色组');
+                }
+
+                $is_supper_admin = Auth::isSupperAdmin();
+                $exist_role_ids = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
+                $scope_role_ids = Auth::getScopeRoleIds();
+                if (!$is_supper_admin && !array_intersect($exist_role_ids, $scope_role_ids)) {
+                    return $this->json(1, '无权限更改该记录');
+                }
+                if (!$is_supper_admin && array_diff($role_ids, $scope_role_ids)) {
+                    return $this->json(1, '角色超出权限范围');
+                }
+
+                // 删除账户角色
+                $delete_ids = array_diff($exist_role_ids, $role_ids);
+                AdminRole::whereIn('role_id', $delete_ids)->where('admin_id', $admin_id)->delete();
+                // 添加账户角色
+                $add_ids = array_diff($role_ids, $exist_role_ids);
+                foreach ($add_ids as $id) {
+                    $admin_role = new AdminRole;
+                    $admin_role->admin_id = $admin_id;
+                    $admin_role->role_id = $id;
+                    $admin_role->save();
+                }
             }
-            return parent::update($request);
+
+            $this->doUpdate($id, $data);
+            return $this->json(0);
         }
+
         return view('admin/update');
     }
 

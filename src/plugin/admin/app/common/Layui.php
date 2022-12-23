@@ -787,7 +787,10 @@ EOF;
 				$.post(UPDATE_API, postData, function (res) {
 					layer.close(load);
 					if (res.code) {
-                        return layui.popup.failure(res.msg);
+                        return layui.popup.failure(res.msg, function () {
+                            data.elem.checked = !data.elem.checked;
+                            form.render();
+                        });
                     }
 					return layui.popup.success("操作成功");
 				})
