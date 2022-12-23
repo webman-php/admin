@@ -5,13 +5,13 @@ namespace plugin\admin\app\common;
 use plugin\admin\app\model\Admin;
 use plugin\admin\app\model\AdminRole;
 use plugin\admin\app\model\Role;
+use plugin\admin\app\model\Rule;
 
 class Auth
 {
     /**
      * 获取权限范围内的所有角色id
      * @param bool $with_self
-     * @param array $admin_ids
      * @return array
      */
     public static function getScopeRoleIds(bool $with_self = false): array
@@ -34,10 +34,9 @@ class Auth
     /**
      * 获取权限范围内的所有管理员id
      * @param bool $with_self
-     * @param array $admin_ids
      * @return array
      */
-    public static function getScopeAdminIds(bool $with_self = false, array $admin_ids = []): array
+    public static function getScopeAdminIds(bool $with_self = false): array
     {
         $role_ids = static::getScopeRoleIds($with_self);
         return AdminRole::whereIn('role_id', $role_ids)->pluck('admin_id')->toArray();

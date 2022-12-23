@@ -27,5 +27,12 @@ class Role extends Base
      */
     protected $primaryKey = 'id';
 
-    
+    /**
+     * @return mixed
+     */
+    public function getRuleIds()
+    {
+        return $this->rules ? explode(',', $this->rules) : [];
+    }
+
 }

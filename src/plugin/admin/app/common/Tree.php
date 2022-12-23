@@ -8,12 +8,12 @@ class Tree
     /**
      * 获取完整的树结构，包含祖先节点
      */
-    const INCLUDE_ANCESTORS = 0;
+    const INCLUDE_ANCESTORS = 1;
 
     /**
      * 获取部分树，不包含祖先节点
      */
-    const EXCLUDE_ANCESTORS = 1;
+    const EXCLUDE_ANCESTORS = 0;
 
     /**
      * 数据
@@ -103,8 +103,9 @@ class Tree
      * @param int $type
      * @return array|null
      */
-    public function getTree(array $include = [], int $type = 0): ?array
+    public function getTree(array $include = [], int $type = 1): ?array
     {
+        // $type === static::EXCLUDE_ANCESTORS
         if ($type === static::EXCLUDE_ANCESTORS) {
             $items = [];
             $include = array_unique($include);
@@ -130,13 +131,15 @@ class Tree
                 $max_depth = 100;
                 while ($max_depth-- > 0 && $item[$this->pidName] && isset($hash_tree[$item[$this->pidName]])) {
                     $last_item = $item;
-                    $item = $hash_tree[$item[$this->pidName]];
+                    $pid = $item[$this->pidName];
+                    $item = $hash_tree[$pid];
                     $item_id = $item['id'];
                     if (empty($map[$item_id])) {
                         $map[$item_id] = 1;
-                        $item['children'] = [];
+                        $hash_tree[$pid]['children'] = [];
                     }
-                    $item['children'][$last_item['id']] = $last_item;
+                    $hash_tree[$pid]['children'][$last_item['id']] = $last_item;
+                    $item = $hash_tree[$pid];
                 }
                 $items[$item['id']] = $item;
             }
