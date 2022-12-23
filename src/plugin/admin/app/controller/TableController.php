@@ -1053,7 +1053,7 @@ EOF;
             const UPDATE_API = "$url_path_base/update";
 
             // 获取数据库记录
-            layui.use(["form", "util, "popup"], function () {
+            layui.use(["form", "util", "popup"], function () {
                 let $ = layui.$;
                 $.ajax({
                     url: SELECT_API,

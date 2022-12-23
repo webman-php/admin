@@ -132,6 +132,8 @@
 					},{
 						title: "ID",
 						field: "id",
+                        width: 100,
+                        sort: true,
 					},{
 						title: "用户名",
 						field: "username",
@@ -147,13 +149,16 @@
 						field: "avatar",
 						templet: function (d) {
 							return '<img src="'+encodeURI(d['avatar'])+'" style="max-width:32px;max-height:32px;" alt="" />'
-						}
+						},
+                        width: 90,
 					},{
 						title: "邮箱",
 						field: "email",
+                        hide: true,
 					},{
 						title: "手机",
 						field: "mobile",
+                        hide: true,
 					},{
 						title: "创建时间",
 						field: "created_at",
@@ -163,6 +168,9 @@
 						field: "updated_at",
 						hide: true,
 					},{
+                        title: "登录时间",
+                        field: "login_at",
+                    },{
 						title: "角色",
 						field: "roles",
 						templet: function (d) {

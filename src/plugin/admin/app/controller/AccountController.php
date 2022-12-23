@@ -73,6 +73,8 @@ class AccountController extends Crud
         if (!$admin || !Util::passwordVerify($password, $admin->password)) {
             return $this->json(1, '账户不存在或密码错误');
         }
+        $admin->login_at = date('Y-m-d H:i:s');
+        $admin->save();
         $this->removeLoginLimit($username);
         $admin = $admin->toArray();
         $session = $request->session();
