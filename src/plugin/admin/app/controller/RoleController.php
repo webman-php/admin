@@ -16,6 +16,12 @@ use support\Response;
 class RoleController extends Crud
 {
     /**
+     * 不需要鉴权的方法
+     * @var array
+     */
+    protected $noNeedAuth = ['select'];
+
+    /**
      * @var Role
      */
     protected $model = null;
