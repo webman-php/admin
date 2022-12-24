@@ -4,7 +4,7 @@
 layui.$(function () {
     let $ = layui.$;
     $.ajax({
-        url: "/app/admin/rule/auth",
+        url: "/app/admin/rule/permission",
         dataType: "json",
         success: function (res) {
             let style = '';

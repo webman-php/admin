@@ -783,7 +783,7 @@ EOF
 
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/auth.js"></script>
+        <script src="/app/admin/admin/js/permission.js"></script>
         <script src="/app/admin/admin/js/common.js"></script>
         
         <script>
@@ -968,7 +968,7 @@ EOF;
 
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/auth.js"></script>
+        <script src="/app/admin/admin/js/permission.js"></script>
         
         <script>
 
@@ -1043,7 +1043,7 @@ EOF;
 
         <script src="/app/admin/component/layui/layui.js"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/auth.js"></script>
+        <script src="/app/admin/admin/js/permission.js"></script>
         
         <script>
 

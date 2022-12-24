@@ -20,7 +20,7 @@ class RuleController extends Crud
      *
      * @var string[]
      */
-    protected $noNeedAuth = ['get', 'auth'];
+    protected $noNeedAuth = ['get', 'permission'];
 
     /**
      * @var Rule
@@ -92,7 +92,7 @@ class RuleController extends Crud
      * @param Request $request
      * @return Response
      */
-    public function auth(Request $request): Response
+    public function permission(Request $request): Response
     {
         $rules = $this->getRules(admin('roles'));
         // 超级管理员
