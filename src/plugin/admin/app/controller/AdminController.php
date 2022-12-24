@@ -138,11 +138,12 @@ class AdminController extends Crud
             }
 
             // 需要更新角色
-            if (key_exists('roles', $data)) {
-                $role_ids = $data['roles'] ? explode(',', $data['roles']) : [];
+            $role_ids = $request->post('roles');
+            if ($role_ids !== null) {
                 if (!$role_ids) {
                     return $this->json(1, '至少选择一个角色组');
                 }
+                $role_ids = explode(',', $role_ids);
 
                 $is_supper_admin = Auth::isSupperAdmin();
                 $exist_role_ids = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
@@ -159,10 +160,10 @@ class AdminController extends Crud
                 AdminRole::whereIn('role_id', $delete_ids)->where('admin_id', $admin_id)->delete();
                 // 添加账户角色
                 $add_ids = array_diff($role_ids, $exist_role_ids);
-                foreach ($add_ids as $id) {
+                foreach ($add_ids as $role_id) {
                     $admin_role = new AdminRole;
                     $admin_role->admin_id = $admin_id;
-                    $admin_role->role_id = $id;
+                    $admin_role->role_id = $role_id;
                     $admin_role->save();
                 }
             }
