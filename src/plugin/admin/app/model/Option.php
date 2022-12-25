@@ -17,7 +17,7 @@ class Option extends Base
      *
      * @var string
      */
-    protected $table = 'wa_options';
+    protected $table = 'options';
 
     /**
      * The primary key associated with the table.

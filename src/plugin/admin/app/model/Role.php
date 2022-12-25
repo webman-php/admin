@@ -18,7 +18,7 @@ class Role extends Base
      *
      * @var string
      */
-    protected $table = 'wa_roles';
+    protected $table = 'roles';
 
     /**
      * The primary key associated with the table.

@@ -73,7 +73,7 @@ class TableController extends Base
             $table_names = array_column($tables, 'TABLE_NAME');
             $table_rows_count = [];
             foreach ($table_names as $table_name) {
-                $table_rows_count[$table_name] = Util::db()->table($table_name)->count();
+                $table_rows_count[$table_name] = Util::db()->table($this->getTableName($table_name))->count();
             }
             foreach ($tables as $key => $table) {
                 $tables[$key]->TABLE_ROWS = $table_rows_count[$table->TABLE_NAME] ?? $table->TABLE_ROWS;
@@ -160,7 +160,7 @@ class TableController extends Base
         Util::db()->statement("ALTER TABLE `$table_name` COMMENT $table_comment");
 
         // 索引
-        Util::schema()->table($table_name, function (Blueprint $table) use ($keys) {
+        Util::schema()->table($this->getTableName($table_name), function (Blueprint $table) use ($keys) {
             foreach ($keys as $key) {
                 $name = $key['name'];
                 $columns = is_array($key['columns']) ? $key['columns'] : explode(',', $key['columns']);
@@ -288,7 +288,7 @@ class TableController extends Base
         }
 
         $old_columns = Util::getSchema($table_name, 'columns');
-        Util::schema()->table($table_name, function (Blueprint $table) use ($columns, $old_columns, $keys, $table_name) {
+        Util::schema()->table($this->getTableName($table_name), function (Blueprint $table) use ($columns, $old_columns, $keys, $table_name) {
             foreach ($columns as $column) {
                 $field = $column['field'];
                 // 新字段
@@ -315,7 +315,7 @@ class TableController extends Base
         }
 
         $old_keys = Util::getSchema($table_name, 'keys');
-        Util::schema()->table($table_name, function (Blueprint $table) use ($keys, $old_keys, $table_name) {
+        Util::schema()->table($this->getTableName($table_name), function (Blueprint $table) use ($keys, $old_keys, $table_name) {
             foreach ($keys as $key) {
                 $key_name = $key['name'];
                 $old_key = $old_keys[$key_name] ?? [];
@@ -385,7 +385,8 @@ class TableController extends Base
     {
         $table_name = $request->input('table');
         Util::checkTableName($table_name);
-        $table_basename = strpos($table_name, 'wa_') === 0 ? substr($table_name, 3) : $table_name;
+        $prefix = config('plugin.admin.database.connections.mysql.prefix');
+        $table_basename = strpos($table_name, $prefix) === 0 ? substr($table_name, strlen($prefix)) : $table_name;
         $inflector = InflectorFactory::create()->build();
         $model_class = $inflector->classify($inflector->singularize($table_basename));
         $base_path = '/plugin/admin/app';
@@ -463,7 +464,7 @@ class TableController extends Base
         $model_namespace = str_replace('/' , '\\', trim($model_path, '/'));
 
         // 创建model
-        $this->createModel($model_class, $model_namespace, base_path($model_file), $table_name);
+        $this->createModel($model_class, $model_namespace, base_path($model_file), $this->getTableName($table_name));
 
         $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
         $controller_class = $controller_file_name;
@@ -1158,7 +1159,7 @@ EOF;
             $field = current($allow_column);
         }
         $order = $order === 'asc' ? 'asc' : 'desc';
-        $paginator = Util::db()->table($table);
+        $paginator = Util::db()->table($this->getTableName($table));
         foreach ($request->get() as $column => $value) {
             if ($value === '') {
                 continue;
@@ -1247,7 +1248,7 @@ EOF;
         if (isset($columns['updated_at']) && empty($data['updated_at'])) {
             $data['updated_at'] = $datetime;
         }
-        $id = Util::db()->table($table)->insertGetId($data);
+        $id = Util::db()->table($this->getTableName($table))->insertGetId($data);
         return $this->json(0, $id);
     }
 
@@ -1314,7 +1315,7 @@ EOF;
         if (isset($columns['updated_at']) && empty($data['updated_at'])) {
             $data['updated_at'] = $datetime;
         }
-        Util::db()->table($table)->where($primary_key, $value)->update($data);
+        Util::db()->table($this->getTableName($table))->where($primary_key, $value)->update($data);
         return $this->json(0);
     }
 
@@ -1337,7 +1338,7 @@ EOF;
         }
         $primary_key = $primary_keys[0];
         $value = (array)$request->post($primary_key);
-        Util::db()->table($table)->whereIn($primary_key, $value)->delete();
+        Util::db()->table($this->getTableName($table))->whereIn($primary_key, $value)->delete();
         return $this->json(0);
     }
 
@@ -1353,14 +1354,15 @@ EOF;
         if (!$tables) {
             return $this->json(0, 'not found');
         }
-        $table_not_allow_drop = ['wa_admins', 'wa_users', 'wa_options', 'wa_roles', 'wa_rules'];
+        $prefix = config('plugin.admin.database.connections.mysql.prefix');
+        $table_not_allow_drop = ["{$prefix}admins", "{$prefix}users", "{$prefix}options", "{$prefix}roles", "{$prefix}rules", "{$prefix}admin_roles", "{$prefix}uploads"];
         if ($found = array_intersect($tables, $table_not_allow_drop)) {
             return $this->json(400, implode(',', $found) . '不允许删除');
         }
         foreach ($tables as $table) {
             Util::schema()->drop($table);
             // 删除schema
-            Util::db()->table('wa_options')->where('name', "table_form_schema_$table")->delete();
+            Util::db()->table('options')->where('name', "table_form_schema_$table")->delete();
         }
         return $this->json(0, 'ok');
     }
@@ -1589,6 +1591,19 @@ EOF;
             default:
                 return 'mixed';
         }
+    }
+
+    /**
+     * @param string $table_name
+     * @return false|string
+     */
+    protected function getTableName(string $table_name)
+    {
+        $prefix = config('plugin.admin.database.connections.mysql.prefix');
+        if (strpos($table_name, $prefix) === 0) {
+            return substr($table_name, strlen($prefix));
+        }
+        return $table_name;
     }
 
 }

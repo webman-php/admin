@@ -88,7 +88,7 @@ class InstallController extends Base
             }
         }
 
-        $sql_file = base_path() . '/plugin/admin/webman-admin.sql';
+        $sql_file = base_path() . '/plugin/admin/install.sql';
         if (!is_file($sql_file)) {
             return $this->json(1, '数据库SQL文件不存在');
         }
@@ -119,7 +119,7 @@ return  [
             'password'    => '$password',
             'charset'     => 'utf8mb4',
             'collation'   => 'utf8mb4_general_ci',
-            'prefix'      => '',
+            'prefix'      => 'wa_',
             'strict'      => true,
             'engine'      => null,
         ],
@@ -155,7 +155,7 @@ return [
             // 数据库编码默认采用utf8
             'charset' => 'utf8mb4',
             // 数据库表前缀
-            'prefix' => '',
+            'prefix' => 'wa_',
             // 断线重连
             'break_reconnect' => true,
             // 关闭SQL监听日志
@@ -202,13 +202,12 @@ EOF;
         $config = include $config_file;
         $connection = $config['connections']['mysql'];
         $pdo = $this->getPdo($connection['host'], $connection['username'], $connection['password'], $connection['port'], $connection['database']);
-        $smt = $pdo->prepare("insert into `wa_admins` (`username`, `password`, `nickname`, `roles`, `created_at`, `updated_at`) values (:username, :password, :nickname, :roles, :created_at, :updated_at)");
+        $smt = $pdo->prepare("insert into `wa_admins` (`username`, `password`, `nickname`, `created_at`, `updated_at`) values (:username, :password, :nickname, :created_at, :updated_at)");
         $time = date('Y-m-d H:i:s');
         $data = [
             'username' => $username,
             'password' => Util::passwordHash($password),
             'nickname' => '超级管理员',
-            'roles' => '1',
             'created_at' => $time,
             'updated_at' => $time
         ];
@@ -216,6 +215,13 @@ EOF;
             $smt->bindValue($key, $value);
         }
         $smt->execute();
+        $admin_id = $pdo->lastInsertId();
+
+        $smt = $pdo->prepare("insert into `wa_admin_roles` (`role_id`, `admin_id`) values (:role_id, :admin_id)");
+        $smt->bindValue('role_id', 1);
+        $smt->bindValue('admin_id', $admin_id);
+        $smt->execute();
+
         $request->session()->flush();
         return $this->json(0);
     }

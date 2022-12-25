@@ -16,7 +16,7 @@ class AdminRole extends Base
      *
      * @var string
      */
-    protected $table = 'wa_admin_roles';
+    protected $table = 'admin_roles';
 
     /**
      * The primary key associated with the table.

@@ -74,7 +74,7 @@ class RoleController extends Crud
         if ($request->method() === 'POST') {
             $data = $this->insertInput($request);
             $pid = $data['pid'] ?? null;
-            if ($pid) {
+            if (!$pid) {
                 return $this->json(1, '请选择父级角色组');
             }
             if (!Auth::isSupperAdmin() && !in_array($pid, Auth::getScopeRoleIds(true))) {

@@ -23,7 +23,7 @@ class Rule extends Base
      *
      * @var string
      */
-    protected $table = 'wa_rules';
+    protected $table = 'rules';
 
     /**
      * The primary key associated with the table.
