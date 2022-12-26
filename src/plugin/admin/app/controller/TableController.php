@@ -96,6 +96,10 @@ class TableController extends Base
         }
         $data = $request->post();
         $table_name = Util::filterAlphaNum($data['table']);
+        $table_prefix = Util::getTablePrefix();
+        if (strpos($table_name, $table_prefix) !== 0) {
+            return $this->json(1, "表名必须以{$table_prefix}开头");
+        }
         $table_comment = Util::pdoQuote($data['table_comment']);
         $columns = $data['columns'];
         $forms = $data['forms'];
@@ -141,7 +145,7 @@ class TableController extends Base
             }
         }
 
-        Util::schema()->create($table_name, function (Blueprint $table) use ($columns) {
+        Util::schema()->create($this->getTableName($table_name), function (Blueprint $table) use ($columns) {
             $type_method_map = Util::methodControlMap();
             foreach ($columns as $column) {
                 if (!isset($column['type'])) {
@@ -385,7 +389,7 @@ class TableController extends Base
     {
         $table_name = $request->input('table');
         Util::checkTableName($table_name);
-        $prefix = config('plugin.admin.database.connections.mysql.prefix');
+        $prefix = Util::getTablePrefix();
         $table_basename = strpos($table_name, $prefix) === 0 ? substr($table_name, strlen($prefix)) : $table_name;
         $inflector = InflectorFactory::create()->build();
         $model_class = $inflector->classify($inflector->singularize($table_basename));
@@ -1354,13 +1358,13 @@ EOF;
         if (!$tables) {
             return $this->json(0, 'not found');
         }
-        $prefix = config('plugin.admin.database.connections.mysql.prefix');
+        $prefix = Util::getTablePrefix();
         $table_not_allow_drop = ["{$prefix}admins", "{$prefix}users", "{$prefix}options", "{$prefix}roles", "{$prefix}rules", "{$prefix}admin_roles", "{$prefix}uploads"];
         if ($found = array_intersect($tables, $table_not_allow_drop)) {
             return $this->json(400, implode(',', $found) . '不允许删除');
         }
         foreach ($tables as $table) {
-            Util::schema()->drop($table);
+            Util::schema()->drop($this->getTableName($table));
             // 删除schema
             Util::db()->table('options')->where('name', "table_form_schema_$table")->delete();
         }
@@ -1594,12 +1598,13 @@ EOF;
     }
 
     /**
+     * 获取表名(不带前缀)
      * @param string $table_name
      * @return false|string
      */
     protected function getTableName(string $table_name)
     {
-        $prefix = config('plugin.admin.database.connections.mysql.prefix');
+        $prefix = Util::getTablePrefix();
         if (strpos($table_name, $prefix) === 0) {
             return substr($table_name, strlen($prefix));
         }

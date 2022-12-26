@@ -124,6 +124,15 @@ class Util
     }
 
     /**
+     * 获取表前缀
+     * @return string
+     */
+    public static function getTablePrefix(): string
+    {
+        return config('plugin.admin.database.connections.mysql.prefix', '');
+    }
+
+    /**
      * 变量或数组中的元素只能是字母数字下划线组合
      * @param $var
      * @return mixed
@@ -369,6 +378,10 @@ class Util
     public static function getSchema($table, $section = null)
     {
         Util::checkTableName($table);
+        $table_prefix = Util::getTablePrefix();
+        if (strpos($table, $table_prefix) !== 0) {
+            $table = "$table_prefix{$table}";
+        }
         $database = config('database.connections')['plugin.admin.mysql']['database'];
         $schema_raw = $section !== 'table' ? Util::db()->select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table'") : [];
         $forms = [];
