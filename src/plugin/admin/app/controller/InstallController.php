@@ -124,7 +124,7 @@ return  [
             'password'    => '$password',
             'charset'     => 'utf8mb4',
             'collation'   => 'utf8mb4_general_ci',
-            'prefix'      => 'wa_',
+            'prefix'      => '',
             'strict'      => true,
             'engine'      => null,
         ],
@@ -160,7 +160,7 @@ return [
             // 数据库编码默认采用utf8
             'charset' => 'utf8mb4',
             // 数据库表前缀
-            'prefix' => 'wa_',
+            'prefix' => '',
             // 断线重连
             'break_reconnect' => true,
             // 关闭SQL监听日志
