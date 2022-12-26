@@ -70,6 +70,7 @@ class InstallController extends Base
 
         $tables_to_install = [
             'wa_admins',
+            'wa_admin_roles',
             'wa_roles',
             'wa_rules',
             'wa_options',
@@ -85,6 +86,10 @@ class InstallController extends Base
             $tables_conflict = array_intersect($tables_to_install, $tables_exist);
             if ($tables_conflict) {
                 return $this->json(1, '以下表' . implode(',', $tables_conflict) . '已经存在，如需覆盖请选择强制覆盖');
+            }
+        } else {
+            foreach ($tables_to_install as $table) {
+                $db->exec("DROP TABLE `$table`");
             }
         }
 
