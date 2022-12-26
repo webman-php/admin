@@ -98,7 +98,6 @@ class Auth
 
         // 如果action为index，规则里有任意一个以$controller开头的权限即可
         if (strtolower($action) === 'index') {
-            $controller = str_replace('\\', '\\\\', $controller);
             $rule = Rule::where(function ($query) use ($controller, $action) {
                 $query->where('key', 'like', "$controller@%")->orWhere('key', $controller);
             })->whereIn('id', $rule_ids)->first();

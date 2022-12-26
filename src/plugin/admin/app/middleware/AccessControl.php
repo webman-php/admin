@@ -37,7 +37,7 @@ class AccessControl implements MiddlewareInterface
 EOF
                     );
                 } else {
-                    $response = view('common/error/403');
+                    $response = view('common/error/403')->withStatus(403);
                 }
             }
 
