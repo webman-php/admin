@@ -78,17 +78,17 @@ class InstallController extends Base
             'wa_uploads',
         ];
 
+        $tables_exist = [];
+        foreach ($tables as $table) {
+            $tables_exist[] = current($table);
+        }
+        $tables_conflict = array_intersect($tables_to_install, $tables_exist);
         if (!$overwrite) {
-            $tables_exist = [];
-            foreach ($tables as $table) {
-                $tables_exist[] = current($table);
-            }
-            $tables_conflict = array_intersect($tables_to_install, $tables_exist);
             if ($tables_conflict) {
                 return $this->json(1, '以下表' . implode(',', $tables_conflict) . '已经存在，如需覆盖请选择强制覆盖');
             }
         } else {
-            foreach ($tables_to_install as $table) {
+            foreach ($tables_conflict as $table) {
                 $db->exec("DROP TABLE `$table`");
             }
         }
