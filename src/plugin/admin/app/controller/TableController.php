@@ -67,7 +67,8 @@ class TableController extends Base
             $field = 'TABLE_NAME';
         }
         $order = $order === 'asc' ? 'asc' : 'desc';
-        $tables = Util::db()->select("SELECT TABLE_NAME,TABLE_COMMENT,ENGINE,TABLE_ROWS,CREATE_TIME,UPDATE_TIME,TABLE_COLLATION FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' order by $field $order");
+        $table_prefix = Util::getTablePrefix();
+        $tables = Util::db()->select("SELECT TABLE_NAME,TABLE_COMMENT,ENGINE,TABLE_ROWS,CREATE_TIME,UPDATE_TIME,TABLE_COLLATION FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' AND TABLE_NAME like '$table_prefix%' order by $field $order");
 
         if ($tables) {
             $table_names = array_column($tables, 'TABLE_NAME');
