@@ -1454,7 +1454,7 @@ EOF;
         $field = Util::filterAlphaNum($column['field']);
         $old_field = Util::filterAlphaNum($column['old_field'] ?? null);
         $nullable = $column['nullable'];
-        $default = Util::filterAlphaNum($column['default']);
+        $default = Util::pdoQuote($column['default']);
         $comment = Util::pdoQuote($column['comment']);
         $auto_increment = $column['auto_increment'];
         $length = (int)$column['length'];
