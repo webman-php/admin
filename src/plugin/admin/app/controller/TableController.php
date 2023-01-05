@@ -1522,7 +1522,7 @@ EOF;
         }
 
         if ($method != 'text' && $default !== null) {
-            $sql .= "DEFAULT '$default' ";
+            $sql .= "DEFAULT $default ";
         }
 
         if ($comment !== null) {
