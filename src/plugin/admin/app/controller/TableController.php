@@ -1458,7 +1458,7 @@ EOF;
         $field = Util::filterAlphaNum($column['field']);
         $old_field = Util::filterAlphaNum($column['old_field'] ?? null);
         $nullable = $column['nullable'];
-        $default = Util::filterAlphaNum($column['default']);
+        $default = $column['default'] !== null ? Util::pdoQuote($column['default']) : null;
         $comment = Util::pdoQuote($column['comment']);
         $auto_increment = $column['auto_increment'];
         $length = (int)$column['length'];
@@ -1468,9 +1468,9 @@ EOF;
         }
 
         if ($old_field && $old_field !== $field) {
-            $sql = "ALTER TABLE $table CHANGE COLUMN `$old_field` `$field` ";
+            $sql = "ALTER TABLE `$table` CHANGE COLUMN `$old_field` `$field` ";
         } else {
-            $sql = "ALTER TABLE $table MODIFY `$field` ";
+            $sql = "ALTER TABLE `$table` MODIFY `$field` ";
         }
 
         if (stripos($method, 'integer') !== false) {
@@ -1526,13 +1526,14 @@ EOF;
         }
 
         if ($method != 'text' && $default !== null) {
-            $sql .= "DEFAULT '$default' ";
+            $sql .= "DEFAULT $default ";
         }
 
         if ($comment !== null) {
             $sql .= "COMMENT $comment ";
         }
 
+        echo "$sql\n";
         Util::db()->statement($sql);
     }
 
