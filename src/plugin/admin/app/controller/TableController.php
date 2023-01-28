@@ -195,7 +195,7 @@ class TableController extends Base
         $data = $request->post();
         $old_table_name = Util::filterAlphaNum($data['old_table']);
         $table_name = Util::filterAlphaNum($data['table']);
-        $table_comment = Util::pdoQuote($data['table_comment']);
+        $table_comment = $data['table_comment'];
         $columns = $data['columns'];
         $forms = $data['forms'];
         $keys = $data['keys'];
@@ -284,6 +284,7 @@ class TableController extends Base
 
         $table = Util::getSchema($table_name, 'table');
         if ($table_comment !== $table['comment']) {
+            $table_comment = Util::pdoQuote($table_comment);
             Util::db()->statement("ALTER TABLE `$table_name` COMMENT $table_comment");
         }
 
@@ -320,9 +321,10 @@ class TableController extends Base
                 $key_name = $key['name'];
                 $old_key = $old_keys[$key_name] ?? [];
                 // 如果索引有变动，则删除索引，重新建立索引
-                if ($old_key && ($key['type'] != $old_key['type'] || $key['columns'] != $old_key['columns'])) {
+                if ($old_key && ($key['type'] != $old_key['type'] || $key['columns'] != implode(',', $old_key['columns']))) {
                     $old_key = [];
                     unset($old_keys[$key_name]);
+                    echo "Drop Index $key_name\n";
                     $table->dropIndex($key_name);
                 }
                 // 重新建立索引
@@ -334,6 +336,7 @@ class TableController extends Base
                         $table->unique($columns, $name);
                         continue;
                     }
+                    echo "Create Index $key_name\n";
                     $table->index($columns, $name);
                 }
             }
@@ -343,6 +346,7 @@ class TableController extends Base
             $old_keys_names = array_column($old_keys, 'name');
             $drop_keys_names = array_diff($old_keys_names, $exists_key_names);
             foreach ($drop_keys_names as $name) {
+                echo "Drop Index $name\n";
                 $table->dropIndex($name);
             }
         });
@@ -1454,7 +1458,7 @@ EOF;
         $field = Util::filterAlphaNum($column['field']);
         $old_field = Util::filterAlphaNum($column['old_field'] ?? null);
         $nullable = $column['nullable'];
-        $default = Util::pdoQuote($column['default']);
+        $default = Util::filterAlphaNum($column['default']);
         $comment = Util::pdoQuote($column['comment']);
         $auto_increment = $column['auto_increment'];
         $length = (int)$column['length'];
@@ -1522,7 +1526,7 @@ EOF;
         }
 
         if ($method != 'text' && $default !== null) {
-            $sql .= "DEFAULT $default ";
+            $sql .= "DEFAULT '$default' ";
         }
 
         if ($comment !== null) {
