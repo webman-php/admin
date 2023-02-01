@@ -129,10 +129,16 @@ class Crud extends Base
         $model = $this->model;
         foreach ($where as $column => $value) {
             if (is_array($value)) {
-                if (in_array($value[0], ['>', '=', '<', '<>', 'like'])) {
+                if (in_array($value[0], ['>', '=', '<', '<>', 'like', 'not like'])) {
                     $model = $model->where($column, $value[0], $value[1]);
                 } elseif ($value[0] == 'in') {
                     $model = $model->whereIn($column, $value[1]);
+                } elseif ($value[0] == 'not in') {
+                    $model = $model->whereNotIn($column, $value[1]);
+                } elseif ($value[0] == 'null') {
+                    $model = $model->whereNull($column, $value[1]);
+                } elseif ($value[0] == 'not null') {
+                    $model = $model->whereNotNull($column, $value[1]);
                 } else {
                     $model = $model->whereBetween($column, $value);
                 }
