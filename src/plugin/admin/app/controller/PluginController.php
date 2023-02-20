@@ -5,10 +5,17 @@ namespace plugin\admin\app\controller;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use plugin\admin\app\common\Util;
+use process\Monitor;
 use support\exception\BusinessException;
 use support\Log;
 use support\Request;
 use support\Response;
+use ZIPARCHIVE;
+use function array_diff;
+use function ini_get;
+use function scandir;
+use const DIRECTORY_SEPARATOR;
+use const PATH_SEPARATOR;
 
 class PluginController extends Base
 {
@@ -20,11 +27,14 @@ class PluginController extends Base
 
     /**
      * @param Request $request
-     * @return Response
+     * @return string
+     * @throws GuzzleException
      */
-    public function index(Request $request): Response
+    public function index(Request $request)
     {
-        return view('plugin/index');
+        $client = $this->httpClient();
+        $response = $client->get("/webman-admin/apps");
+        return (string)$response->getBody();
     }
 
     /**
@@ -37,7 +47,7 @@ class PluginController extends Base
     {
         $installed = [];
         clearstatcache();
-        $plugin_names = \array_diff(\scandir(base_path() . '/plugin/'), array('.', '..')) ?: [];
+        $plugin_names = array_diff(scandir(base_path() . '/plugin/'), array('.', '..')) ?: [];
         foreach ($plugin_names as $plugin_name) {
             if (is_dir(base_path() . "/plugin/$plugin_name") && $version = $this->getPluginVersion($plugin_name)) {
                 $installed[$plugin_name] = $version;
@@ -64,7 +74,7 @@ class PluginController extends Base
         }
         $items = $data['result']['items'];
         $count = $data['result']['total'];
-        return json(['code' =>0, 'msg' => 'ok', 'data' => $items, 'count' => $count]);
+        return json(['code' => 0, 'msg' => 'ok', 'data' => $items, 'count' => $count]);
     }
 
     /**
@@ -77,7 +87,7 @@ class PluginController extends Base
     {
         $client = $this->httpClient();
         $response = $client->get('/api/app/schema', ['query' => $request->get()]);
-        $data = json_decode($response->getBody()->getContents(), true);
+        $data = json_decode((string)$response->getBody(), true);
         $result = $data['result'];
         foreach ($result as &$item) {
             $item['field'] = $item['field'] ?? $item['dataIndex'];
@@ -90,14 +100,13 @@ class PluginController extends Base
      * 安装
      * @param Request $request
      * @return Response
-     * @throws GuzzleException
+     * @throws GuzzleException|BusinessException
      */
     public function install(Request $request): Response
     {
         $name = $request->post('name');
         $version = $request->post('version');
         $installed_version = $this->getPluginVersion($name);
-        $host = $request->host(true);
         if (!$name || !$version) {
             return $this->json(1, '缺少参数');
         }
@@ -111,11 +120,16 @@ class PluginController extends Base
         }
 
         // 获取下载zip文件url
-        $data = $this->getDownloadUrl($name, $user['uid'], $host, $version);
+        $data = $this->getDownloadUrl($name, $version);
         if ($data['code'] == -1) {
             return $this->json(0, '请登录', [
                 'code' => 401,
                 'msg' => '请登录'
+            ]);
+        } elseif ($data['code'] == -2) {
+            return $this->json(0, '未购买此插件', [
+                'code' => 402,
+                'msg' => '未购买此插件'
             ]);
         }
 
@@ -123,9 +137,9 @@ class PluginController extends Base
         $base_path = base_path() . "/plugin/$name";
         $zip_file = "$base_path.zip";
         $extract_to = base_path() . '/plugin/';
-        $this->downloadZipFile($data['result']['url'], $zip_file);
+        $this->downloadZipFile($data['data']['url'], $zip_file);
 
-        $has_zip_archive = class_exists(\ZipArchive::class, false);
+        $has_zip_archive = class_exists(ZipArchive::class, false);
         if (!$has_zip_archive) {
             $cmd = $this->getUnzipCmd($zip_file, $extract_to);
             if (!$cmd) {
@@ -136,39 +150,49 @@ class PluginController extends Base
             }
         }
 
-        // 解压zip到plugin目录
-        if ($has_zip_archive) {
-            $zip = new \ZipArchive;
-            $zip->open($zip_file, \ZIPARCHIVE::CHECKCONS);
+        $monitor_support_pause = method_exists(Monitor::class, 'pause');
+        if ($monitor_support_pause) {
+            Monitor::pause();
         }
-
-        $context = null;
-        $install_class = "\\plugin\\$name\\api\\Install";
-        if ($installed_version) {
-            // 执行beforeUpdate
-            if (class_exists($install_class) && method_exists($install_class, 'beforeUpdate')) {
-                $context = call_user_func([$install_class, 'beforeUpdate'], $installed_version, $version);
+        try {
+            // 解压zip到plugin目录
+            if ($has_zip_archive) {
+                $zip = new ZipArchive;
+                $zip->open($zip_file, ZIPARCHIVE::CHECKCONS);
             }
-        }
 
-        if (!empty($zip)) {
-            $zip->extractTo(base_path() . '/plugin/');
-            unset($zip);
-        } else {
-            $this->unzipWithCmd($cmd);
-        }
-
-        unlink($zip_file);
-
-        if ($installed_version) {
-            // 执行update更新
-            if (class_exists($install_class) && method_exists($install_class, 'update')) {
-                call_user_func([$install_class, 'update'], $installed_version, $version, $context);
+            $context = null;
+            $install_class = "\\plugin\\$name\\api\\Install";
+            if ($installed_version) {
+                // 执行beforeUpdate
+                if (class_exists($install_class) && method_exists($install_class, 'beforeUpdate')) {
+                    $context = call_user_func([$install_class, 'beforeUpdate'], $installed_version, $version);
+                }
             }
-        } else {
-            // 执行install安装
-            if (class_exists($install_class) && method_exists($install_class, 'install')) {
-                call_user_func([$install_class, 'install'], $version);
+
+            if (!empty($zip)) {
+                $zip->extractTo(base_path() . '/plugin/');
+                unset($zip);
+            } else {
+                $this->unzipWithCmd($cmd);
+            }
+
+            unlink($zip_file);
+
+            if ($installed_version) {
+                // 执行update更新
+                if (class_exists($install_class) && method_exists($install_class, 'update')) {
+                    call_user_func([$install_class, 'update'], $installed_version, $version, $context);
+                }
+            } else {
+                // 执行install安装
+                if (class_exists($install_class) && method_exists($install_class, 'install')) {
+                    call_user_func([$install_class, 'install'], $version);
+                }
+            }
+        } finally {
+            if ($monitor_support_pause) {
+                Monitor::resume();
             }
         }
 
@@ -206,13 +230,44 @@ class PluginController extends Base
         // 删除目录
         clearstatcache();
         if (is_dir($path)) {
-            $this->rmDir($path);
+            $monitor_support_pause = method_exists(Monitor::class, 'pause');
+            if ($monitor_support_pause) {
+                Monitor::pause();
+            }
+            try {
+                $this->rmDir($path);
+            } finally {
+                if ($monitor_support_pause) {
+                    Monitor::resume();
+                }
+            }
         }
         clearstatcache();
 
         Util::reloadWebman();
 
         return $this->json(0);
+    }
+
+    /**
+     * 支付
+     * @param Request $request
+     * @return string|Response
+     * @throws GuzzleException
+     */
+    public function pay(Request $request)
+    {
+        $app = $request->get('app');
+        if (!$app) {
+            return response('app not found');
+        }
+        $token = session('app-plugin-token');
+        if (!$token) {
+            return 'Please login workerman.net';
+        }
+        $client = $this->httpClient();
+        $response = $client->get("/payment/app/$app/$token");
+        return (string)$response->getBody();
     }
 
     /**
@@ -226,7 +281,7 @@ class PluginController extends Base
         $client = $this->httpClient();
         $response = $client->get('/user/captcha?type=login');
         $sid_str = $response->getHeaderLine('Set-Cookie');
-        if(preg_match('/PHPSID=([a-zA-z_0-9]+?);/', $sid_str, $match)) {
+        if (preg_match('/PHPSID=([a-zA-Z_0-9]+?);/', $sid_str, $match)) {
             $sid = $match[1];
             session()->set('app-plugin-token', $sid);
         }
@@ -236,15 +291,17 @@ class PluginController extends Base
     /**
      * 登录官网
      * @param Request $request
-     * @return Response
+     * @return Response|string
      * @throws GuzzleException
      */
-    public function login(Request $request): Response
+    public function login(Request $request)
     {
-        if ($request->method() === 'GET') {
-            return view('plugin/auth-login');
-        }
         $client = $this->httpClient();
+        if ($request->method() === 'GET') {
+            $response = $client->get("/webman-admin/login");
+            return (string)$response->getBody();
+        }
+
         $response = $client->post('/api/user/login', [
             'form_params' => [
                 'email' => $request->post('username'),
@@ -272,37 +329,27 @@ class PluginController extends Base
     /**
      * 获取zip下载url
      * @param $name
-     * @param $uid
-     * @param $host
      * @param $version
      * @return mixed
      * @throws BusinessException
      * @throws GuzzleException
      */
-    protected function getDownloadUrl($name, $uid, $host, $version)
+    protected function getDownloadUrl($name, $version)
     {
         $client = $this->httpClient();
-        $response = $client->post('/api/app/download', [
-            'form_params' => [
-                'name' => $name,
-                'uid' => $uid,
-                'token' => session('app-plugin-token'),
-                'referer' => $host,
-                'version' => $version,
-            ]
-        ]);
+        $response = $client->get("/app/download/$name?version=$version");
 
         $content = $response->getBody()->getContents();
         $data = json_decode($content, true);
         if (!$data) {
             $msg = "/api/app/download return $content";
             Log::error($msg);
-            throw new BusinessException('访问官方接口失败');
+            throw new BusinessException('访问官方接口失败 ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase());
         }
-        if ($data['code'] && $data['code'] != -1) {
-            throw new BusinessException($data['msg']);
+        if ($data['code'] && $data['code'] != -1 && $data['code'] != -2) {
+            throw new BusinessException($data['message']);
         }
-        if ($data['code'] == 0 && !isset($data['result']['url'])) {
+        if ($data['code'] == 0 && !isset($data['data']['url'])) {
             throw new BusinessException('官方接口返回数据错误');
         }
         return $data;
@@ -344,7 +391,7 @@ class PluginController extends Base
             $cmd = "$cmd -qq $zip_file -d $extract_to";
         } else if ($cmd = $this->findCmd('7z')) {
             $cmd = "$cmd x -bb0 -y $zip_file -o$extract_to";
-        } else if ($cmd= $this->findCmd('7zz')) {
+        } else if ($cmd = $this->findCmd('7zz')) {
             $cmd = "$cmd x -bb0 -y $zip_file -o$extract_to";
         }
         return $cmd;
@@ -406,10 +453,10 @@ class PluginController extends Base
     protected function rmDir($src)
     {
         $dir = opendir($src);
-        while(false !== ( $file = readdir($dir)) ) {
-            if (( $file != '.' ) && ( $file != '..' )) {
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
                 $full = $src . '/' . $file;
-                if ( is_dir($full) ) {
+                if (is_dir($full)) {
                     $this->rmDir($full);
                 } else {
                     unlink($full);
@@ -435,7 +482,7 @@ class PluginController extends Base
             'http_errors' => false,
             'headers' => [
                 'Referer' => \request()->fullUrl(),
-                'User-Agent'  => 'webman-app-plugin',
+                'User-Agent' => 'webman-app-plugin',
                 'Accept' => 'application/json;charset=UTF-8',
             ]
         ];
@@ -459,7 +506,7 @@ class PluginController extends Base
             'http_errors' => false,
             'headers' => [
                 'Referer' => \request()->fullUrl(),
-                'User-Agent'  => 'webman-app-plugin',
+                'User-Agent' => 'webman-app-plugin',
             ]
         ];
         if ($token = session('app-plugin-token')) {
@@ -477,8 +524,8 @@ class PluginController extends Base
      */
     protected function findCmd(string $name, string $default = null, array $extraDirs = [])
     {
-        if (\ini_get('open_basedir')) {
-            $searchPath = array_merge(explode(\PATH_SEPARATOR, \ini_get('open_basedir')), $extraDirs);
+        if (ini_get('open_basedir')) {
+            $searchPath = array_merge(explode(PATH_SEPARATOR, ini_get('open_basedir')), $extraDirs);
             $dirs = [];
             foreach ($searchPath as $path) {
                 if (@is_dir($path)) {
@@ -491,19 +538,19 @@ class PluginController extends Base
             }
         } else {
             $dirs = array_merge(
-                explode(\PATH_SEPARATOR, getenv('PATH') ?: getenv('Path')),
+                explode(PATH_SEPARATOR, getenv('PATH') ?: getenv('Path')),
                 $extraDirs
             );
         }
 
         $suffixes = [''];
-        if ('\\' === \DIRECTORY_SEPARATOR) {
+        if ('\\' === DIRECTORY_SEPARATOR) {
             $pathExt = getenv('PATHEXT');
-            $suffixes = array_merge($pathExt ? explode(\PATH_SEPARATOR, $pathExt) : $this->suffixes, $suffixes);
+            $suffixes = array_merge($pathExt ? explode(PATH_SEPARATOR, $pathExt) : ['.exe', '.bat', '.cmd', '.com'], $suffixes);
         }
         foreach ($suffixes as $suffix) {
             foreach ($dirs as $dir) {
-                if (@is_file($file = $dir.\DIRECTORY_SEPARATOR.$name.$suffix) && ('\\' === \DIRECTORY_SEPARATOR || @is_executable($file))) {
+                if (@is_file($file = $dir . DIRECTORY_SEPARATOR . $name . $suffix) && ('\\' === DIRECTORY_SEPARATOR || @is_executable($file))) {
                     return $file;
                 }
             }
