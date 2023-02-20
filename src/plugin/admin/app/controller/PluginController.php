@@ -45,14 +45,7 @@ class PluginController extends Base
      */
     public function list(Request $request): Response
     {
-        $installed = [];
-        clearstatcache();
-        $plugin_names = array_diff(scandir(base_path() . '/plugin/'), array('.', '..')) ?: [];
-        foreach ($plugin_names as $plugin_name) {
-            if (is_dir(base_path() . "/plugin/$plugin_name") && $version = $this->getPluginVersion($plugin_name)) {
-                $installed[$plugin_name] = $version;
-            }
-        }
+        $installed = $this->getLocalPlugins();
 
         $client = $this->httpClient();
         $query = $request->get();
@@ -67,13 +60,13 @@ class PluginController extends Base
             return $this->json(1, '获取数据出错');
         }
         $disabled = is_phar();
-        foreach ($data['result']['items'] as $key => $item) {
+        foreach ($data['data']['items'] as $key => $item) {
             $name = $item['name'];
-            $data['result']['items'][$key]['installed'] = $installed[$name] ?? 0;
-            $data['result']['items'][$key]['disabled'] = $disabled;
+            $data['data']['items'][$key]['installed'] = $installed[$name] ?? 0;
+            $data['data']['items'][$key]['disabled'] = $disabled;
         }
-        $items = $data['result']['items'];
-        $count = $data['result']['total'];
+        $items = $data['data']['items'];
+        $count = $data['data']['total'];
         return json(['code' => 0, 'msg' => 'ok', 'data' => $items, 'count' => $count]);
     }
 
@@ -88,7 +81,7 @@ class PluginController extends Base
         $client = $this->httpClient();
         $response = $client->get('/api/app/schema', ['query' => $request->get()]);
         $data = json_decode((string)$response->getBody(), true);
-        $result = $data['result'];
+        $result = $data['data'];
         foreach ($result as &$item) {
             $item['field'] = $item['field'] ?? $item['dataIndex'];
             unset($item['dataIndex']);
@@ -113,24 +106,13 @@ class PluginController extends Base
 
         $user = session('app-plugin-user');
         if (!$user) {
-            return $this->json(0, '请登录', [
-                'code' => 401,
-                'msg' => '请登录'
-            ]);
+            return $this->json(-1, '请登录');
         }
 
         // 获取下载zip文件url
         $data = $this->getDownloadUrl($name, $version);
-        if ($data['code'] == -1) {
-            return $this->json(0, '请登录', [
-                'code' => 401,
-                'msg' => '请登录'
-            ]);
-        } elseif ($data['code'] == -2) {
-            return $this->json(0, '未购买此插件', [
-                'code' => 402,
-                'msg' => '未购买此插件'
-            ]);
+        if ($data['code'] != 0) {
+            return $this->json($data['code'], $data['msg'], $data['data'] ?? []);
         }
 
         // 下载zip文件
@@ -421,6 +403,34 @@ class PluginController extends Base
             throw new BusinessException("解压zip时出错:$err");
         }
     }
+
+    /**
+     * 获取已安装的插件列表
+     * @return array
+     */
+    protected function getLocalPlugins(): array
+    {
+        clearstatcache();
+        $installed = [];
+        $plugin_names = array_diff(scandir(base_path() . '/plugin/'), array('.', '..')) ?: [];
+        foreach ($plugin_names as $plugin_name) {
+            if (is_dir(base_path() . "/plugin/$plugin_name") && $version = $this->getPluginVersion($plugin_name)) {
+                $installed[$plugin_name] = $version;
+            }
+        }
+        return $installed;
+    }
+
+    /**
+     * 获取已安装的插件列表
+     * @param Request $request
+     * @return Response
+     */
+    public function getInstalledPlugins(Request $request): Response
+    {
+        return $this->json(0, 'ok', $this->getLocalPlugins());
+    }
+    
 
     /**
      * 获取本地插件版本
