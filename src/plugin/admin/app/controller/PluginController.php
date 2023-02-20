@@ -71,25 +71,6 @@ class PluginController extends Base
     }
 
     /**
-     * 摘要
-     * @param Request $request
-     * @return Response
-     * @throws GuzzleException
-     */
-    public function schema(Request $request): Response
-    {
-        $client = $this->httpClient();
-        $response = $client->get('/api/app/schema', ['query' => $request->get()]);
-        $data = json_decode((string)$response->getBody(), true);
-        $result = $data['data'];
-        foreach ($result as &$item) {
-            $item['field'] = $item['field'] ?? $item['dataIndex'];
-            unset($item['dataIndex']);
-        }
-        return $this->json(0, 'ok', $result);
-    }
-
-    /**
      * 安装
      * @param Request $request
      * @return Response
