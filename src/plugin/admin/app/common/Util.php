@@ -370,7 +370,7 @@ class Util
     {
         Util::checkTableName($table);
         $database = config('database.connections')['plugin.admin.mysql']['database'];
-        $schema_raw = $section !== 'table' ? Util::db()->select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table'") : [];
+        $schema_raw = $section !== 'table' ? Util::db()->select("select * from information_schema.COLUMNS where TABLE_SCHEMA = '$database' and table_name = '$table' order by ORDINAL_POSITION") : [];
         $forms = [];
         $columns = [];
         foreach ($schema_raw as $item) {
