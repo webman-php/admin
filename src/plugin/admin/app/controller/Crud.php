@@ -274,7 +274,7 @@ class Crud extends Base
     protected function inputFilter(array $data): array
     {
         $table = config('plugin.admin.database.connections.mysql.prefix') . $this->model->getTable();
-        $allow_column = Util::db()->select("desc `$table`");
+        $allow_column = $this->model->getConnection()->select("desc `$table`");
         if (!$allow_column) {
             throw new BusinessException('表不存在', 2);
         }
