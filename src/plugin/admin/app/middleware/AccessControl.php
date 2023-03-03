@@ -21,6 +21,11 @@ class AccessControl implements MiddlewareInterface
         $controller = $request->controller;
         $action = $request->action;
 
+        $plugin=$request->plugin;
+        $app=$request->app;
+        $request->plugin='admin';
+        $request->app='';
+
         $code = 0;
         $msg = '';
         if (!Auth::canAccess($controller, $action, $code, $msg)) {
@@ -42,6 +47,8 @@ EOF
             }
 
         } else {
+            $request->plugin=$plugin;
+            $request->app=$app;
             $response = $request->method() == 'OPTIONS' ? response('') : $handler($request);
         }
 
