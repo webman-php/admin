@@ -171,6 +171,11 @@ class RoleController extends Crud
         if (!Auth::isSupperAdmin() && array_diff($ids, Auth::getScopeRoleIds())) {
             return $this->json(1, '无删除权限');
         }
+        $tree = new Tree(Role::get());
+        $descendants = $tree->getDescendant($ids);
+        if ($descendants) {
+            $ids = array_merge($ids, array_column($descendants, 'id'));
+        }
         $this->doDelete($ids);
         return $this->json(0);
     }
