@@ -103,6 +103,7 @@ class TableController extends Base
 
         $primary_key_count = 0;
         foreach ($columns as $index => $item) {
+            $columns[$index]['field'] = trim($item['field']);
             if (!$item['field']) {
                 unset($columns[$index]);
                 continue;
@@ -207,6 +208,7 @@ class TableController extends Base
 
         $primary_key_count = $auto_increment_count = 0;
         foreach ($columns as $index => $item) {
+            $columns[$index]['field'] = trim($item['field']);
             if (!$item['field']) {
                 unset($columns[$index]);
                 continue;
