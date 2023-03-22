@@ -3,11 +3,9 @@
  * Here is your custom functions.
  */
 
-use app\model\User;
+use plugin\admin\app\model\User;
 use plugin\admin\app\model\Admin;
 use plugin\admin\app\model\AdminRole;
-use plugin\admin\app\model\Role;
-use plugin\admin\app\model\Rule;
 
 /**
  * 当前管理员id
