@@ -612,6 +612,9 @@ EOF;
         $default_value_string = isset($props['initValue']) && $props['initValue'] != '' ? $props['initValue'] : $value;
         $url = $props['url'] ?? '';
         $options_string = '';
+        if (isset($props['lay-verify'])) {
+            $props['layVerify'] = $props['lay-verify'];
+        }
         unset($props['lay-verify'], $props['url']);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
@@ -673,7 +676,7 @@ EOF;
 <div class="layui-form-item">
     $select_label
     <div class="$class">
-        <div name="$field" id="$id"$verify_string$required_string value="$default_value_string" ></div>
+        <div name="$field" id="$id"$required_string value="$default_value_string" ></div>
     </div>
 </div>
 
