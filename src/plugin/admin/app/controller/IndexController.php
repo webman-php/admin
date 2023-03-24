@@ -4,7 +4,6 @@ namespace plugin\admin\app\controller;
 
 use plugin\admin\app\common\Util;
 use plugin\admin\app\model\User;
-use support\Db;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
@@ -61,7 +60,7 @@ class IndexController
         // 总用户数
         $user_count = User::count();
         // mysql版本
-        $version = Db::select('select VERSION() as version');
+        $version = Util::db()->select('select VERSION() as version');
         $mysql_version = $version[0]->version ?? 'unknown';
 
         $day7_detail = [];
