@@ -58,16 +58,20 @@ class TableController extends Base
      */
     public function show(Request $request): Response
     {
+        $limit = (int)$request->get('limit', 10);
+        $page = (int)$request->get('page', 1);
+        $offset = ($page - 1) * $limit;
         $database = config('database.connections')['plugin.admin.mysql']['database'];
         $field = $request->get('field', 'TABLE_NAME');
         $field = Util::filterAlphaNum($field);
         $order = $request->get('order', 'asc');
-        $allow_column = ['TABLE_NAME','TABLE_COMMENT','ENGINE','TABLE_ROWS','CREATE_TIME','UPDATE_TIME','TABLE_COLLATION'];
+        $allow_column = ['TABLE_NAME', 'TABLE_COMMENT', 'ENGINE', 'TABLE_ROWS', 'CREATE_TIME', 'UPDATE_TIME', 'TABLE_COLLATION'];
         if (!in_array($field, $allow_column)) {
             $field = 'TABLE_NAME';
         }
         $order = $order === 'asc' ? 'asc' : 'desc';
-        $tables = Util::db()->select("SELECT TABLE_NAME,TABLE_COMMENT,ENGINE,TABLE_ROWS,CREATE_TIME,UPDATE_TIME,TABLE_COLLATION FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' order by $field $order");
+        $total = Util::db()->select("SELECT count(*)total FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database'")[0]->total ?? 0;
+        $tables = Util::db()->select("SELECT TABLE_NAME,TABLE_COMMENT,ENGINE,TABLE_ROWS,CREATE_TIME,UPDATE_TIME,TABLE_COLLATION FROM  information_schema.`TABLES` WHERE  TABLE_SCHEMA='$database' order by $field $order limit $offset,$limit");
 
         if ($tables) {
             $table_names = array_column($tables, 'TABLE_NAME');
@@ -80,7 +84,7 @@ class TableController extends Base
             }
         }
 
-        return $this->json(0, 'ok', $tables);
+        return json(['code' => 0, 'msg' => 'ok', 'count' => $total, 'data' => $tables]);
     }
 
     /**
