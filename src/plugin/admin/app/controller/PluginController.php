@@ -351,7 +351,7 @@ class PluginController extends Base
     protected function getUnzipCmd($zip_file, $extract_to)
     {
         if ($cmd = $this->findCmd('unzip')) {
-            $cmd = "$cmd -qq $zip_file -d $extract_to";
+            $cmd = "$cmd -o -qq $zip_file -d $extract_to";
         } else if ($cmd = $this->findCmd('7z')) {
             $cmd = "$cmd x -bb0 -y $zip_file -o$extract_to";
         } else if ($cmd = $this->findCmd('7zz')) {
@@ -369,8 +369,8 @@ class PluginController extends Base
     protected function unzipWithCmd($cmd)
     {
         $desc = [
-            0 => STDIN,
-            1 => STDOUT,
+            0 => ["pipe", "r"],
+            1 => ["pipe", "w"],
             2 => ["pipe", "w"],
         ];
         $handler = proc_open($cmd, $desc, $pipes);
