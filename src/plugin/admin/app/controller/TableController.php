@@ -838,6 +838,9 @@ EOF
                 // 表格顶部搜索事件
                 form.on("submit(table-query)", function(data) {
                     table.reload("data-table", {
+                        page: {
+                            curr: 1
+                        },
                         where: data.field
                     })
                     return false;
