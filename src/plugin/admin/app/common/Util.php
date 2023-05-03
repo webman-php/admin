@@ -519,7 +519,7 @@ class Util
 
 
     /**
-     * reload webman (不支持windows)
+     * reload webman
      * @return bool
      */
     public static function reloadWebman()
@@ -529,6 +529,10 @@ class Util
                 posix_kill(posix_getppid(), SIGUSR1);
                 return true;
             } catch (Throwable $e) {}
+        } else {
+            Timer::add(1, function () {
+                Worker::stopAll();
+            });
         }
         return false;
     }
