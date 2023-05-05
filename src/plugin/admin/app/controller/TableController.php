@@ -1,17 +1,23 @@
 <?php
 
-namespace plugin\admin\app\controller;
+namespace Webman\Admin\plugin\admin\app\controller;
 
 use Doctrine\Inflector\InflectorFactory;
 use Illuminate\Database\Schema\Blueprint;
 use plugin\admin\app\common\Layui;
 use plugin\admin\app\common\Util;
+use plugin\admin\app\controller\Base;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
 use plugin\admin\app\model\Option;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
+use Throwable;
+use function plugin\admin\app\controller\base_path;
+use function plugin\admin\app\controller\config;
+use function plugin\admin\app\controller\json;
+use function plugin\admin\app\controller\view;
 
 class TableController extends Base
 {
@@ -470,44 +476,49 @@ class TableController extends Base
             $app = strtolower($explode[1]) !== 'controller' ? $explode[1] : '';
         }
 
-        $model_class = $model_file_name;
-        $model_namespace = str_replace('/' , '\\', trim($model_path, '/'));
+        Util::pauseFileMonitor();
+        try {
+            $model_class = $model_file_name;
+            $model_namespace = str_replace('/', '\\', trim($model_path, '/'));
 
-        // 创建model
-        $this->createModel($model_class, $model_namespace, base_path($model_file), $table_name);
+            // 创建model
+            $this->createModel($model_class, $model_namespace, base_path($model_file), $table_name);
 
-        $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
-        $controller_class = $controller_file_name;
-        $controller_namespace = str_replace('/' , '\\', trim($controller_path, '/'));
-        // 创建controller
-        $controller_url_name = $controller_suffix && substr($controller_class, -strlen($controller_suffix)) === $controller_suffix ? substr($controller_class, 0, -strlen($controller_suffix)) : $controller_class;
-        $controller_url_name = str_replace('_', '-', $inflector->tableize($controller_url_name));
+            $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
+            $controller_class = $controller_file_name;
+            $controller_namespace = str_replace('/', '\\', trim($controller_path, '/'));
+            // 创建controller
+            $controller_url_name = $controller_suffix && substr($controller_class, -strlen($controller_suffix)) === $controller_suffix ? substr($controller_class, 0, -strlen($controller_suffix)) : $controller_class;
+            $controller_url_name = str_replace('_', '-', $inflector->tableize($controller_url_name));
 
-        if ($plugin) {
-            array_splice($explode, 0, 2);
-        }
-        array_shift($explode);
-        if ($app) {
-            array_shift($explode);
-        }
-        foreach ($explode as $index => $item) {
-            if (strtolower($item) === 'controller') {
-                unset($explode[$index]);
+            if ($plugin) {
+                array_splice($explode, 0, 2);
             }
+            array_shift($explode);
+            if ($app) {
+                array_shift($explode);
+            }
+            foreach ($explode as $index => $item) {
+                if (strtolower($item) === 'controller') {
+                    unset($explode[$index]);
+                }
+            }
+
+            $controller_base = implode('/', $explode);
+            $controller_class_with_namespace = "$controller_namespace\\$controller_class";
+            $template_path = $controller_base ? "$controller_base/$controller_url_name" : $controller_url_name;
+            $this->createController($controller_class, $controller_namespace, base_path($controller_file), $model_class, $model_namespace, $title, $template_path);
+
+            // 创建模版
+            $template_file_path = ($plugin ? "/plugin/$plugin" : '') . '/app/' . ($app ? "$app/" : '') . 'view/' . $template_path;
+
+            $model_class_with_namespace = "$model_namespace\\$model_class";
+            $primary_key = (new $model_class_with_namespace)->getKeyName();
+            $url_path_base = ($plugin ? "/app/$plugin/" : '/') . ($app ? "$app/" : '') . $template_path;
+            $this->createTemplate(base_path($template_file_path), $table_name, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
+        } finally {
+            Util::resumeFileMonitor();
         }
-
-        $controller_base = implode('/', $explode);
-        $controller_class_with_namespace = "$controller_namespace\\$controller_class";
-        $template_path = $controller_base ? "$controller_base/$controller_url_name" : $controller_url_name;
-        $this->createController($controller_class, $controller_namespace, base_path($controller_file), $model_class, $model_namespace, $title, $template_path);
-
-        // 创建模版
-        $template_file_path = ($plugin ? "/plugin/$plugin" : '') . '/app/' . ($app ? "$app/" : '') . 'view/' . $template_path;
-
-        $model_class_with_namespace = "$model_namespace\\$model_class";
-        $primary_key = (new $model_class_with_namespace)->getKeyName();
-        $url_path_base = ($plugin ? "/app/$plugin/" : '/') . ($app ? "$app/" : '') . $template_path;
-        $this->createTemplate(base_path($template_file_path), $table_name, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
 
         $menu = Rule::where('key', $controller_class_with_namespace)->first();
         if (!$menu) {
@@ -570,7 +581,7 @@ class TableController extends Base
                 $properties .= " * @property $type \${$item->COLUMN_NAME} {$item->COLUMN_COMMENT}\n";
                 $columns[$item->COLUMN_NAME] = $item->COLUMN_NAME;
             }
-        } catch (\Throwable $e) {echo $e;}
+        } catch (Throwable $e) {echo $e;}
         if (!isset($columns['created_at']) || !isset($columns['updated_at'])) {
             $timestamps = <<<EOF
 /**
@@ -1179,17 +1190,21 @@ EOF;
             }
             if (isset($allow_column[$column])) {
                 if (is_array($value)) {
-                    if (in_array($value[0], ['', 'undefined']) || in_array($value[1], ['', 'undefined'])) {
-                        continue;
+                    if ($value[0] === 'like') {
+                        $paginator = $paginator->where($column, 'like', "%$value[1]%");
+                    } elseif (in_array($value[0], ['>', '=', '<', '<>', 'not like'])) {
+                        $paginator = $paginator->where($column, $value[0], $value[1]);
+                    } else {
+                        if($value[0] !== '' || $value[1] !== '') {
+                            $paginator = $paginator->whereBetween($column, $value);
+                        }
                     }
-                    $paginator = $paginator->whereBetween($column, $value);
                 } else {
                     $paginator = $paginator->where($column, $value);
                 }
             }
         }
         $paginator = $paginator->orderBy($field, $order)->paginate($limit, '*', 'page', $page);
-
         $items = $paginator->items();
         if ($format == 'tree') {
             $items_map = [];

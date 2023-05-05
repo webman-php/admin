@@ -1,6 +1,7 @@
 <?php
-namespace plugin\admin\app\common;
+namespace Webman\Admin\plugin\admin\app\common;
 
+use plugin\admin\app\common\Util;
 use support\exception\BusinessException;
 
 class Layui
@@ -128,6 +129,31 @@ EOF;
     }
 
     /**
+     * 输入框模糊查询
+     * @param $options
+     * @return void
+     */
+    public function inputLike($options)
+    {
+        [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
+        $type = $props['type'] ?? 'text';
+
+        $this->htmlContent .= <<<EOF
+
+<div class="layui-form-item">
+    $label
+    <div class="$class">
+        <div class="layui-input-block">
+            <input type="hidden" autocomplete="off" name="{$field}[]" value="like" class="layui-input inline-block">
+            <input type="$type" autocomplete="off" name="{$field}[]" class="layui-input">
+        </div>
+    </div>
+</div>
+
+EOF;
+    }
+
+    /**
      * 数字输入框范围
      * @param $options
      * @return void
@@ -136,6 +162,17 @@ EOF;
     {
         $options['props']['type'] = 'number';
         $this->inputRange($options);
+    }
+
+    /**
+     * 数字输入框模糊查询
+     * @param $options
+     * @return void
+     */
+    public function inputNumberLike($options)
+    {
+        $options['props']['type'] = 'number';
+        $this->inputLike($options);
     }
 
     /**
@@ -730,8 +767,12 @@ EOF;
                 continue;
             }
             // 范围查询
-            if ($type == 'search' && $info['search_type'] == 'between' && method_exists($form, "{$control}Range")) {
-                $control = "{$control}Range";
+            if ($type == 'search') {
+                if ($info['search_type'] == 'between' && method_exists($form, "{$control}Range")) {
+                    $control = "{$control}Range";
+                } elseif ($info['search_type'] == 'like' && method_exists($form, "{$control}Like")) {
+                    $control = "{$control}Like";
+                }
             }
 
             $options = [

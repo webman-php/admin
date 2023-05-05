@@ -1,7 +1,8 @@
 <?php
 
-namespace plugin\admin\app\common;
+namespace Webman\Admin\plugin\admin\app\common;
 
+use process\Monitor;
 use Throwable;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Builder;
@@ -10,6 +11,8 @@ use support\exception\BusinessException;
 use support\Db;
 use Workerman\Timer;
 use Workerman\Worker;
+use function plugin\admin\app\common\base_path;
+use function plugin\admin\app\common\config;
 
 class Util
 {
@@ -521,7 +524,7 @@ class Util
 
 
     /**
-     * reload webman
+     * Reload webman
      * @return bool
      */
     public static function reloadWebman()
@@ -537,6 +540,28 @@ class Util
             });
         }
         return false;
+    }
+
+    /**
+     * Pause file monitor
+     * @return void
+     */
+    public static function pauseFileMonitor()
+    {
+        if (method_exists(Monitor::class, 'pause')) {
+            Monitor::pause();
+        }
+    }
+
+    /**
+     * Resume file monitor
+     * @return void
+     */
+    public static function resumeFileMonitor()
+    {
+        if (method_exists(Monitor::class, 'resume')) {
+            Monitor::resume();
+        }
     }
 
 }

@@ -1,10 +1,11 @@
 <?php
 
-namespace plugin\admin\app\controller;
+namespace Webman\Admin\plugin\admin\app\controller;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use plugin\admin\app\common\Util;
+use plugin\admin\app\controller\Base;
 use process\Monitor;
 use support\exception\BusinessException;
 use support\Log;
@@ -13,6 +14,13 @@ use support\Response;
 use ZIPARCHIVE;
 use function array_diff;
 use function ini_get;
+use function plugin\admin\app\controller\base_path;
+use function plugin\admin\app\controller\config;
+use function plugin\admin\app\controller\get_realpath;
+use function plugin\admin\app\controller\is_phar;
+use function plugin\admin\app\controller\json;
+use function plugin\admin\app\controller\response;
+use function plugin\admin\app\controller\session;
 use function scandir;
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;
@@ -113,10 +121,7 @@ class PluginController extends Base
             }
         }
 
-        $monitor_support_pause = method_exists(Monitor::class, 'pause');
-        if ($monitor_support_pause) {
-            Monitor::pause();
-        }
+        Util::pauseFileMonitor();
         try {
             // 解压zip到plugin目录
             if ($has_zip_archive) {
@@ -154,9 +159,7 @@ class PluginController extends Base
                 }
             }
         } finally {
-            if ($monitor_support_pause) {
-                Monitor::resume();
-            }
+            Util::resumeFileMonitor();
         }
 
         Util::reloadWebman();

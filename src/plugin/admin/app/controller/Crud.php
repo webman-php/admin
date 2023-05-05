@@ -1,16 +1,19 @@
 <?php
 
-namespace plugin\admin\app\controller;
+namespace Webman\Admin\plugin\admin\app\controller;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use plugin\admin\app\common\Auth;
 use plugin\admin\app\common\Tree;
 use plugin\admin\app\common\Util;
+use plugin\admin\app\controller\Base;
 use support\exception\BusinessException;
 use support\Model;
 use support\Request;
 use support\Response;
+use function plugin\admin\app\controller\config;
+use function plugin\admin\app\controller\json;
 
 class Crud extends Base
 {
@@ -129,7 +132,9 @@ class Crud extends Base
         $model = $this->model;
         foreach ($where as $column => $value) {
             if (is_array($value)) {
-                if (in_array($value[0], ['>', '=', '<', '<>', 'like', 'not like'])) {
+                if ($value[0] === 'like') {
+                    $model = $model->where($column, 'like', "%$value[1]%");
+                } elseif (in_array($value[0], ['>', '=', '<', '<>', 'not like'])) {
                     $model = $model->where($column, $value[0], $value[1]);
                 } elseif ($value[0] == 'in') {
                     $model = $model->whereIn($column, $value[1]);
@@ -139,7 +144,7 @@ class Crud extends Base
                     $model = $model->whereNull($column, $value[1]);
                 } elseif ($value[0] == 'not null') {
                     $model = $model->whereNotNull($column, $value[1]);
-                } else {
+                } elseif ($value[0] !== '' || $value[1] !== '') {
                     $model = $model->whereBetween($column, $value);
                 }
             } else {

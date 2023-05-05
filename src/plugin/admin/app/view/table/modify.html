@@ -164,7 +164,7 @@
 
                                 <script type="text/html" id="form-search_type">
                                     <select name="forms[{{ d.LAY_INDEX-1 }}][search_type]" lay-verify="">
-                                        {{# layui.each([["normal", "普通查询"], ["between", "范围查询"]], function (index, item) { }}
+                                        {{# layui.each([["normal", "普通查询"], ["between", "范围查询"], ["like", "模糊查询"]], function (index, item) { }}
                                         <option value="{{ item[0] }}" {{ d.search_type==item[0]?'selected':''}}>{{ item[1] }}</option>
                                         {{#  }); }}
                                     </select>
