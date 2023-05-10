@@ -96,7 +96,7 @@
 
                                 <script type="text/html" id="col-type">
                                     <select name="columns[{{ d.LAY_INDEX-1 }}][type]" lay-verify="">
-                                        {{# layui.each(["integer","string","text","date","enum","float","tinyInteger","smallInteger","mediumInteger","bigInteger","unsignedInteger","unsignedTinyInteger","unsignedSmallInteger","unsignedMediumInteger","unsignedBigInteger","decimal","double","mediumText","longText","dateTime","time","timestamp","char","binary"], function (index, item) { }}
+                                        {{# layui.each(["integer","string","text","date","enum","float","tinyInteger","smallInteger","mediumInteger","bigInteger","unsignedInteger","unsignedTinyInteger","unsignedSmallInteger","unsignedMediumInteger","unsignedBigInteger","decimal","double","mediumText","longText","dateTime","time","timestamp","char","binary","json"], function (index, item) { }}
                                             <option value="{{ item }}" {{ d.type==item?"selected":""}}>{{ item }}</option>
                                         {{#  }); }}
                                     </select>

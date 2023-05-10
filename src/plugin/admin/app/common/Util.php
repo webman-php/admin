@@ -315,6 +315,8 @@ class Util
             'char' => ['Input'],
 
             'binary' => ['Input'],
+
+            'json' => ['input']
         ];
     }
 
