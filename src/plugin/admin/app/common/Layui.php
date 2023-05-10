@@ -211,6 +211,55 @@ EOF;
     }
 
     /**
+     * 富文本
+     * @param $options
+     * @return void
+     */
+    public function richText($options)
+    {
+        [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
+
+        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="'.$props['placeholder'].'"' : '';
+        $disabled_string = !empty($props['disabled']) ? ' disabled' : '';
+        $id = $field;
+
+        $this->htmlContent .= <<<EOF
+
+<div class="layui-form-item">
+    $label
+    <div class="$class">
+        <textarea id="$id" name="$field"$required_string$verify_string$placeholder_string$disabled_string class="layui-textarea">$value</textarea>
+    </div>
+</div>
+
+EOF;
+
+        $options_string = '';
+        foreach ($props as $key => $item) {
+            if (is_array($item)) {
+                $item = json_encode($item, JSON_UNESCAPED_UNICODE);
+                $options_string .= "\n        $key: $item,";
+            } else {
+                $options_string .= "\n        $key: \"$item\",";
+            }
+        }
+        $this->jsContent .= <<<EOF
+
+// 字段 {$options['label']} $field
+layui.use(["tinymce"], function() {
+    var tinymce = layui.tinymce
+    var edit = tinymce.render({
+        elem: "#$id",$options_string
+    });
+    edit.on("blur", function(){
+        layui.$("#$id").val(edit.getContent());
+    });
+});
+
+EOF;
+    }
+
+    /**
      * 上传组件
      * @param $options
      * @return void
