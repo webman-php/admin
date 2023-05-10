@@ -235,6 +235,9 @@ EOF;
 EOF;
 
         $options_string = '';
+        if (!isset($props['images_upload_url'])) {
+            $props['images_upload_url'] = '/app/admin/upload/image';
+        }
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
