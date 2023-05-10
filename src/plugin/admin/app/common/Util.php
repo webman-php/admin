@@ -1,6 +1,6 @@
 <?php
 
-namespace Webman\Admin\plugin\admin\app\common;
+namespace plugin\admin\app\common;
 
 use process\Monitor;
 use Throwable;
@@ -11,8 +11,6 @@ use support\exception\BusinessException;
 use support\Db;
 use Workerman\Timer;
 use Workerman\Worker;
-use function plugin\admin\app\common\base_path;
-use function plugin\admin\app\common\config;
 
 class Util
 {

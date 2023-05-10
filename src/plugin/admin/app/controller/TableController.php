@@ -1,12 +1,11 @@
 <?php
 
-namespace Webman\Admin\plugin\admin\app\controller;
+namespace plugin\admin\app\controller;
 
 use Doctrine\Inflector\InflectorFactory;
 use Illuminate\Database\Schema\Blueprint;
 use plugin\admin\app\common\Layui;
 use plugin\admin\app\common\Util;
-use plugin\admin\app\controller\Base;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
 use plugin\admin\app\model\Option;
@@ -14,10 +13,6 @@ use support\exception\BusinessException;
 use support\Request;
 use support\Response;
 use Throwable;
-use function plugin\admin\app\controller\base_path;
-use function plugin\admin\app\controller\config;
-use function plugin\admin\app\controller\json;
-use function plugin\admin\app\controller\view;
 
 class TableController extends Base
 {

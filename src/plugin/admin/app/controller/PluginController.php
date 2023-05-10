@@ -1,6 +1,6 @@
 <?php
 
-namespace Webman\Admin\plugin\admin\app\controller;
+namespace plugin\admin\app\controller;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -14,13 +14,6 @@ use support\Response;
 use ZIPARCHIVE;
 use function array_diff;
 use function ini_get;
-use function plugin\admin\app\controller\base_path;
-use function plugin\admin\app\controller\config;
-use function plugin\admin\app\controller\get_realpath;
-use function plugin\admin\app\controller\is_phar;
-use function plugin\admin\app\controller\json;
-use function plugin\admin\app\controller\response;
-use function plugin\admin\app\controller\session;
 use function scandir;
 use const DIRECTORY_SEPARATOR;
 use const PATH_SEPARATOR;

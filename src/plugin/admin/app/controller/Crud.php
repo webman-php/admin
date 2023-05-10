@@ -1,19 +1,16 @@
 <?php
 
-namespace Webman\Admin\plugin\admin\app\controller;
+namespace plugin\admin\app\controller;
 
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use plugin\admin\app\common\Auth;
 use plugin\admin\app\common\Tree;
 use plugin\admin\app\common\Util;
-use plugin\admin\app\controller\Base;
 use support\exception\BusinessException;
 use support\Model;
 use support\Request;
 use support\Response;
-use function plugin\admin\app\controller\config;
-use function plugin\admin\app\controller\json;
 
 class Crud extends Base
 {
