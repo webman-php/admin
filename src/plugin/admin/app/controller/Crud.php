@@ -118,7 +118,7 @@ class Crud extends Base
     }
 
     /**
-     * 执行查询
+     * 指定查询where条件,并没有真正的查询数据库操作
      * @param array $where
      * @param string|null $field
      * @param string $order
@@ -155,7 +155,7 @@ class Crud extends Base
     }
 
     /**
-     * 格式化数据
+     * 执行真正查询，并返回格式化数据
      * @param $query
      * @param $format
      * @param $limit
