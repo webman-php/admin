@@ -799,6 +799,7 @@ EOF;
             $field = $info['field'];
             $default = $columns[$key]['default'];
             $control = strtolower($info['control']);
+            $auto_increment = $columns[$key]['auto_increment'];
             // 搜索框里上传组件替换为input
             if ($type == 'search' && in_array($control, ['upload', 'uploadimg'])) {
                 $control = 'input';
@@ -807,24 +808,34 @@ EOF;
 
             $props = Util::getControlProps($control, $info['control_args']);
             // 增加修改记录验证必填项
-            if ($filter == 'form_show' && !isset($props['lay-verify']) && !$columns[$key]['nullable'] && $default === null && ($field !== 'password' || $type === 'insert')) {
-                $props['lay-verify'] = 'required';
+            if ($filter == 'form_show' && !$columns[$key]['nullable'] && $default === null && ($field !== 'password' || $type === 'insert')) {
+                if (!isset($props['lay-verify'])) {
+                    $props['lay-verify'] = 'required';
+                // 非类似字符串类型不允许传空
+                } elseif (!in_array($columns[$key]['type'], ['string', 'text', 'mediumText', 'longText', 'char', 'binary', 'json'])
+                    && strpos($props['lay-verify'], 'required') === false) {
+                    $props['lay-verify'] = 'required|' . $props['lay-verify'];
+                }
             }
             // 增加记录显示默认值
             if ($type === 'insert' && !isset($props['value']) && $default !== null) {
                 $props['value'] = $default;
             }
-            // 表单不显示主键
-            if ($filter == 'form_show' && $primary_key && $field == $primary_key) {
+            // 主键是自增字段或者表单是更新类型不显示主键
+            if ($primary_key && $field == $primary_key && (($type == 'insert' && $auto_increment) || $type == 'update')) {
                 continue;
             }
-            // 范围查询
+            // 查询类型
             if ($type == 'search') {
                 if ($info['search_type'] == 'between' && method_exists($form, "{$control}Range")) {
                     $control = "{$control}Range";
                 } elseif ($info['search_type'] == 'like' && method_exists($form, "{$control}Like")) {
                     $control = "{$control}Like";
                 }
+            }
+            // 查询类型移除lay-verify
+            if ($type == 'search' && !empty($props['lay-verify'])) {
+                $props['lay-verify'] = '';
             }
 
             $options = [

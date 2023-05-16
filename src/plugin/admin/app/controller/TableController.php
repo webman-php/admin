@@ -563,6 +563,7 @@ class TableController extends Base
         $pk = 'id';
         $properties = '';
         $timestamps = '';
+        $incrementing = '';
         $columns = [];
         try {
             $database = config('database.connections')['plugin.admin.mysql']['database'];
@@ -571,6 +572,18 @@ class TableController extends Base
                 if ($item->COLUMN_KEY === 'PRI') {
                     $pk = $item->COLUMN_NAME;
                     $item->COLUMN_COMMENT .= "(主键)";
+                    if (strpos(strtolower($item->DATA_TYPE), 'int') === false) {
+                        $incrementing = <<<EOF
+/**
+     * Indicates if the model's ID is auto-incrementing.
+     *
+     * @var bool
+     */
+    public \$incrementing = false;
+
+EOF;
+;
+                    }
                 }
                 $type = $this->getType($item->DATA_TYPE);
                 $properties .= " * @property $type \${$item->COLUMN_NAME} {$item->COLUMN_COMMENT}\n";
@@ -585,6 +598,7 @@ class TableController extends Base
      * @var bool
      */
     public \$timestamps = false;
+
 EOF;
 
         }
@@ -614,9 +628,8 @@ class $class extends Base
      * @var string
      */
     protected \$primaryKey = '$pk';
-    
     $timestamps
-    
+    $incrementing
     
 }
 
@@ -858,6 +871,16 @@ EOF
                         where: []
                     })
                 });
+                
+                // 字段允许为空
+                form.verify({
+                    phone: [/(^$)|^1\d{10}$/, "请输入正确的手机号"],
+                    email: [/(^$)|^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/, "邮箱格式不正确"],
+                    url: [/(^$)|(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/, "链接格式不正确"],
+                    number: [/(^$)|^\d+$/,'只能填写数字'],
+                    date: [/(^$)|^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/, "日期格式不正确"],
+                    identity: [/(^$)|(^\d{15}$)|(^\d{17}(x|X|\d)$)/, "请输入正确的身份证号"]
+                });
 
                 // 表格排序事件
                 table.on("sort(data-table)", function(obj){
@@ -999,6 +1022,15 @@ EOF;
             $js
             //提交事件
             layui.use(["form", "popup"], function () {
+                // 字段验证允许为空
+                layui.form.verify({
+                    phone: [/(^$)|^1\d{10}$/, "请输入正确的手机号"],
+                    email: [/(^$)|^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/, "邮箱格式不正确"],
+                    url: [/(^$)|(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/, "链接格式不正确"],
+                    number: [/(^$)|^\d+$/,'只能填写数字'],
+                    date: [/(^$)|^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/, "日期格式不正确"],
+                    identity: [/(^$)|(^\d{15}$)|(^\d{17}(x|X|\d)$)/, "请输入正确的身份证号"]
+                });
                 layui.form.on("submit(save)", function (data) {
                     layui.$.ajax({
                         url: INSERT_API,
@@ -1109,6 +1141,15 @@ EOF;
 
             //提交事件
             layui.use(["form", "popup"], function () {
+                // 字段验证允许为空
+                layui.form.verify({
+                    phone: [/(^$)|^1\d{10}$/, "请输入正确的手机号"],
+                    email: [/(^$)|^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/, "邮箱格式不正确"],
+                    url: [/(^$)|(^#)|(^http(s*):\/\/[^\s]+\.[^\s]+)/, "链接格式不正确"],
+                    number: [/(^$)|^\d+$/,'只能填写数字'],
+                    date: [/(^$)|^(\d{4})[-\/](\d{1}|0\d{1}|1[0-2])([-\/](\d{1}|0\d{1}|[1-2][0-9]|3[0-1]))*$/, "日期格式不正确"],
+                    identity: [/(^$)|(^\d{15}$)|(^\d{17}(x|X|\d)$)/, "请输入正确的身份证号"]
+                });
                 layui.form.on("submit(save)", function (data) {
                     data.field[PRIMARY_KEY] = layui.url().search[PRIMARY_KEY];
                     layui.$.ajax({
