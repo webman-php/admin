@@ -799,6 +799,7 @@ EOF;
             $field = $info['field'];
             $default = $columns[$key]['default'];
             $control = strtolower($info['control']);
+            $auto_increment = $columns[$key]['auto_increment'];
             // 搜索框里上传组件替换为input
             if ($type == 'search' && in_array($control, ['upload', 'uploadimg'])) {
                 $control = 'input';
@@ -815,7 +816,7 @@ EOF;
                 $props['value'] = $default;
             }
             // 表单不显示主键
-            if ($filter == 'form_show' && $primary_key && $field == $primary_key) {
+            if (($filter == 'form_show' && $primary_key && $field == $primary_key && $auto_increment)) {
                 continue;
             }
             // 范围查询
