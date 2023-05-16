@@ -833,15 +833,9 @@ EOF;
                     $control = "{$control}Like";
                 }
             }
-            // 查询移除required
+            // 查询类型移除lay-verify
             if ($type == 'search' && !empty($props['lay-verify'])) {
-                $verify_items = explode('|', $props['lay-verify']);
-                foreach ($verify_items as $key => $value) {
-                    if ($value === 'required') {
-                        unset($verify_items[$key]);
-                    }
-                }
-                $props['lay-verify'] = implode('|', $verify_items);
+                $props['lay-verify'] = '';
             }
 
             $options = [
