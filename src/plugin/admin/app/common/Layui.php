@@ -808,15 +808,21 @@ EOF;
 
             $props = Util::getControlProps($control, $info['control_args']);
             // 增加修改记录验证必填项
-            if ($filter == 'form_show' && !isset($props['lay-verify']) && !$columns[$key]['nullable'] && $default === null && ($field !== 'password' || $type === 'insert')) {
-                $props['lay-verify'] = 'required';
+            if ($filter == 'form_show' && !$columns[$key]['nullable'] && $default === null && ($field !== 'password' || $type === 'insert')) {
+                if (!isset($props['lay-verify'])) {
+                    $props['lay-verify'] = 'required';
+                // 非类似字符串类型不允许传空
+                } elseif (!in_array($columns[$key]['type'], ['string', 'text', 'mediumText', 'longText', 'char', 'binary', 'json'])
+                    && strpos($props['lay-verify'], 'required') === false) {
+                    $props['lay-verify'] = 'required|' . $props['lay-verify'];
+                }
             }
             // 增加记录显示默认值
             if ($type === 'insert' && !isset($props['value']) && $default !== null) {
                 $props['value'] = $default;
             }
-            // 表单不显示主键
-            if ($filter == 'form_show' && $primary_key && $field == $primary_key && $auto_increment) {
+            // 主键是自增字段或者表单是更新类型不显示主键
+            if ($primary_key && $field == $primary_key && (($type == 'insert' && $auto_increment) || $type == 'update')) {
                 continue;
             }
             // 查询类型
