@@ -563,6 +563,7 @@ class TableController extends Base
         $pk = 'id';
         $properties = '';
         $timestamps = '';
+        $incrementing = '';
         $columns = [];
         try {
             $database = config('database.connections')['plugin.admin.mysql']['database'];
@@ -571,6 +572,18 @@ class TableController extends Base
                 if ($item->COLUMN_KEY === 'PRI') {
                     $pk = $item->COLUMN_NAME;
                     $item->COLUMN_COMMENT .= "(主键)";
+                    if (strpos(strtolower($item->DATA_TYPE), 'int') === false) {
+                        $incrementing = <<<EOF
+/**
+     * Indicates if the model's ID is auto-incrementing.
+     *
+     * @var bool
+     */
+    public \$incrementing = false;
+
+EOF;
+;
+                    }
                 }
                 $type = $this->getType($item->DATA_TYPE);
                 $properties .= " * @property $type \${$item->COLUMN_NAME} {$item->COLUMN_COMMENT}\n";
@@ -585,6 +598,7 @@ class TableController extends Base
      * @var bool
      */
     public \$timestamps = false;
+
 EOF;
 
         }
@@ -614,9 +628,8 @@ class $class extends Base
      * @var string
      */
     protected \$primaryKey = '$pk';
-    
     $timestamps
-    
+    $incrementing
     
 }
 
