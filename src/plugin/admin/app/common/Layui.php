@@ -816,16 +816,26 @@ EOF;
                 $props['value'] = $default;
             }
             // 表单不显示主键
-            if (($filter == 'form_show' && $primary_key && $field == $primary_key && $auto_increment)) {
+            if ($filter == 'form_show' && $primary_key && $field == $primary_key && $auto_increment) {
                 continue;
             }
-            // 范围查询
+            // 查询类型
             if ($type == 'search') {
                 if ($info['search_type'] == 'between' && method_exists($form, "{$control}Range")) {
                     $control = "{$control}Range";
                 } elseif ($info['search_type'] == 'like' && method_exists($form, "{$control}Like")) {
                     $control = "{$control}Like";
                 }
+            }
+            // 查询移除required
+            if ($type == 'search' && !empty($props['lay-verify'])) {
+                $verify_items = explode('|', $props['lay-verify']);
+                foreach ($verify_items as $key => $value) {
+                    if ($value === 'required') {
+                        unset($verify_items[$key]);
+                    }
+                }
+                $props['lay-verify'] = implode('|', $verify_items);
             }
 
             $options = [
