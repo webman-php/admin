@@ -306,7 +306,7 @@ class PluginController extends Base
             throw new BusinessException('访问官方接口失败 ' . $response->getStatusCode() . ' ' . $response->getReasonPhrase());
         }
         if ($data['code'] && $data['code'] != -1 && $data['code'] != -2) {
-            throw new BusinessException($data['message']);
+            throw new BusinessException($data['msg']);
         }
         if ($data['code'] == 0 && !isset($data['data']['url'])) {
             throw new BusinessException('官方接口返回数据错误');

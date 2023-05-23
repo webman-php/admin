@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS `wa_admin_roles` (
   `admin_id` int(11) NOT NULL COMMENT '管理员id',
   PRIMARY KEY (`id`),
   UNIQUE KEY `role_admin_id` (`role_id`,`admin_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员角色表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='管理员角色表';
 
 CREATE TABLE IF NOT EXISTS `wa_admins` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `wa_admins` (
   `status` tinyint(4) DEFAULT NULL COMMENT '禁用',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='管理员表';
 
 CREATE TABLE IF NOT EXISTS `wa_options` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `wa_options` (
   `created_at` datetime NOT NULL DEFAULT '2022-08-15 00:00:00' COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT '2022-08-15 00:00:00' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='选项表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='选项表';
 
 
 LOCK TABLES `wa_options` WRITE;
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `wa_roles` (
   `updated_at` datetime NOT NULL COMMENT '更新时间',
   `pid` int(10) unsigned DEFAULT NULL COMMENT '父级',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理员角色';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='管理员角色';
 
 LOCK TABLES `wa_roles` WRITE;
 INSERT INTO `wa_roles` VALUES (1,'超级管理员','*','2022-08-13 16:15:01','2022-12-23 12:05:07',NULL);
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `wa_rules` (
   `type` int(11) NOT NULL DEFAULT '1' COMMENT '类型',
   `weight` int(11) DEFAULT '0' COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限规则';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='权限规则';
 
 
 CREATE TABLE IF NOT EXISTS `wa_uploads` (
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS `wa_uploads` (
   KEY `admin_id` (`admin_id`),
   KEY `name` (`name`),
   KEY `ext` (`ext`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='附件';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='附件';
 
 CREATE TABLE IF NOT EXISTS `wa_users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -114,4 +114,4 @@ CREATE TABLE IF NOT EXISTS `wa_users` (
   KEY `join_time` (`join_time`),
   KEY `mobile` (`mobile`),
   KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='用户表';

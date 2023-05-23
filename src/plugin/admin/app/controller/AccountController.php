@@ -58,6 +58,7 @@ class AccountController extends Crud
      */
     public function login(Request $request): Response
     {
+        $this->checkDatabaseAvailable();
         $captcha = $request->post('captcha');
         if (strtolower($captcha) !== session('captcha-login')) {
             return $this->json(1, '验证码错误');
@@ -244,6 +245,13 @@ class AccountController extends Crud
         $limit_file = $limit_log_path . '/' . md5($username) . '.limit';
         if (is_file($limit_file)) {
             unlink($limit_file);
+        }
+    }
+
+    protected function checkDatabaseAvailable()
+    {
+        if (!config('plugin.admin.database')) {
+            throw new BusinessException('请重启webman');
         }
     }
 
