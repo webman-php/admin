@@ -64,9 +64,8 @@
                                     location.reload();
                                 })
                             } else {
-                                layui.popup.failure(res.msg, function () {
-                                    switchCaptcha();
-                                })
+                                layui.popup.failure(res.msg)
+                                switchCaptcha();
                             }
                         }
                     });

@@ -53,4 +53,12 @@ class Base
         return json(['code' => $code, 'data' => $data, 'msg' => $msg]);
     }
 
+    protected function success(array $data = [], string $msg = '成功'): Response
+    {
+        return $this->json(0, $msg, $data);
+    }
+    protected function fail(array $data = [], string $msg = '失败'): Response
+    {
+        return $this->json(1, $msg, $data);
+    }
 }

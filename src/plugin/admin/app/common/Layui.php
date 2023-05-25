@@ -873,7 +873,7 @@ EOF;
             $field = $info['field'];
             $templet = '';
             $schema = <<<EOF
-title: "$title",
+title: "$title",align: "center",
 		field: "$field",$hide_str$sort_str
 EOF;
 
@@ -981,7 +981,8 @@ EOF;
 // 表头参数
 let cols = [
 	{
-		type: "checkbox"
+		type: "checkbox",
+		align: "center"
 	}$cols,{
 		title: "操作",
 		toolbar: "#table-bar",
