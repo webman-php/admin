@@ -134,9 +134,11 @@ class Crud extends Base
                 } elseif (in_array($value[0], ['>', '=', '<', '<>', 'not like'])) {
                     $model = $model->where($column, $value[0], $value[1]);
                 } elseif ($value[0] == 'in') {
-                    $model = $model->whereIn($column, $value[1]);
+                    $valArr = explode(",",trim($value[1]));
+                    $valArr && $model = $model->whereIn($column, $valArr);
                 } elseif ($value[0] == 'not in') {
-                    $model = $model->whereNotIn($column, $value[1]);
+                    $valArr = explode(",",trim($value[1]));
+                    $valArr && $model = $model->whereNotIn($column, $valArr);
                 } elseif ($value[0] == 'null') {
                     $model = $model->whereNull($column, $value[1]);
                 } elseif ($value[0] == 'not null') {
