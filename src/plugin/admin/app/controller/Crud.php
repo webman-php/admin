@@ -101,6 +101,7 @@ class Crud extends Base
         }
         foreach ($where as $column => $value) {
             if ($value === '' || !isset($allow_column[$column]) ||
+                (is_array($value) && (count($value) <= 1)) ||
                 (is_array($value) && (in_array($value[0], ['', 'undefined']) || in_array($value[1], ['', 'undefined'])))) {
                 unset($where[$column]);
             }
@@ -134,10 +135,20 @@ class Crud extends Base
                 } elseif (in_array($value[0], ['>', '=', '<', '<>', 'not like'])) {
                     $model = $model->where($column, $value[0], $value[1]);
                 } elseif ($value[0] == 'in') {
-                    $model = $model->whereIn($column, $value[1]);
+                    if (is_string($value[1])) {
+                        $valArr = explode(",", trim($value[1]));
+                        $valArr && $model = $model->whereIn($column, $valArr);
+                    } else {
+                        $model = $model->whereIn($column, $value[1]);
+                    }
                 } elseif ($value[0] == 'not in') {
-                    $model = $model->whereNotIn($column, $value[1]);
-                } elseif ($value[0] == 'null') {
+                    if (is_string($value[1])) {
+                        $valArr = explode(",", trim($value[1]));
+                        $valArr && $model = $model->whereNotIn($column, $valArr);
+                    } else {
+                        $model = $model->whereNotIn($column, $value[1]);
+                    }
+                }elseif ($value[0] == 'null') {
                     $model = $model->whereNull($column, $value[1]);
                 } elseif ($value[0] == 'not null') {
                     $model = $model->whereNotNull($column, $value[1]);
