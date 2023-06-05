@@ -9,6 +9,7 @@ use plugin\admin\app\model\Rule;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
+use Throwable;
 
 /**
  * 角色管理
@@ -37,6 +38,7 @@ class RoleController extends Crud
     /**
      * 浏览
      * @return Response
+     * @throws Throwable
      */
     public function index(): Response
     {
@@ -68,6 +70,7 @@ class RoleController extends Crud
      * @param Request $request
      * @return Response
      * @throws BusinessException
+     * @throws Throwable
      */
     public function insert(Request $request): Response
     {
@@ -92,7 +95,7 @@ class RoleController extends Crud
      * 更新
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function update(Request $request): Response
     {

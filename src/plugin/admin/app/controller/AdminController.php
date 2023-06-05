@@ -8,6 +8,7 @@ use plugin\admin\app\model\AdminRole;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
+use Throwable;
 
 /**
  * 管理员列表 
@@ -45,10 +46,11 @@ class AdminController extends Crud
     {
         $this->model = new Admin;
     }
-    
+
     /**
      * 浏览
      * @return Response
+     * @throws Throwable
      */
     public function index(): Response
     {
@@ -89,7 +91,7 @@ class AdminController extends Crud
      * 插入
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function insert(Request $request): Response
     {
@@ -120,8 +122,8 @@ class AdminController extends Crud
      * 更新
      * @param Request $request
      * @return Response
-     * @throws BusinessException
-    */
+     * @throws BusinessException|Throwable
+     */
     public function update(Request $request): Response
     {
         if ($request->method() === 'POST') {

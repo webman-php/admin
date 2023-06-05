@@ -7,6 +7,7 @@ use plugin\admin\app\model\Option;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
+use Throwable;
 
 /**
  * 系统设置
@@ -22,6 +23,7 @@ class ConfigController extends Base
     /**
      * 账户设置
      * @return Response
+     * @throws Throwable
      */
     public function index(): Response
     {

@@ -7,6 +7,7 @@ use plugin\admin\app\model\Option;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
+use Throwable;
 
 /**
  * 字典管理 
@@ -21,6 +22,7 @@ class DictController extends Base
     /**
      * 浏览
      * @return Response
+     * @throws Throwable
      */
     public function index(): Response
     {
@@ -50,7 +52,7 @@ class DictController extends Base
      * 插入
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function insert(Request $request): Response
     {
@@ -69,8 +71,8 @@ class DictController extends Base
      * 更新
      * @param Request $request
      * @return Response
-     * @throws BusinessException
-    */
+     * @throws BusinessException|Throwable
+     */
     public function update(Request $request): Response
     {
         if ($request->method() === 'POST') {

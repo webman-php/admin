@@ -8,6 +8,7 @@ use plugin\admin\app\model\Admin;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
+use Throwable;
 use Webman\Captcha\CaptchaBuilder;
 use Webman\Captcha\PhraseBuilder;
 
@@ -44,6 +45,7 @@ class AccountController extends Crud
     /**
      * 账户设置
      * @return Response
+     * @throws Throwable
      */
     public function index()
     {

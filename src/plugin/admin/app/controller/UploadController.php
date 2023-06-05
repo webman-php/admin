@@ -10,6 +10,7 @@ use plugin\admin\app\model\Upload;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
+use Throwable;
 
 /**
  * 附件管理 
@@ -35,10 +36,11 @@ class UploadController extends Crud
     {
         $this->model = new Upload;
     }
-    
+
     /**
      * 浏览
      * @return Response
+     * @throws Throwable
      */
     public function index(): Response
     {
@@ -48,6 +50,7 @@ class UploadController extends Crud
     /**
      * 浏览附件
      * @return Response
+     * @throws Throwable
      */
     public function attachment(): Response
     {
@@ -77,7 +80,7 @@ class UploadController extends Crud
      * 更新附件
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function update(Request $request): Response
     {
@@ -91,7 +94,7 @@ class UploadController extends Crud
      * 添加附件
      * @param Request $request
      * @return Response
-     * @throws Exception
+     * @throws Exception|Throwable
      */
     public function insert(Request $request): Response
     {

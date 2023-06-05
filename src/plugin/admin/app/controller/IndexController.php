@@ -8,6 +8,7 @@ use support\exception\BusinessException;
 use support\Request;
 use support\Response;
 use think\db\Where;
+use Throwable;
 use Workerman\Worker;
 
 class IndexController
@@ -29,7 +30,7 @@ class IndexController
      * 后台主页
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function index(Request $request): Response
     {
@@ -48,6 +49,7 @@ class IndexController
      * 仪表板
      * @param Request $request
      * @return Response
+     * @throws Throwable
      */
     public function dashboard(Request $request): Response
     {

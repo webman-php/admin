@@ -25,6 +25,7 @@ class TableController extends Base
     /**
      * 浏览
      * @return Response
+     * @throws Throwable
      */
     public function index(): Response
     {
@@ -35,7 +36,7 @@ class TableController extends Base
      * 查看表
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function view(Request $request): Response
     {
@@ -92,7 +93,7 @@ class TableController extends Base
      * 创建表
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function create(Request $request): Response
     {
@@ -191,7 +192,7 @@ class TableController extends Base
      * 修改表
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function modify(Request $request): Response
     {
@@ -390,7 +391,7 @@ class TableController extends Base
      * 一键菜单
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function crud(Request $request): Response
     {
@@ -1271,7 +1272,7 @@ EOF;
      * 插入记录
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function insert(Request $request): Response
     {
@@ -1322,7 +1323,7 @@ EOF;
      * 更新记录
      * @param Request $request
      * @return Response
-     * @throws BusinessException
+     * @throws BusinessException|Throwable
      */
     public function update(Request $request): Response
     {
