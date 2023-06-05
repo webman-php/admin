@@ -1483,7 +1483,7 @@ EOF;
             $column['auto_increment'] = false;
         }
 
-        $column_def = [$table, $method](...$args);
+        $column_def = call_user_func_array([$table, $method], $args);
         if (!empty($column['comment'])) {
             $column_def = $column_def->comment($column['comment']);
         }
