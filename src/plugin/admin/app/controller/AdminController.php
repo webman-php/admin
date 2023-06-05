@@ -52,7 +52,7 @@ class AdminController extends Crud
      */
     public function index(): Response
     {
-        return view('admin/index');
+        return raw_view('admin/index');
     }
 
     /**
@@ -113,7 +113,7 @@ class AdminController extends Crud
             }
             return $this->json(0, 'ok', ['id' => $admin_id]);
         }
-        return view('admin/insert');
+        return raw_view('admin/insert');
     }
 
     /**
@@ -172,7 +172,7 @@ class AdminController extends Crud
             return $this->json(0);
         }
 
-        return view('admin/update');
+        return raw_view('admin/update');
     }
 
     /**

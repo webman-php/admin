@@ -16,7 +16,7 @@ class DevController
      */
     public function formBuild()
     {
-        return view('dev/form-build');
+        return raw_view('dev/form-build');
     }
 
 }

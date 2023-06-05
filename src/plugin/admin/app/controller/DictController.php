@@ -24,7 +24,7 @@ class DictController extends Base
      */
     public function index(): Response
     {
-        return view('dict/index');
+        return raw_view('dict/index');
     }
 
     /**
@@ -62,7 +62,7 @@ class DictController extends Base
             $values = (array)$request->post('value', []);
             Dict::save($name, $values);
         }
-        return view('dict/insert');
+        return raw_view('dict/insert');
     }
 
     /**
@@ -80,7 +80,7 @@ class DictController extends Base
             }
             Dict::save($name, $request->post('value'));
         }
-        return view('dict/update');
+        return raw_view('dict/update');
     }
 
     /**

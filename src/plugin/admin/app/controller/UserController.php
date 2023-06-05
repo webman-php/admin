@@ -35,7 +35,7 @@ class UserController extends Crud
      */
     public function index(): Response
     {
-        return view('user/index');
+        return raw_view('user/index');
     }
 
     /**
@@ -49,7 +49,7 @@ class UserController extends Crud
         if ($request->method() === 'POST') {
             return parent::insert($request);
         }
-        return view('user/insert');
+        return raw_view('user/insert');
     }
 
     /**
@@ -63,7 +63,7 @@ class UserController extends Crud
         if ($request->method() === 'POST') {
             return parent::update($request);
         }
-        return view('user/update');
+        return raw_view('user/update');
     }
 
 }

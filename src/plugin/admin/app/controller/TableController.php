@@ -28,7 +28,7 @@ class TableController extends Base
      */
     public function index(): Response
     {
-        return view('table/index');
+        return raw_view('table/index');
     }
 
     /**
@@ -44,7 +44,7 @@ class TableController extends Base
         $form = Layui::buildForm($table, 'search');
         $table_info = Util::getSchema($table, 'table');
         $primary_key = $table_info['primary_key'][0] ?? null;
-        return view("table/view", [
+        return raw_view("table/view", [
             'form' => $form,
             'table' => $table,
             'primary_key' => $primary_key,
@@ -97,7 +97,7 @@ class TableController extends Base
     public function create(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view("table/create", []);
+            return raw_view("table/create", []);
         }
         $data = $request->post();
         $table_name = Util::filterAlphaNum($data['table']);
@@ -196,7 +196,7 @@ class TableController extends Base
     public function modify(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return view("table/modify", ['table' => $request->get('table')]);
+            return raw_view("table/modify", ['table' => $request->get('table')]);
         }
         $data = $request->post();
         $old_table_name = Util::filterAlphaNum($data['old_table']);
@@ -402,7 +402,7 @@ class TableController extends Base
         $model_class = $inflector->classify($inflector->singularize($table_basename));
         $base_path = '/plugin/admin/app';
         if ($request->method() === 'GET') {
-            return view("table/crud", [
+            return raw_view("table/crud", [
                 'table' => $table_name,
                 'model' => "$base_path/model/$model_class.php",
                 'controller' => "$base_path/controller/{$model_class}Controller.php",
@@ -693,7 +693,7 @@ class $controller_class extends Crud
      */
     public function index(): Response
     {
-        return view('$template_path/index');
+        return raw_view('$template_path/index');
     }
 
     /**
@@ -707,7 +707,7 @@ class $controller_class extends Crud
         if (\$request->method() === 'POST') {
             return parent::insert(\$request);
         }
-        return view('$template_path/insert');
+        return raw_view('$template_path/insert');
     }
 
     /**
@@ -721,7 +721,7 @@ class $controller_class extends Crud
         if (\$request->method() === 'POST') {
             return parent::update(\$request);
         }
-        return view('$template_path/update');
+        return raw_view('$template_path/update');
     }
 
 }
@@ -1278,7 +1278,7 @@ EOF;
         if ($request->method() === 'GET') {
             $table = $request->get('table');
             $form = Layui::buildForm($table);
-            return view("table/insert", [
+            return raw_view("table/insert", [
                 'form' => $form,
                 'table' => $table
             ]);
@@ -1332,7 +1332,7 @@ EOF;
             $primary_key = $table_info['primary_key'][0] ?? null;
             $value = htmlspecialchars($request->get($primary_key, ''));
             $form = Layui::buildForm($table,'update');
-            return view("table/update", [
+            return raw_view("table/update", [
                 'primary_key' => $primary_key,
                 'value' => $value,
                 'form' => $form,

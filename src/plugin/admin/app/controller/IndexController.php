@@ -35,13 +35,13 @@ class IndexController
     {
         clearstatcache();
         if (!is_file(base_path('plugin/admin/config/database.php'))) {
-            return view('index/install');
+            return raw_view('index/install');
         }
         $admin = admin();
         if (!$admin) {
-            return view('account/login');
+            return raw_view('account/login');
         }
-        return view('index/index');
+        return raw_view('index/index');
     }
 
     /**
@@ -71,7 +71,7 @@ class IndexController
                 ->where('created_at', '<', "$date 23:59:59")->count();
         }
 
-        return view('index/dashboard', [
+        return raw_view('index/dashboard', [
             'today_user_count' => $today_user_count,
             'day7_user_count' => $day7_user_count,
             'day30_user_count' => $day30_user_count,
