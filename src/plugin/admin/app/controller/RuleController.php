@@ -282,7 +282,6 @@ class RuleController extends Crud
                 $this->removeNotContain($item['children'], $key, $values);
             }
         }
-        $array = array_values($array);
     }
 
     /**
