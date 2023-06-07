@@ -1124,7 +1124,7 @@ EOF;
                             }
                             if (typeof obj[0] === "undefined" || !obj[0].nodeName) return;
                             if (obj[0].nodeName.toLowerCase() === "textarea") {
-                                obj.val(layui.util.escape(value));
+                                obj.val(value);
                             } else {
                                 obj.attr("value", value);
                             }

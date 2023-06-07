@@ -13,6 +13,8 @@ layui.define(['jquery'],function (exports) {
 
     var settings = {
         base_url: modPath
+        , relative_urls: false
+        , remove_script_host: true
         , images_upload_url: ''//图片上传接口，可在option传入，也可在这里修改，option的值优先
         , language: 'zh_CN'//语言，可在option传入，也可在这里修改，option的值优先
         , response: {//后台返回数据格式设置
@@ -105,6 +107,10 @@ layui.define(['jquery'],function (exports) {
         option.suffix= isset(option.suffix) ? option.suffix : (plugin_filename.indexOf('.min')>-1 ? '.min' : '')
 
         option.base_url = isset(option.base_url) ? option.base_url : settings.base_url
+
+        option.relative_urls = isset(option.relative_urls) ? option.relative_urls : settings.relative_urls
+
+        option.remove_script_host = isset(option.remove_script_host) ? option.remove_script_host : settings.remove_script_host
 
         option.language = isset(option.language) ? option.language : settings.language
 
