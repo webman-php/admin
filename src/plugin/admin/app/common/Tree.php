@@ -168,7 +168,7 @@ class Tree
         }
         if (!isset($array['children'])) {
             $current = current($array);
-            if (!is_array($current) || !isset($current['children'])) {
+            if (!is_array($current)) {
                 return $array;
             }
             $tree = array_values($array);
