@@ -61,7 +61,7 @@ class AccountController extends Crud
     public function login(Request $request): Response
     {
         $this->checkDatabaseAvailable();
-        $captcha = $request->post('captcha');
+        $captcha = $request->post('captcha', '');
         if (strtolower($captcha) !== session('captcha-login')) {
             return $this->json(1, '验证码错误');
         }
