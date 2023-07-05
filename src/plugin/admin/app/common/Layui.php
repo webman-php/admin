@@ -241,9 +241,9 @@ EOF;
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\n        $key: $item,";
+                $options_string .= "\n        '$key': $item,";
             } else {
-                $options_string .= "\n        $key: \"$item\",";
+                $options_string .= "\n        '$key': \"$item\",";
             }
         }
         $this->jsContent .= <<<EOF
