@@ -487,7 +487,7 @@ class PluginController extends Base
     {
         // 下载zip
         $options = [
-            'timeout' => 30,
+            'timeout' => 59,
             'connect_timeout' => 5,
             'verify' => false,
             'http_errors' => false,
