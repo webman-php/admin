@@ -373,7 +373,7 @@
                             }
 
                             let batchRemove = function(obj) {
-                                var checkIds = common.checkField(obj,"_field_id");
+                                let checkIds = common.checkField(obj,"_field_id");
                                 if (checkIds === "") return layui.popup.warning("未选中数据");
                                 let data = table.getData("column-table");
                                 let newData = [];
@@ -384,6 +384,7 @@
                                     }
                                 });
                                 table.reloadData("column-table", {data: newData})
+                                syncTableData()
                             }
 
 
