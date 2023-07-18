@@ -17,5 +17,5 @@ return [
     'controller_suffix' => 'Controller',
     'controller_reuse' => false,
     'plugin_market_host' => 'https://www.workerman.net',
-    'version' => '0.6.16'
+    'version' => '0.6.17'
 ];
