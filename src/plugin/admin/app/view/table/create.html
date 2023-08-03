@@ -78,24 +78,24 @@
                                 </script>
 
                                 <script type="text/html" id="col-field">
-                                    <input type="text" name="columns[{{ d.LAY_INDEX-1 }}][field]" placeholder="字段名称" autocomplete="off" class="layui-input" value="{{ d.field }}">
-                                    <input type="hidden" name="columns[{{ d.LAY_INDEX-1 }}][_field_id]" value="{{ d._field_id }}">
+                                    <input type="text" name="columns[{{ d.LAY_NUM-1 }}][field]" placeholder="字段名称" autocomplete="off" class="layui-input" value="{{ d.field }}">
+                                    <input type="hidden" name="columns[{{ d.LAY_NUM-1 }}][_field_id]" value="{{ d._field_id }}">
                                 </script>
 
                                 <script type="text/html" id="col-comment">
-                                    <input type="text" name="columns[{{ d.LAY_INDEX-1 }}][comment]" placeholder="备注" autocomplete="off" class="layui-input" value="{{ d.comment }}">
+                                    <input type="text" name="columns[{{ d.LAY_NUM-1 }}][comment]" placeholder="备注" autocomplete="off" class="layui-input" value="{{ d.comment }}">
                                 </script>
 
                                 <script type="text/html" id="col-length">
-                                    <input type="text" name="columns[{{ d.LAY_INDEX-1 }}][length]" placeholder="长度/值" autocomplete="off" class="layui-input" value="{{ d.length }}">
+                                    <input type="text" name="columns[{{ d.LAY_NUM-1 }}][length]" placeholder="长度/值" autocomplete="off" class="layui-input" value="{{ d.length }}">
                                 </script>
 
                                 <script type="text/html" id="col-default">
-                                    <input type="text" name="columns[{{ d.LAY_INDEX-1 }}][default]" placeholder="默认值" autocomplete="off" class="layui-input" value="{{ d.default }}">
+                                    <input type="text" name="columns[{{ d.LAY_NUM-1 }}][default]" placeholder="默认值" autocomplete="off" class="layui-input" value="{{ d.default }}">
                                 </script>
 
                                 <script type="text/html" id="col-type">
-                                    <select name="columns[{{ d.LAY_INDEX-1 }}][type]" lay-verify="">
+                                    <select name="columns[{{ d.LAY_NUM-1 }}][type]" lay-verify="">
                                         {{# layui.each(["integer","string","text","date","enum","float","tinyInteger","smallInteger","mediumInteger","bigInteger","unsignedInteger","unsignedTinyInteger","unsignedSmallInteger","unsignedMediumInteger","unsignedBigInteger","decimal","double","mediumText","longText","dateTime","time","timestamp","char","binary","json"], function (index, item) { }}
                                             <option value="{{ item }}" {{ d.type==item?"selected":""}}>{{ item }}</option>
                                         {{#  }); }}
@@ -103,15 +103,15 @@
                                 </script>
 
                                 <script type="text/html" id="col-primary_key">
-                                    <input type="checkbox" name="columns[{{ d.LAY_INDEX-1 }}][primary_key]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.primary_key ? 'checked' : '' }}>
+                                    <input type="checkbox" name="columns[{{ d.LAY_NUM-1 }}][primary_key]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.primary_key ? 'checked' : '' }}>
                                 </script>
 
                                 <script type="text/html" id="col-auto_increment">
-                                    <input type="checkbox" name="columns[{{ d.LAY_INDEX-1 }}][auto_increment]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.auto_increment ? 'checked' : '' }}>
+                                    <input type="checkbox" name="columns[{{ d.LAY_NUM-1 }}][auto_increment]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.auto_increment ? 'checked' : '' }}>
                                 </script>
 
                                 <script type="text/html" id="col-nullable">
-                                    <input type="checkbox" name="columns[{{ d.LAY_INDEX-1 }}][nullable]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.nullable ? 'checked' : '' }}>
+                                    <input type="checkbox" name="columns[{{ d.LAY_NUM-1 }}][nullable]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.nullable ? 'checked' : '' }}>
                                 </script>
 
                             </div>
@@ -122,16 +122,16 @@
                                 <table id="form-table" lay-filter="form-table"></table>
 
                                 <script type="text/html" id="form-field">
-                                    <input type="text" name="forms[{{ d.LAY_INDEX-1 }}][field]" autocomplete="off" class="layui-input" value="{{ d.field }}" disabled>
-                                    <input type="hidden" name="forms[{{ d.LAY_INDEX-1 }}][_field_id]" value="{{ d._field_id }}">
+                                    <input type="text" name="forms[{{ d.LAY_NUM-1 }}][field]" autocomplete="off" class="layui-input" value="{{ d.field }}" disabled>
+                                    <input type="hidden" name="forms[{{ d.LAY_NUM-1 }}][_field_id]" value="{{ d._field_id }}">
                                 </script>
 
                                 <script type="text/html" id="form-comment">
-                                    <input type="text" name="forms[{{ d.LAY_INDEX-1 }}][comment]" autocomplete="off" class="layui-input" value="{{ d.comment }}" disabled>
+                                    <input type="text" name="forms[{{ d.LAY_NUM-1 }}][comment]" autocomplete="off" class="layui-input" value="{{ d.comment }}" disabled>
                                 </script>
 
                                 <script type="text/html" id="form-control">
-                                    <select name="forms[{{ d.LAY_INDEX-1 }}][control]" lay-verify="">
+                                    <select name="forms[{{ d.LAY_NUM-1 }}][control]" lay-verify="">
                                         {{# layui.each([["input", "文本框"],["inputNumber", "数字文本框"],["textArea", "多行文本"],["richText", "富文本"],["select", "下拉单选"],["selectMulti", "下拉多选"],["treeSelect", "树形单选"],["treeSelectMulti", "树形多选"],["datePicker", "日期选择"],["dateTimePicker", "日期时间选择"],["switch", "开关"],["upload", "上传文件"],["uploadImage", "上传图片"],["iconPicker", "图标选择"]], function (index, item) { }}
                                         <option value="{{ item[0] }}" {{ d.control.toLocaleLowerCase()==item[0].toLocaleLowerCase()?'selected':''}}>{{ item[1] }}</option>
                                         {{#  }); }}
@@ -139,27 +139,27 @@
                                 </script>
 
                                 <script type="text/html" id="form-control_args">
-                                    <input type="text" name="forms[{{ d.LAY_INDEX-1 }}][control_args]" placeholder="控件参数" autocomplete="off" class="layui-input" value="{{ d.control_args }}">
+                                    <input type="text" name="forms[{{ d.LAY_NUM-1 }}][control_args]" placeholder="控件参数" autocomplete="off" class="layui-input" value="{{ d.control_args }}">
                                 </script>
 
                                 <script type="text/html" id="form-form_show">
-                                    <input type="checkbox" name="forms[{{ d.LAY_INDEX-1 }}][form_show]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.form_show ? 'checked' : '' }}>
+                                    <input type="checkbox" name="forms[{{ d.LAY_NUM-1 }}][form_show]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.form_show ? 'checked' : '' }}>
                                 </script>
 
                                 <script type="text/html" id="form-list_show">
-                                    <input type="checkbox" name="forms[{{ d.LAY_INDEX-1 }}][list_show]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.list_show ? 'checked' : '' }}>
+                                    <input type="checkbox" name="forms[{{ d.LAY_NUM-1 }}][list_show]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.list_show ? 'checked' : '' }}>
                                 </script>
 
                                 <script type="text/html" id="form-enable_sort">
-                                    <input type="checkbox" name="forms[{{ d.LAY_INDEX-1 }}][enable_sort]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.enable_sort ? 'checked' : '' }}>
+                                    <input type="checkbox" name="forms[{{ d.LAY_NUM-1 }}][enable_sort]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.enable_sort ? 'checked' : '' }}>
                                 </script>
 
                                 <script type="text/html" id="form-searchable">
-                                    <input type="checkbox" name="forms[{{ d.LAY_INDEX-1 }}][searchable]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.searchable ? 'checked' : '' }}>
+                                    <input type="checkbox" name="forms[{{ d.LAY_NUM-1 }}][searchable]" autocomplete="off" class="layui-input" lay-skin="primary" {{ d.searchable ? 'checked' : '' }}>
                                 </script>
 
                                 <script type="text/html" id="form-search_type">
-                                    <select name="forms[{{ d.LAY_INDEX-1 }}][search_type]" lay-verify="">
+                                    <select name="forms[{{ d.LAY_NUM-1 }}][search_type]" lay-verify="">
                                         {{# layui.each([["normal", "普通查询"], ["between", "范围查询"], ["like", "模糊查询"]], function (index, item) { }}
                                         <option value="{{ item[0] }}" {{ d.search_type==item[0]?'selected':''}}>{{ item[1] }}</option>
                                         {{#  }); }}
@@ -175,15 +175,15 @@
                                     <table id="key-table" lay-filter="key-table"></table>
 
                                     <script type="text/html" id="key-name">
-                                        <input type="text" name="keys[{{ d.LAY_INDEX-1 }}][name]" placeholder="字段名称" autocomplete="off" class="layui-input" value="{{ d.name }}">
+                                        <input type="text" name="keys[{{ d.LAY_NUM-1 }}][name]" placeholder="字段名称" autocomplete="off" class="layui-input" value="{{ d.name }}">
                                     </script>
 
                                     <script type="text/html" id="key-columns">
-                                        <div name="keys[{{ d.LAY_INDEX-1 }}][columns]" class="key-columns-div" value="{{ d.columns }}"></div>
+                                        <div name="keys[{{ d.LAY_NUM-1 }}][columns]" class="key-columns-div" value="{{ d.columns }}"></div>
                                     </script>
 
                                     <script type="text/html" id="key-type">
-                                        <select name="keys[{{ d.LAY_INDEX-1 }}][type]" lay-verify="">
+                                        <select name="keys[{{ d.LAY_NUM-1 }}][type]" lay-verify="">
                                             {{# layui.each(["normal", "unique"], function (index, item) { }}
                                             <option value="{{ item }}" {{ d.type==item?'selected':''}}>{{ item }}</option>
                                             {{#  }); }}
