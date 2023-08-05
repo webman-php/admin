@@ -100,7 +100,7 @@ class Crud extends Base
             $field = null;
         }
         foreach ($where as $column => $value) {
-            if ( 
+            if (
                 $value === '' || !isset($allow_column[$column]) ||
                 is_array($value) && (empty($value) || !in_array($value[0], ['null', 'not null']) && !isset($value[1]))
             ) {
@@ -182,6 +182,9 @@ class Crud extends Base
         $paginator = $query->paginate($limit);
         $total = $paginator->total();
         $items = $paginator->items();
+        if (method_exists($this, "afterQuery")) {
+            $items = call_user_func([$this, "afterQuery"], $items);
+        }
         $format_function = $methods[$format] ?? 'formatNormal';
         return call_user_func([$this, $format_function], $items, $total);
     }
@@ -408,4 +411,13 @@ class Crud extends Base
         return json(['code' => 0, 'msg' => 'ok', 'count' => $total, 'data' => $items]);
     }
 
+    /**
+     * 查询数据库后置方法，可用于修改数据
+     * @param mixed $items 原数据
+     * @return mixed 修改后数据
+     */
+    protected function afterQuery(mixed $items): mixed
+    {
+        return $items;
+    }
 }
