@@ -64,17 +64,22 @@ function getQueryVariable(variable){
 }
 //处理TinyMCE编辑器的事件
 window.addEventListener('message', function (event) {
+  if (typeof kfe === 'undefined') {
+    return;
+  }
   var data = event.data;
-  kfe.execCommand('get.image.data', function(data){
-        var latex = kfe.execCommand('get.source');
-        window.parent.postMessage({
-            mceAction: 'insertContent',
-            content: "<img src=\""+data.img+"\" data-latex=\""+latex+"\">"
-        }, '*');
-        window.parent.postMessage({
-            mceAction: 'close'
-        }, '*');
-    });
+  if (data === 'save') {
+      kfe.execCommand('get.image.data', function(data){
+            var latex = kfe.execCommand('get.source');
+            window.parent.postMessage({
+                mceAction: 'insertContent',
+                content: "<img src=\""+data.img+"\" data-latex=\""+latex+"\">"
+            }, '*');
+            window.parent.postMessage({
+                mceAction: 'close'
+            }, '*');
+        });
+  }
 });
 //实例化编辑器
 jQuery( function ($) {

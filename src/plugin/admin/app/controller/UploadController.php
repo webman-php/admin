@@ -280,7 +280,17 @@ class UploadController extends Crud
             mkdir($full_dir, 0777, true);
         }
 
-        $ext = strtolower($file->getUploadExtension());
+        $ext = $file->getUploadExtension() ?: null;
+        $mime_type = $file->getUploadMimeType();
+        $file_name = $file->getUploadName();
+        $file_size = $file->getSize();
+
+        if (!$ext && $file_name === 'blob') {
+            [$___image, $ext] = explode('/', $mime_type);
+            unset($___image);
+        }
+
+        $ext = strtolower($ext);
         $ext_forbidden_map = ['php', 'php3', 'php5', 'css', 'js', 'html', 'htm', 'asp', 'jsp'];
         if (in_array($ext, $ext_forbidden_map)) {
             throw new BusinessException('不支持该格式的文件上传', 400);
@@ -288,9 +298,6 @@ class UploadController extends Crud
 
         $relative_path = $relative_dir . '/' . bin2hex(pack('Nn',time(), random_int(1, 65535))) . ".$ext";
         $full_path = $base_dir . $relative_path;
-        $file_size = $file->getSize();
-        $file_name = $file->getUploadName();
-        $mime_type = $file->getUploadMimeType();
         $file->move($full_path);
         $image_with = $image_height = 0;
         if ($img_info = getimagesize($full_path)) {
