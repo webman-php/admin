@@ -44,6 +44,12 @@ class Tree
             $this->data = $data->toArray();
         } else {
             $this->data = (array)$data;
+            $this->data = array_map(function ($item) {
+                if (is_object($item) && method_exists($item, 'toArray')) {
+                    return $item->toArray();
+                }
+                return $item;
+            }, $this->data);
         }
         $this->hashTree = $this->getHashTree();
     }
