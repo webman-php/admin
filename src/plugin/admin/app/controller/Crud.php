@@ -100,9 +100,10 @@ class Crud extends Base
             $field = null;
         }
         foreach ($where as $column => $value) {
-            if ($value === '' || !isset($allow_column[$column]) ||
-                (is_array($value) && (count($value) <= 1)) ||
-                (is_array($value) && (in_array($value[0], ['', 'undefined']) || in_array($value[1], ['', 'undefined'])))) {
+            if (
+                $value === '' || !isset($allow_column[$column]) ||
+                is_array($value) && (empty($value) || !in_array($value[0], ['null', 'not null']) && !isset($value[1]))
+            ) {
                 unset($where[$column]);
             }
         }
@@ -130,28 +131,26 @@ class Crud extends Base
         $model = $this->model;
         foreach ($where as $column => $value) {
             if (is_array($value)) {
-                if ($value[0] === 'like') {
-                    $model = $model->where($column, 'like', "%$value[1]%");
-                } elseif (in_array($value[0], ['>', '=', '<', '<>', 'not like'])) {
+                if ($value[0] === 'like' || $value[0] === 'not like') {
+                    $model = $model->where($column, $value[0], "%$value[1]%");
+                } elseif (in_array($value[0], ['>', '=', '<', '<>'])) {
                     $model = $model->where($column, $value[0], $value[1]);
-                } elseif ($value[0] == 'in') {
+                } elseif ($value[0] == 'in' && !empty($value[1])) {
+                    $valArr = $value[1];
                     if (is_string($value[1])) {
                         $valArr = explode(",", trim($value[1]));
-                        $valArr && $model = $model->whereIn($column, $valArr);
-                    } else {
-                        $model = $model->whereIn($column, $value[1]);
                     }
-                } elseif ($value[0] == 'not in') {
+                    $model = $model->whereIn($column, $valArr);
+                } elseif ($value[0] == 'not in' && !empty($value[1])) {
+                    $valArr = $value[1];
                     if (is_string($value[1])) {
                         $valArr = explode(",", trim($value[1]));
-                        $valArr && $model = $model->whereNotIn($column, $valArr);
-                    } else {
-                        $model = $model->whereNotIn($column, $value[1]);
                     }
+                    $model = $model->whereNotIn($column, $valArr);
                 }elseif ($value[0] == 'null') {
-                    $model = $model->whereNull($column, $value[1]);
+                    $model = $model->whereNull($column);
                 } elseif ($value[0] == 'not null') {
-                    $model = $model->whereNotNull($column, $value[1]);
+                    $model = $model->whereNotNull($column);
                 } elseif ($value[0] !== '' || $value[1] !== '') {
                     $model = $model->whereBetween($column, $value);
                 }
@@ -183,6 +182,9 @@ class Crud extends Base
         $paginator = $query->paginate($limit);
         $total = $paginator->total();
         $items = $paginator->items();
+        if (method_exists($this, "afterQuery")) {
+            $items = call_user_func([$this, "afterQuery"], $items);
+        }
         $format_function = $methods[$format] ?? 'formatNormal';
         return call_user_func([$this, $format_function], $items, $total);
     }
@@ -409,4 +411,13 @@ class Crud extends Base
         return json(['code' => 0, 'msg' => 'ok', 'count' => $total, 'data' => $items]);
     }
 
+    /**
+     * 查询数据库后置方法，可用于修改数据
+     * @param mixed $items 原数据
+     * @return mixed 修改后数据
+     */
+    protected function afterQuery(mixed $items): mixed
+    {
+        return $items;
+    }
 }

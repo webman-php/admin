@@ -733,6 +733,7 @@ layui.use(["jquery", "xmSelect", "popup"], function() {
                 el: "#$id",
                 name: "$field",
                 initValue: initValue,
+                filterable: true,
                 data: res.data, $options_string
             });
             if (res.code) {
@@ -753,6 +754,7 @@ layui.use(["jquery", "xmSelect"], function() {
     layui.xmSelect.render({
         el: "#$id",
         name: "$field",
+        filterable: true,
         initValue: initValue,$options_string
     })
 });

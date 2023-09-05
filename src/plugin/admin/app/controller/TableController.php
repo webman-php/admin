@@ -694,7 +694,7 @@ class $controller_class extends Crud
      */
     public function index(): Response
     {
-        return raw_view('$template_path/index');
+        return view('$template_path/index');
     }
 
     /**
@@ -708,7 +708,7 @@ class $controller_class extends Crud
         if (\$request->method() === 'POST') {
             return parent::insert(\$request);
         }
-        return raw_view('$template_path/insert');
+        return view('$template_path/insert');
     }
 
     /**
@@ -722,7 +722,7 @@ class $controller_class extends Crud
         if (\$request->method() === 'POST') {
             return parent::update(\$request);
         }
-        return raw_view('$template_path/update');
+        return view('$template_path/update');
     }
 
 }
