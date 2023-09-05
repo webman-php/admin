@@ -901,7 +901,7 @@ EOF
                         type: 2,
                         title: "新增",
                         shade: 0.1,
-                        shadeClose:true,
+                        maxmin: true,
                         area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
                         content: INSERT_URL
                     });
@@ -914,7 +914,7 @@ EOF
                         type: 2,
                         title: "修改",
                         shade: 0.1,
-                        shadeClose:true,
+                        maxmin: true,
                         area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
                         content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
