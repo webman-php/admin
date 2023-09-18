@@ -416,7 +416,7 @@ class Crud extends Base
      * @param mixed $items 原数据
      * @return mixed 修改后数据
      */
-    protected function afterQuery(mixed $items): mixed
+    protected function afterQuery($items)
     {
         return $items;
     }
