@@ -134,6 +134,9 @@
 
                 form.on("submit(table-query)", function(data) {
                     table.reload("data-table", {
+                        page: {
+                            curr: 1
+                        },
                         where: data.field
                     })
                     return false;
