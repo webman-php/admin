@@ -807,6 +807,14 @@ EOF;
                 $control = 'input';
                 $info['control_args'] = '';
             }
+            if ($type === 'search' && $control === 'switch') {
+                $control = 'select';
+                if (preg_match('/lay-text:(.+?)\|([^;]+)/', $info['control_args'], $matches)) {
+                    $info['control_args'] = 'data:1:' . $matches[1] . ',0:' . $matches[2];
+                } else {
+                    $info['control_args'] = 'data:1:是,0:否';
+                }
+            }
 
             $props = Util::getControlProps($control, $info['control_args']);
             // 增加修改记录验证必填项
