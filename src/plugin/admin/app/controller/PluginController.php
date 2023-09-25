@@ -463,7 +463,7 @@ class PluginController extends Base
         // 下载zip
         $options = [
             'base_uri' => config('plugin.admin.app.plugin_market_host'),
-            'timeout' => 30,
+            'timeout' => 60,
             'connect_timeout' => 5,
             'verify' => false,
             'http_errors' => false,
