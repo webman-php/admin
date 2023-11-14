@@ -1127,6 +1127,7 @@ EOF;
                                 obj.val(value);
                             } else {
                                 obj.attr("value", value);
+                                obj[0].value = value;
                             }
                         });
                         $js
