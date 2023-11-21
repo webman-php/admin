@@ -38,8 +38,12 @@ class Auth
      */
     public static function getScopeAdminIds(bool $with_self = false): array
     {
-        $role_ids = static::getScopeRoleIds($with_self);
-        return AdminRole::whereIn('role_id', $role_ids)->pluck('admin_id')->toArray();
+        $role_ids = static::getScopeRoleIds();
+        $admin_ids = AdminRole::whereIn('role_id', $role_ids)->pluck('admin_id')->toArray();
+        if ($with_self) {
+            $admin_ids[] = admin_id();
+        }
+        return array_unique($admin_ids);
     }
 
     /**

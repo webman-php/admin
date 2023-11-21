@@ -242,10 +242,20 @@ class Crud extends Base
         $primary_key = $this->model->getKeyName();
         $id = $request->post($primary_key);
         $data = $this->inputFilter($request->post());
-        if (!Auth::isSupperAdmin() && $this->dataLimit && !empty($data[$this->dataLimitField])) {
-            $admin_id = $data[$this->dataLimitField];
-            if (!in_array($admin_id, Auth::getScopeAdminIds(true))) {
-                throw new BusinessException('无数据权限');
+        $model = $this->model->find($id);
+        if (!$model) {
+            throw new BusinessException('记录不存在', 2);
+        }
+        if (!Auth::isSupperAdmin() && $this->dataLimit) {
+            $scopeAdminIds = Auth::getScopeAdminIds(true);
+            $admin_ids = [
+                $data[$this->dataLimitField] ?? false, // 检查要更新的数据admin_id是否是有权限的值
+                $model->{$this->dataLimitField} ?? false // 检查要更新的记录的admin_id是否有权限
+            ];
+            foreach ($admin_ids as $admin_id) {
+                if ($admin_id && !in_array($admin_id, $scopeAdminIds)) {
+                    throw new BusinessException('无数据权限');
+                }
             }
         }
         $password_filed = 'password';
@@ -266,14 +276,10 @@ class Crud extends Base
      * @param $id
      * @param $data
      * @return void
-     * @throws BusinessException
      */
     protected function doUpdate($id, $data)
     {
         $model = $this->model->find($id);
-        if (!$model) {
-            throw new BusinessException('记录不存在', 2);
-        }
         foreach ($data as $key => $val) {
             $model->{$key} = $val;
         }
