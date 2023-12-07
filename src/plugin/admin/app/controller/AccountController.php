@@ -84,7 +84,7 @@ class AccountController extends Crud
         $this->removeLoginLimit($username);
         $admin = $admin->toArray();
         $session = $request->session();
-        unset($admin['password']);
+        $admin['password'] = md5($admin['password']);
         $session->set('admin', $admin);
         return $this->json(0, '登录成功', [
             'nickname' => $admin['nickname'],

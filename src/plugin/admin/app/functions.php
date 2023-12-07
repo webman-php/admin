@@ -80,9 +80,11 @@ function user($fields = null)
  */
 function refresh_admin_session(bool $force = false)
 {
-    if (!$admin_id = admin_id()) {
+    $admin_session = session('admin');
+    if (!$admin_session) {
         return null;
     }
+    $admin_id = $admin_session['id'];
     $time_now = time();
     // session在2秒内不刷新
     $session_ttl = 2;
@@ -97,7 +99,12 @@ function refresh_admin_session(bool $force = false)
         return null;
     }
     $admin = $admin->toArray();
-    unset($admin['password']);
+    $admin['password'] = md5($admin['password']);
+    $admin_session['password'] = $admin_session['password'] ?? '';
+    if ($admin['password'] != $admin_session['password']) {
+        $session->forget('admin');
+        return null;
+    }
     // 账户被禁用
     if ($admin['status'] != 0) {
         $session->forget('admin');
