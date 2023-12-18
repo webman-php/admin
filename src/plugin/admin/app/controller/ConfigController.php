@@ -78,6 +78,8 @@ class ConfigController extends Base
                 case 'logo':
                     $data[$section]['title'] = htmlspecialchars($items['title'] ?? '');
                     $data[$section]['image'] = Util::filterUrlPath($items['image'] ?? '');
+                    $data[$section]['icp_code'] = htmlspecialchars($items['icp_code'] ?? '');
+                    $data[$section]['beian_code'] = htmlspecialchars($items['beian_code'] ?? '');
                     break;
                 case 'menu':
                     $data[$section]['data'] = Util::filterUrlPath($items['data'] ?? '');
