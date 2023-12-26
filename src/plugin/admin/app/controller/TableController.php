@@ -777,7 +777,7 @@ EOF
         $template_content = <<<EOF
 
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
     <head>
         <meta charset="utf-8">
         <title>浏览页面</title>
@@ -981,7 +981,7 @@ EOF;
         $js = $form->js(3);
         $template_content = <<<EOF
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
     <head>
         <meta charset="UTF-8">
         <title>新增页面</title>
@@ -1066,7 +1066,7 @@ EOF;
         $js = $form->js(6);
         $template_content = <<<EOF
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
     <head>
         <meta charset="UTF-8">
         <title>更新页面</title>
