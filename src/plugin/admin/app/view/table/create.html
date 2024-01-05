@@ -478,7 +478,7 @@
                     list_show: true,
                     enable_sort: true,
                     searchable: true,
-                    search_type: "normal",
+                    search_type: "between",
                 },{
                     _field_id: _id++,
                     field : "updated_at",
@@ -489,7 +489,7 @@
                     list_show: true,
                     enable_sort: false,
                     searchable: false,
-                    search_type: "normal",
+                    search_type: "between",
                 }];
 
                 table.render({
@@ -664,13 +664,13 @@
                                 _field_id: _field_id,
                                 field : item.field, // column
                                 comment: item.comment, // column
-                                control: item.type.toLocaleString().indexOf("int") !== -1 ? "inputNumber" : "input",
+                                control: item.type.toLocaleString().indexOf("date") !== -1 ? "dateTimePicker" : (item.type.toLocaleString().indexOf("int") !== -1 ? "inputNumber" : "input"),
                                 control_args: "",
                                 form_show: true,
                                 list_show: true,
                                 enable_sort: false,
                                 searchable: false,
-                                search_type: "normal",
+                                search_type: item.type.toLocaleString().indexOf("date") !== -1 ? "between" : "normal",
                             });
                         } else {
                             formTableData.push(formTableOldDataMap[_field_id]);
