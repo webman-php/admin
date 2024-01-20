@@ -86,7 +86,10 @@ class RuleController extends Crud
             $this->removeNotContain($tree_items, 'id', $rules);
         }
         $this->removeNotContain($tree_items, 'type', $types);
-        return $this->json(0, 'ok', Tree::arrayValues($tree_items));
+        $menus = array_filter(Tree::arrayValues($tree_items), function ($item) {
+            return count($item['children']);
+        });
+        return $this->json(0, 'ok', $menus);
     }
 
     /**

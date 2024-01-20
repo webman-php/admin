@@ -150,7 +150,7 @@ class RoleController extends Crud
             foreach ($descendant_role_ids as $role_id) {
                 $tmp_role = Role::find($role_id);
                 $tmp_rule_ids = $role->getRuleIds();
-                $tmp_rule_ids = array_intersect($rule_ids, $tmp_rule_ids);
+                $tmp_rule_ids = array_intersect(explode(',',$tmp_role->rules), $tmp_rule_ids);
                 $tmp_role->rules = implode(',', $tmp_rule_ids);
                 $tmp_role->save();
             }
