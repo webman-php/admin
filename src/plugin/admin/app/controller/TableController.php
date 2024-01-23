@@ -987,6 +987,7 @@ EOF;
         <meta charset="UTF-8">
         <title>新增页面</title>
         <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
         <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
     </head>
     <body>
@@ -1015,6 +1016,7 @@ EOF;
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
+        <script src="/app/admin/component/jsoneditor/jsoneditor.js"></script>
         <script src="/app/admin/admin/js/permission.js"></script>
         
         <script>
@@ -1072,7 +1074,9 @@ EOF;
         <meta charset="UTF-8">
         <title>更新页面</title>
         <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
         <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        
     </head>
     <body>
 
@@ -1099,6 +1103,7 @@ EOF;
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
+        <script src="/app/admin/component/jsoneditor/jsoneditor.js"></script>
         <script src="/app/admin/admin/js/permission.js"></script>
         
         <script>

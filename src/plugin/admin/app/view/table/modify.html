@@ -136,7 +136,7 @@
 
                                 <script type="text/html" id="form-control">
                                     <select name="forms[{{ d.LAY_NUM-1 }}][control]" lay-verify="">
-                                        {{# layui.each([["input", "文本框"],["inputNumber", "数字文本框"],["textArea", "多行文本"],["richText", "富文本"],["select", "下拉单选"],["selectMulti", "下拉多选"],["treeSelect", "树形单选"],["treeSelectMulti", "树形多选"],["datePicker", "日期选择"],["dateTimePicker", "日期时间选择"],["switch", "开关"],["upload", "上传文件"],["uploadImage", "上传图片"],["iconPicker", "图标选择"]], function (index, item) { }}
+                                        {{# layui.each([["input", "文本框"],["inputNumber", "数字文本框"],["textArea", "多行文本"],["richText", "富文本"],["jsonEditor", "json编辑框"],["select", "下拉单选"],["selectMulti", "下拉多选"],["treeSelect", "树形单选"],["treeSelectMulti", "树形多选"],["datePicker", "日期选择"],["dateTimePicker", "日期时间选择"],["switch", "开关"],["upload", "上传文件"],["uploadImage", "上传图片"],["iconPicker", "图标选择"]], function (index, item) { }}
                                         <option value="{{ item[0] }}" {{ d.control.toLocaleLowerCase()==item[0].toLocaleLowerCase()?'selected':''}}>{{ item[1] }}</option>
                                         {{#  }); }}
                                     </select>

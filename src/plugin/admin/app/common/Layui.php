@@ -263,6 +263,42 @@ EOF;
     }
 
     /**
+     * json编辑框
+     * @param $options
+     * @return void
+     */
+    public function jsonEditor($options)
+    {
+        [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
+
+        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="'.$props['placeholder'].'"' : '';
+        $autocomplete_string = !empty($props['autocomplete']) ? ' autocomplete="'.$props['autocomplete'].'"' : '';
+        $disabled_string = !empty($props['disabled']) ? ' disabled' : '';
+        $type = $props['type'] ?? 'text';
+        if (empty($value)){
+            $value='{}';
+        }
+        $this->htmlContent .= <<<EOF
+
+<div class="layui-form-item">
+    $label
+    <div class="$class">
+        <input type="$type" name="$field"id="$field" value="$value"$disabled_string$required_string$verify_string$placeholder_string$autocomplete_string class="layui-input">
+    </div>
+</div>
+EOF;
+        $this->jsContent .= <<<EOF
+jsonArea({
+    el: "#$field",
+    change: function(data) {
+        console.log(data);
+    }
+});
+EOF;
+
+    }
+
+    /**
      * 上传组件
      * @param $options
      * @return void
