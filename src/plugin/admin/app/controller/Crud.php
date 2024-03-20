@@ -355,7 +355,9 @@ class Crud extends Base
             return;
         }
         $primary_key = $this->model->getKeyName();
-        $this->model->whereIn($primary_key, $ids)->delete();
+        $this->model->whereIn($primary_key, $ids)->each(function ($model) {
+            $model->delete();
+        });
     }
 
     /**
