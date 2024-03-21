@@ -274,7 +274,7 @@ class UploadController extends Crud
             throw new BusinessException('未找到上传文件', 400);
         }
 
-        $base_dir = config('plugin.admin.public_path') ?: base_path() . '/plugin/admin/public/';
+        $base_dir = config('plugin.admin.app.public_path') ?: base_path() . '/plugin/admin/public/';
         $full_dir = $base_dir . $relative_dir;
         if (!is_dir($full_dir)) {
             mkdir($full_dir, 0777, true);
