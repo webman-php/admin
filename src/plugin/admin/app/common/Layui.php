@@ -238,13 +238,12 @@ EOF;
         if (!isset($props['images_upload_url'])) {
             $props['images_upload_url'] = '/app/admin/upload/image';
         }
+        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\n        '$key': $item,";
-            } else {
-                $options_string .= "\n        '$key': \"$item\",";
             }
+            $options_string .= "\n        '$key': $item,";
         }
         $this->jsContent .= <<<EOF
 
@@ -314,13 +313,12 @@ EOF;
         $props['field'] = $props['field'] ?? '__file__';
         unset($props['lay-verify']);
         $options_string = '';
+        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\n        $key: $item,";
-            } else {
-                $options_string .= "\n        $key: \"$item\",";
             }
+            $options_string .= "\n        $key: $item,";
         }
 
         $this->htmlContent .= <<<EOF
@@ -386,13 +384,12 @@ EOF;
         unset($props['lay-verify']);
         $props['field'] = $props['field'] ?? '__file__';
         $options_string = '';
+        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\n        $key: $item,";
-            } else {
-                $options_string .= "\n        $key: \"$item\",";
             }
+            $options_string .= "\n        $key: $item,";
         }
 
         $this->htmlContent .= <<<EOF
@@ -466,11 +463,12 @@ EOF;
         $value_string = $value ? ' value="'.$value.'"' : '';
         $options_string = '';
         unset($props['required'], $props['lay-verify'], $props['value']);
+        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 continue;
             }
-            $options_string .= "\n        $key: \"$item\",";
+            $options_string .= "\n        $key: $item,";
         }
         $id = $this->createId($field);
 
@@ -520,11 +518,12 @@ EOF;
         }
         $options_string = '';
         unset($props['required'], $props['lay-verify'], $props['value']);
+        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 continue;
             }
-            $options_string .= "\n        $key: \"$item\",";
+            $options_string .= "\n        $key: $item,";
         }
         $id = $this->createId($field);
         $id_start = "$id-date-start";
@@ -578,13 +577,12 @@ EOF;
         $value_string = $value ? ' value="'.$value.'"' : '';
         $id = $this->createId($field);
         $options_string = '';
+        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-                $options_string .= "\n                $key: $item,";
-            } else {
-                $options_string .= "\n                $key: \"$item\",";
             }
+            $options_string .= "\n                $key: $item,";
         }
 
         $this->htmlContent .= <<<EOF
@@ -741,13 +739,14 @@ EOF;
             $props['layVerify'] = $props['lay-verify'];
         }
         unset($props['lay-verify'], $props['url']);
+        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $item = preg_replace('/"\$([^"]+)"/', '$1', $item);
                 $options_string .= "\n".($url?'                ':'        ')."$key: $item,";
             } else if (is_string($item)) {
-                $options_string .= "\n".($url?'                ':'        ')."$key: \"$item\",";
+                $options_string .= "\n".($url?'                ':'        ')."$key: $item,";
             } else {
                 $options_string .= "\n".($url?'                ':'        ')."$key: ".var_export($item, true).",";
             }
@@ -1148,6 +1147,26 @@ EOF;
 
         return str_replace("\n", "\n" . str_repeat('	', $indent), $codes);
 
+    }
+
+  /**
+   * 预处理props
+   */
+    private function prepareProps($props)
+    {
+        $raw_list = ['true','false','null','undefined'];
+        foreach ($props as $k => $v) {
+            if (is_array($v)) {
+                $props[$k] = $this->prepareProps($v);
+            } elseif (!in_array($v, $raw_list) && !is_numeric($v)) {
+                if (str_starts_with($v, "#")){
+                    $props[$k] = substr($v, 1);
+                } else {
+                    $props[$k] = "\"$v\"";
+                }
+            }
+        }
+        return $props;
     }
 
 
