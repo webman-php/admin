@@ -239,12 +239,7 @@ EOF;
             $props['images_upload_url'] = '/app/admin/upload/image';
         }
         $props = $this->prepareProps($props);
-        foreach ($props as $key => $item) {
-            if (is_array($item)) {
-                $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-            }
-            $options_string .= "\n        '$key': $item,";
-        }
+        $options_string .= "\n" . $this->preparePropsToJsObject($props, 1, true);
         $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
@@ -314,12 +309,7 @@ EOF;
         unset($props['lay-verify']);
         $options_string = '';
         $props = $this->prepareProps($props);
-        foreach ($props as $key => $item) {
-            if (is_array($item)) {
-                $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-            }
-            $options_string .= "\n        $key: $item,";
-        }
+        $options_string .= "\n" . $this->preparePropsToJsObject($props, 1, true);
 
         $this->htmlContent .= <<<EOF
 
@@ -385,12 +375,7 @@ EOF;
         $props['field'] = $props['field'] ?? '__file__';
         $options_string = '';
         $props = $this->prepareProps($props);
-        foreach ($props as $key => $item) {
-            if (is_array($item)) {
-                $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-            }
-            $options_string .= "\n        $key: $item,";
-        }
+        $options_string .= "\n" . $this->preparePropsToJsObject($props, 1, true);
 
         $this->htmlContent .= <<<EOF
 
@@ -464,12 +449,7 @@ EOF;
         $options_string = '';
         unset($props['required'], $props['lay-verify'], $props['value']);
         $props = $this->prepareProps($props);
-        foreach ($props as $key => $item) {
-            if (is_array($item)) {
-                continue;
-            }
-            $options_string .= "\n        $key: $item,";
-        }
+        $options_string .= "\n" . $this->preparePropsToJsObject($props, 1, true);
         $id = $this->createId($field);
 
         $this->htmlContent .= <<<EOF
@@ -519,12 +499,7 @@ EOF;
         $options_string = '';
         unset($props['required'], $props['lay-verify'], $props['value']);
         $props = $this->prepareProps($props);
-        foreach ($props as $key => $item) {
-            if (is_array($item)) {
-                continue;
-            }
-            $options_string .= "\n        $key: $item,";
-        }
+        $options_string .= "\n" . $this->preparePropsToJsObject($props, 1, true);
         $id = $this->createId($field);
         $id_start = "$id-date-start";
         $id_end = "$id-date-end";
@@ -578,12 +553,7 @@ EOF;
         $id = $this->createId($field);
         $options_string = '';
         $props = $this->prepareProps($props);
-        foreach ($props as $key => $item) {
-            if (is_array($item)) {
-                $item = json_encode($item, JSON_UNESCAPED_UNICODE);
-            }
-            $options_string .= "\n                $key: $item,";
-        }
+        $options_string .= "\n" . $this->preparePropsToJsObject($props, 1, true);
 
         $this->htmlContent .= <<<EOF
 
@@ -1149,9 +1119,9 @@ EOF;
 
     }
 
-  /**
-   * 预处理props
-   */
+    /**
+     * 预处理props
+     */
     private function prepareProps($props)
     {
         $raw_list = ['true','false','null','undefined'];
@@ -1159,7 +1129,7 @@ EOF;
             if (is_array($v)) {
                 $props[$k] = $this->prepareProps($v);
             } elseif (!in_array($v, $raw_list) && !is_numeric($v)) {
-                if (str_starts_with($v, "#")){
+                if (strpos($v, "#") === 0){
                     $props[$k] = substr($v, 1);
                 } else {
                     $props[$k] = "\"$v\"";
@@ -1167,6 +1137,29 @@ EOF;
             }
         }
         return $props;
+    }
+
+    private function preparePropsToJsObject($props, $indent = 0, $sub = false)
+    {
+        $string = '';
+        $indent_string = str_repeat('    ', $indent);
+        if (!$sub) {
+            $string .= "$indent_string{\n";
+        }
+        foreach ($props as $k => $v) {
+            if (!preg_match("#^[a-zA-Z0-9_]+$#", $k)) {
+                $k = "'$k'";
+            }
+            if (is_array($v)) {
+                $string .= "$indent_string    $k: {\n{$this->preparePropsToJsObject($v, $indent + 1, true)}\n$indent_string    },\n";
+            } else {
+                $string .= "$indent_string    $k: $v,\n";
+            }
+        }
+        if (!$sub) {
+            $string .= "$indent_string}\n";
+        }
+        return trim($string,"\n");
     }
 
 
