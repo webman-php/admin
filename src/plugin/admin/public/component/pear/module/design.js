@@ -362,7 +362,7 @@ layui.define(['layer', 'form'], function(exports) {
 	function input(type, size) {
 		var name = type === 'text' ? '输入框' : (type === 'password' ? '密码框' : '');
 		var html = '  <div class="layui-form-item">\n' +
-			'    <label class="layui-form-label">' + name + '</label>\n' +
+			'    <label class="layui-form-label required">' + name + '</label>\n' +
 			'    <div class="layui-input-' + size + '">\n' +
 			'      <input type="' + type + '" name="' + key + '" required  lay-verify="required" placeholder="请输入' + name +
 			'内容" autocomplete="off" class="layui-input">\n' +
@@ -373,7 +373,7 @@ layui.define(['layer', 'form'], function(exports) {
 
 	function select(size) {
 		var html = '  <div class="layui-form-item">\n' +
-			'    <label class="layui-form-label">选择框</label>\n' +
+			'    <label class="layui-form-label required">选择框</label>\n' +
 			'    <div class="layui-input-' + size + '">\n' +
 			'      <select name="' + key + '" lay-verify="required" lay-search>\n' +
 			'        <option value=""></option>\n' +

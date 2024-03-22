@@ -630,6 +630,7 @@ class $class extends Base
      * @var string
      */
     protected \$primaryKey = '$pk';
+    
     $timestamps
     $incrementing
     
