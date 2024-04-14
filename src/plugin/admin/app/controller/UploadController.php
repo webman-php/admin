@@ -256,7 +256,26 @@ class UploadController extends Crud
      */
     public function delete(Request $request): Response
     {
-        return parent::delete($request);
+        $ids = $this->deleteInput($request);
+        $primary_key = $this->model->getKeyName();
+        $files = $this->model->whereIn($primary_key, $ids)->get()->toArray();
+        $file_list = array_map(function ($item) {
+          $path =$item['url'];
+          if (preg_match("#^/app/admin#",$path)){
+              return base_path("plugin/admin/public" . str_replace("/app/admin", "", $item['url']));
+          }
+          return null;
+        },$files);
+        $file_list = array_filter($file_list,function ($item){
+            return !empty($item);
+        });
+        $result = parent::delete($request);
+        if (($res = json_decode($result->rawBody())) && $res->code === 0) {
+            foreach ($file_list as $file) {
+                @unlink($file);
+            }
+        }
+        return $result;
     }
 
     /**
