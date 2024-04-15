@@ -14,7 +14,7 @@ use support\Response;
 use Throwable;
 
 /**
- * 附件管理 
+ * 附件管理
  */
 class UploadController extends Crud
 {
@@ -263,7 +263,8 @@ class UploadController extends Crud
         $file_list = array_map(function ($item) {
           $path =$item['url'];
           if (preg_match("#^/app/admin#",$path)){
-              return base_path("plugin/admin/public" . str_replace("/app/admin", "", $item['url']));
+              $admin_public_path = config('plugin.admin.app.public_path') ?: base_path() . "/plugin/admin/public";
+              return $admin_public_path . str_replace("/app/admin", "", $item['url']);
           }
           return null;
         },$files);
