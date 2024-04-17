@@ -105,7 +105,7 @@ class DictController extends Base
      */
     public function get(Request $request, $name): Response
     {
-        return $this->json(0, 'ok', Dict::get($name));
+        return $this->json(0, 'ok', (array)Dict::get($name));
     }
 
 }
