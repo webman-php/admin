@@ -97,6 +97,7 @@ class AdminController extends Crud
     {
         if ($request->method() === 'POST') {
             $data = $this->insertInput($request);
+            unset($data['id']);
             $admin_id = $this->doInsert($data);
             $role_ids = $request->post('roles');
             $role_ids = $role_ids ? explode(',', $role_ids) : [];
