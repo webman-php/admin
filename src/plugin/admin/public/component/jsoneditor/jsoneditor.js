@@ -77,7 +77,7 @@ JSONEditor = function(container, options, json) {
     if (!JSON) {
         throw new Error(
             "您当前使用的浏览器不支持 JSON. \n\n" +
-            "请下载安装最新版本的浏览�?, 本站推荐Google Chrome.\n" +
+            "请下载安装最新版本的浏览, 本站推荐Google Chrome.\n" +
             "(PS: 当前主流浏览器都支持JSON)."
         );
     }
@@ -995,7 +995,7 @@ JSONEditor.Node.prototype.insertBefore = function(node, beforeNode) {
             // insert before a child node
             var index = this.childs.indexOf(beforeNode);
             if (index == -1) {
-                throw new Error("节点未找�?.");
+                throw new Error("节点未找到.");
             }
 
             // adjust the link to the parent
@@ -2313,23 +2313,23 @@ JSONEditor.Node.types = [
     {
         value: "array",
         className: "jsoneditor-option-array",
-        title: '"array" 类型: 丢�个包含了有序值集合的数组.'
+        title: '"array" 类型: 丢�个包含了有序值集合的数组.'
     },
     {
         value: "auto",
         className: "jsoneditor-option-auto",
         title:
-            '"auto" 类型: 节点类型将自动从值中获取, 可以�?: string, number, boolean, 或��? null.'
+            '"auto" 类型: 节点类型将自动从值中获取, 可以是: string, number, boolean, 或 null.'
     },
     {
         value: "object",
         className: "jsoneditor-option-object",
-        title: '"object" 类型: 对象包含了一些无序的�?/值对.'
+        title: '"object" 类型: 对象包含了一些无序的键/值对.'
     },
     {
         value: "string",
         className: "jsoneditor-option-string",
-        title: '"string" 类型: 节点类型不从值中自动获取, 但永远返�? string.'
+        title: '"string" 类型: 节点类型不从值中自动获取, 但永远返回string.'
     }
 ];
 
@@ -2512,7 +2512,7 @@ JSONEditor.Node.prototype._createDomRemoveButton = function() {
     ) {
         var buttonRemove = document.createElement("button");
         buttonRemove.className = "jsoneditor-remove";
-        buttonRemove.title = "删除节点 (包括扢�有子节点)";
+        buttonRemove.title = "删除节点 (包括扢�有子节点)";
 
         return buttonRemove;
     } else {
@@ -2534,7 +2534,7 @@ JSONEditor.Node.prototype._createDomDuplicateButton = function() {
     ) {
         var buttonDupliate = document.createElement("button");
         buttonDupliate.className = "jsoneditor-duplicate";
-        buttonDupliate.title = "复制节点 (包括扢�有子节点)";
+        buttonDupliate.title = "复制节点 (包括扢�有子节点)";
 
         return buttonDupliate;
     } else {
@@ -3024,7 +3024,7 @@ JSONFormatter = function(container, options, json) {
     if (!JSON) {
         throw new Error(
             "您当前使用的浏览器不支持 JSON. \n\n" +
-            "请下载安装最新版本的浏览�?, 本站推荐Google Chrome.\n" +
+            "请下载安装最新版本的浏览, 本站推荐Google Chrome.\n" +
             "(PS: 当前主流浏览器都支持JSON)."
         );
     }
@@ -3059,7 +3059,7 @@ JSONFormatter = function(container, options, json) {
     var buttonCompact = document.createElement("button");
     //buttonCompact.innerHTML = 'Compact';
     buttonCompact.className = "jsoneditor-menu jsoneditor-compact";
-    buttonCompact.title = "压缩JSON数据, 清除扢�有空白字�?";
+    buttonCompact.title = "压缩JSON数据, 清除所有空白字符";
     //buttonCompact.className = 'jsoneditor-button';
     this.menu.appendChild(buttonCompact);
 
@@ -3205,7 +3205,7 @@ JSONEditor.SearchBox = function(editor, container) {
     var divInput = document.createElement("div");
     this.dom.input = divInput;
     divInput.className = "jsoneditor-search";
-    divInput.title = "查找区块和��?";
+    divInput.title = "查找区块";
     td.appendChild(divInput);
 
     // table to contain the text input and search button
@@ -3249,7 +3249,7 @@ JSONEditor.SearchBox = function(editor, container) {
     tr.appendChild(td);
 
     var searchNext = document.createElement("button");
-    searchNext.title = "下一�? (Enter)";
+    searchNext.title = "下一个 (Enter)";
     searchNext.className = "jsoneditor-search-next";
     searchNext.onclick = function() {
         searchBox.next();
@@ -3259,7 +3259,7 @@ JSONEditor.SearchBox = function(editor, container) {
     tr.appendChild(td);
 
     var searchPrevious = document.createElement("button");
-    searchPrevious.title = "上一�? (Shift+Enter)";
+    searchPrevious.title = "上一个 (Shift+Enter)";
     searchPrevious.className = "jsoneditor-search-previous";
     searchPrevious.onclick = function() {
         searchBox.previous();
@@ -3402,7 +3402,7 @@ JSONEditor.SearchBox.prototype.onSearch = function(event, forceSearch) {
                     break;
                 default:
                     this.dom.results.innerHTML =
-                        "找到&nbsp;" + resultCount + "&nbsp;个结�?";
+                        "找到&nbsp;" + resultCount + "&nbsp;个节点";
                     break;
             }
         } else {
@@ -3811,7 +3811,7 @@ JSONEditor.validate = function(jsonString) {
         message = '<pre class="error">' + err.toString() + "</pre>";
         if (window.jsonlint) {
             message +=
-                '<div id="by-jsonlint">�? <a class="error" href="http://zaach.github.com/jsonlint/" target="_blank">' +
+                '<div id="by-jsonlint"> <a class="error" href="http://zaach.github.com/jsonlint/" target="_blank">' +
                 "JSONLint" +
                 "</a> 提供验证.</div>";
         }
@@ -3827,7 +3827,7 @@ function jsonArea(ob) {
     let change = ob.change;
     let thisare = new Object();
     if (!inputEle) {
-        throw new Error("没有提供数据�?.");
+        throw new Error("没有提供数据.");
     }
     // if target to multi dom
     if (nth) {
@@ -3859,7 +3859,7 @@ function jsonArea(ob) {
                 return false;
             }
         }
-        console.log("不是丢�个stringify");
+        console.log("不是丢�个stringify");
     };
     // json data
     thisare.jsonval = "{}";
