@@ -54,7 +54,7 @@ class Auth
      */
     public static function isSupperAdmin(int $admin_id = 0): bool
     {
-        return static::isSuperAdmin();
+        return static::isSuperAdmin($admin_id);
 
     }
 
