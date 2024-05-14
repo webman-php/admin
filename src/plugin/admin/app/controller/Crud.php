@@ -108,12 +108,12 @@ class Crud extends Base
             }
         }
         // 按照数据限制字段返回数据
-        if (!Auth::isSupperAdmin()) {
+        if (!Auth::isSuperAdmin()) {
             if ($this->dataLimit === 'personal') {
                 $where[$this->dataLimitField] = admin_id();
             } elseif ($this->dataLimit === 'auth') {
                 $primary_key = $this->model->getKeyName();
-                if (!Auth::isSupperAdmin() && (!isset($where[$primary_key]) || $this->dataLimitField != $primary_key)) {
+                if (!Auth::isSuperAdmin() && (!isset($where[$primary_key]) || $this->dataLimitField != $primary_key)) {
                     $where[$this->dataLimitField] = ['in', Auth::getScopeAdminIds(true)];
                 }
             }
@@ -205,7 +205,7 @@ class Crud extends Base
             $data[$password_filed] = Util::passwordHash($data[$password_filed]);
         }
 
-        if (!Auth::isSupperAdmin()) {
+        if (!Auth::isSuperAdmin()) {
             if ($this->dataLimit === 'personal') {
                 $data[$this->dataLimitField] = admin_id();
             } elseif ($this->dataLimit === 'auth') {
@@ -255,7 +255,7 @@ class Crud extends Base
             throw new BusinessException('记录不存在', 2);
         }
 
-        if (!Auth::isSupperAdmin()) {
+        if (!Auth::isSuperAdmin()) {
             if ($this->dataLimit == 'personal') {
                 if ($model->{$this->dataLimitField} != admin_id()) {
                     throw new BusinessException('无数据权限');
@@ -350,7 +350,7 @@ class Crud extends Base
             throw new BusinessException('该表无主键，不支持删除');
         }
         $ids = (array)$request->post($primary_key, []);
-        if (!Auth::isSupperAdmin()){
+        if (!Auth::isSuperAdmin()){
             $admin_ids = $this->model->where($primary_key, $ids)->pluck($this->dataLimitField)->toArray();
             if ($this->dataLimit == 'personal') {
                 if (!in_array(admin_id(), $admin_ids)) {

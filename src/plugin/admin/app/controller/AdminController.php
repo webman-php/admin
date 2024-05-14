@@ -104,7 +104,7 @@ class AdminController extends Crud
             if (!$role_ids) {
                 return $this->json(1, '至少选择一个角色组');
             }
-            if (!Auth::isSupperAdmin() && array_diff($role_ids, Auth::getScopeRoleIds())) {
+            if (!Auth::isSuperAdmin() && array_diff($role_ids, Auth::getScopeRoleIds())) {
                 return $this->json(1, '角色超出权限范围');
             }
             AdminRole::where('admin_id', $admin_id)->delete();
@@ -148,7 +148,7 @@ class AdminController extends Crud
                 }
                 $role_ids = explode(',', $role_ids);
 
-                $is_supper_admin = Auth::isSupperAdmin();
+                $is_supper_admin = Auth::isSuperAdmin();
                 $exist_role_ids = AdminRole::where('admin_id', $admin_id)->pluck('role_id')->toArray();
                 $scope_role_ids = Auth::getScopeRoleIds();
                 if (!$is_supper_admin && !array_intersect($exist_role_ids, $scope_role_ids)) {
@@ -194,7 +194,7 @@ class AdminController extends Crud
         if (in_array(admin_id(), $ids)) {
             return $this->json(1, '不能删除自己');
         }
-        if (!Auth::isSupperAdmin() && array_diff($ids, Auth::getScopeAdminIds())) {
+        if (!Auth::isSuperAdmin() && array_diff($ids, Auth::getScopeAdminIds())) {
             return $this->json(1, '无数据权限');
         }
         $this->model->whereIn($primary_key, $ids)->delete();
