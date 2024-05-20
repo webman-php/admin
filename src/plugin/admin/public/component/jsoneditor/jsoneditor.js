@@ -2313,7 +2313,7 @@ JSONEditor.Node.types = [
     {
         value: "array",
         className: "jsoneditor-option-array",
-        title: '"array" 类型: 包含了有序值集合的数组.'
+        title: '"array" 类型: 丢�个包含了有序值集合的数组.'
     },
     {
         value: "auto",
@@ -2512,7 +2512,7 @@ JSONEditor.Node.prototype._createDomRemoveButton = function() {
     ) {
         var buttonRemove = document.createElement("button");
         buttonRemove.className = "jsoneditor-remove";
-        buttonRemove.title = "删除节点 (包括所有子节点)";
+        buttonRemove.title = "删除节点 (包括扢�有子节点)";
 
         return buttonRemove;
     } else {
@@ -2534,7 +2534,7 @@ JSONEditor.Node.prototype._createDomDuplicateButton = function() {
     ) {
         var buttonDupliate = document.createElement("button");
         buttonDupliate.className = "jsoneditor-duplicate";
-        buttonDupliate.title = "复制节点 (包括所有子节点)";
+        buttonDupliate.title = "复制节点 (包括扢�有子节点)";
 
         return buttonDupliate;
     } else {
