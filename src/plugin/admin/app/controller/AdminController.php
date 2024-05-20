@@ -197,8 +197,12 @@ class AdminController extends Crud
         if (!Auth::isSuperAdmin() && array_diff($ids, Auth::getScopeAdminIds())) {
             return $this->json(1, '无数据权限');
         }
-        $this->model->whereIn($primary_key, $ids)->delete();
-        AdminRole::whereIn('admin_id', $ids)->delete();
+        $this->model->whereIn($primary_key, $ids)->each(function (Admin $admin) {
+            $admin->delete();
+        });
+        AdminRole::whereIn('admin_id', $ids)->each(function (AdminRole $admin_role) {
+            $admin_role->delete();
+        });
         return $this->json(0);
     }
 
