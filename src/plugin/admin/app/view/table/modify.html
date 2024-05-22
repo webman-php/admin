@@ -170,10 +170,6 @@
                                     </select>
                                 </script>
 
-                                <script type="text/html" id="form-weight">
-                                    <input type="text" id="_weight_{{d._field_id}}" name="forms[{{ d.LAY_NUM-1 }}][_weight_]" value="{{ d._weight_ }}" class="layui-input" autocomplete="off">
-                                </script>
-
                             </div>
 
                             <!-- 索引 -->
@@ -225,10 +221,6 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script src="/app/admin/admin/js/permission.js"></script>
         <script>
-            // 引入拖拽模块
-            layui.extend({
-                soulTable:'soulTable/soulTable.slim',// 模块
-            })
 
             const MODIFY_API = "/app/admin/table/modify";
             const SCHEMA_API = "/app/admin/table/schema";
@@ -399,7 +391,7 @@
                         });
 
                         // 表单设置
-                        layui.use(["table", "common", "element","soulTable"], function () {
+                        layui.use(["table", "common", "element"], function () {
                             let table = layui.table;
 
                             layui.element.on("tab(create-table-tab)", function(){
@@ -407,12 +399,6 @@
                             });
 
                             let cols = [
-                                {
-                                    title: "序号",
-                                    field: "_weight_",
-                                    templet: '#form-weight',
-                                    width: 80,sort:true,
-                                },
                                 {
                                     title: "字段名称",
                                     field: "field",
@@ -486,22 +472,6 @@
                                 limit: 10000,
                                 page: false,
                                 defaultToolbar: [],
-                                initSort:true,
-                                rowDrag:{done:function(obj){
-                                        for(let i in obj.cache){
-                                            var field_id = obj.cache[i]['_field_id']
-                                            $('#_weight_'+field_id).val(parseInt(i)+1)
-                                            obj.cache[i]['_weight_'] = parseInt(i)+1
-                                        }
-                                        table.reloadData('form-table',{data:obj.cache})
-                                    }},
-                                done:function(){
-                                    layui.soulTable.render(this);
-                                }
-                            });
-
-                            table.on("sort(form-table)", function(obj){
-                                table.reload("form-table", {where: {field: '_weight_',order: obj.type}});
                             });
 
                         });
@@ -588,9 +558,6 @@
                             }
 
                             window.syncTableData = function () {
-                                //切换前 恢复排序
-                                layui.table.reload("form-table",{initSort: {field: '_weight_', type: ''}})
-
                                 let tableData = layui.form.val("create-table-form");
                                 let formTableDataOld = [];
                                 let columnTableData = [];
@@ -629,8 +596,6 @@
                                             enable_sort: tableData["forms[" + id + "][enable_sort]"] === "on",
                                             searchable: tableData["forms[" + id + "][searchable]"],
                                             search_type: tableData["forms[" + id + "][search_type]"],
-                                            // 新增字段
-                                            _weight_:tableData["forms[" + id + "][_weight_]"]||tableData["forms[" + id + "][_field_id]"],
                                         });
                                     }
                                     // key data
@@ -678,8 +643,6 @@
                                 layui.table.reloadData("form-table", {data: formTableData});
                                 layui.table.reloadData("key-table", {data: keyTableData});
                                 keyColumnMultiSelectRender();
-                                // 延迟触发升序
-                                setTimeout(()=>{layui.table.reload("form-table",{initSort: {field: '_weight_', type: 'asc'}})},100)
                             }
 
                             window.keyColumnMultiSelectRender = function () {
