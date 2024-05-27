@@ -709,14 +709,13 @@ EOF;
             $props['layVerify'] = $props['lay-verify'];
         }
         unset($props['lay-verify'], $props['url']);
-        $props = $this->prepareProps($props);
         foreach ($props as $key => $item) {
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $item = preg_replace('/"\$([^"]+)"/', '$1', $item);
                 $options_string .= "\n".($url?'                ':'        ')."$key: $item,";
             } else if (is_string($item)) {
-                $options_string .= "\n".($url?'                ':'        ')."$key: $item,";
+                $options_string .= "\n".($url?'                ':'        ')."$key: \"$item\",";
             } else {
                 $options_string .= "\n".($url?'                ':'        ')."$key: ".var_export($item, true).",";
             }
