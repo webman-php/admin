@@ -664,24 +664,7 @@
                         nullable: tableData["columns[" + id + "][nullable]"] === "on",
                     });
                 }
-                // old form data
-                // if (typeof tableData["forms[" + id + "][_field_id]"] !== "undefined") {
-                //     console.log(tableData["forms[" + id + "][_weight_]"]||tableData["forms[" + id + "][_field_id]"],'---dddd')
-                //     formTableDataOld.push({
-                //         _field_id: tableData["forms[" + id + "][_field_id]"],
-                //         field : tableData["columns[" + id + "][field]"], // column
-                //         comment: tableData["columns[" + id + "][comment]"], //column
-                //         control: tableData["forms[" + id + "][control]"],
-                //         control_args: tableData["forms[" + id + "][control_args]"],
-                //         form_show: tableData["forms[" + id + "][form_show]"] === "on",
-                //         list_show: tableData["forms[" + id + "][list_show]"] === "on",
-                //         enable_sort: tableData["forms[" + id + "][enable_sort]"] === "on",
-                //         searchable: tableData["forms[" + id + "][searchable]"],
-                //         search_type: tableData["forms[" + id + "][search_type]"],
-                //         // 新增字段
-                //         _weight_:tableData["forms[" + id + "][_weight_]"]||tableData["forms[" + id + "][_field_id]"],
-                //     });
-                // }
+
                 // key data
                 if (typeof tableData["keys[" + _key_id + "][name]"] !== "undefined") {
                     keyTableData.push({

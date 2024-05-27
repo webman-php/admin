@@ -9,7 +9,6 @@ use plugin\admin\app\common\Util;
 use plugin\admin\app\model\Role;
 use plugin\admin\app\model\Rule;
 use plugin\admin\app\model\Option;
-use support\Cache;
 use support\exception\BusinessException;
 use support\Request;
 use support\Response;
@@ -398,7 +397,6 @@ class TableController extends Base
     public function crud(Request $request): Response
     {
         $table_name = $request->input('table');
-        $key = "CURD__{$table_name}";
         Util::checkTableName($table_name);
         $prefix = 'wa_';
         $table_basename = strpos($table_name, $prefix) === 0 ? substr($table_name, strlen($prefix)) : $table_name;
@@ -410,19 +408,14 @@ class TableController extends Base
                 'table' => $table_name,
                 'model' => "$base_path/model/$model_class.php",
                 'controller' => "$base_path/controller/{$model_class}Controller.php",
-                // 读取缓存配置  这个需要 symfony/cache 的依赖 无法直接使用 不知道如何处理较好！！！
-                //'defaultParams'=>Cache::get($key)??[],
             ]);
         }
-        // 将表单参数缓存起来 下次再生成时 避免重复填写  这个需要 symfony/cache 的依赖 无法直接使用 不知道如何处理较好！！！
-        // Cache::set($key,$request->post());
         $title = $request->post('title');
         $pid = $request->post('pid', 0);
         $icon = $request->post('icon', '');
         $controller_file = '/' . trim($request->post('controller', ''), '/');
         $model_file = '/' . trim($request->post('model', ''), '/');
         $overwrite = $request->post('overwrite');
-        $ismodel = $request->post('ismodel');// 仅创建模型
         if ($controller_file === '/' || $model_file === '/') {
             return $this->json(1, '控制器和model不能为空');
         }
@@ -448,7 +441,7 @@ class TableController extends Base
         }
 
         if (!$overwrite) {
-            if (!$ismodel && is_file(base_path($controller_file))) {
+            if (is_file(base_path($controller_file))) {
                 return $this->json(1, "$controller_file 已经存在");
             }
             if (is_file(base_path($model_file))) {
@@ -487,11 +480,6 @@ class TableController extends Base
 
             // 创建model
             $this->createModel($model_class, $model_namespace, base_path($model_file), $table_name);
-            // 仅生成模型
-            if($ismodel){
-                Util::resumeFileMonitor();
-                return $this->json(0);
-            }
 
             $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
             $controller_class = $controller_file_name;
@@ -524,9 +512,7 @@ class TableController extends Base
             $model_class_with_namespace = "$model_namespace\\$model_class";
             $primary_key = (new $model_class_with_namespace)->getKeyName();
             $url_path_base = ($plugin ? "/app/$plugin/" : '/') . ($app ? "$app/" : '') . $template_path;
-            Util::$curdIsSort = true;// 将输出的字段信息 按照用户设定的顺序输出
             $this->createTemplate(base_path($template_file_path), $table_name, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
-            Util::$curdIsSort = false;
         } finally {
             Util::resumeFileMonitor();
         }
