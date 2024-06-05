@@ -214,6 +214,8 @@ class Crud extends Base
                     if (!in_array($admin_id, Auth::getScopeAdminIds(true))) {
                         throw new BusinessException('无数据权限');
                     }
+                } else {
+                    $data[$this->dataLimitField] = admin_id();
                 }
             }
         } elseif ($this->dataLimit && empty($data[$this->dataLimitField])) {
