@@ -353,7 +353,9 @@ class Crud extends Base
         }
         $ids = (array)$request->post($primary_key, []);
         if (!Auth::isSuperAdmin()){
-            $admin_ids = $this->model->where($primary_key, $ids)->pluck($this->dataLimitField)->toArray();
+            if ($this->dataLimit) {
+                $admin_ids = $this->model->where($primary_key, $ids)->pluck($this->dataLimitField)->toArray();
+            }
             if ($this->dataLimit == 'personal') {
                 if (!in_array(admin_id(), $admin_ids)) {
                     throw new BusinessException('无数据权限');
