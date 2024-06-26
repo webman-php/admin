@@ -220,6 +220,7 @@
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
         <script src="/app/admin/admin/js/permission.js"></script>
+        <script src="/app/admin/admin/js/soulTable.js"></script>
         <script>
 
             const MODIFY_API = "/app/admin/table/modify";
@@ -269,10 +270,11 @@
                         });
 
                         // 字段设置
-                        layui.use(["table", "common", "popup"], function () {
+                        layui.use(["table", "common", "popup","soulTable"], function () {
 
                             let table = layui.table;
                             let common = layui.common;
+                            let soulTable = layui.soulTable;
                             let cols = [
                                 {
                                     type: "checkbox",
@@ -345,6 +347,33 @@
                                 page: false,
                                 toolbar: "#column-toolbar",
                                 defaultToolbar: [],
+                                rowDrag: {done: function(obj) {
+                                        syncTableData();
+                                        const row_id = obj.row._field_id;  	// 当前id
+                                        const row_sort = obj.newIndex + 1; 		// 拖动后的排序
+                                        const cache = obj.cache; 		// 拖动后的排序
+                                        window._key_i  = 0;
+                                        let options = table.getData("column-table");
+                                        console.log(row_id,row_sort,options)
+                                        if (row_id==options[row_id]['_field_id']){
+                                            cache[obj.newIndex]=options[row_id];
+                                        }
+                                        layui.each(cache, function (index, item) {
+                                            if (item.default==null){
+                                                item.default=""
+                                            }
+                                            item._field_id = _key_i
+                                            _key_i ++
+                                            delete item['LAY_NUM']
+                                            delete item['LAY_INDEX']
+                                        });
+                                        table.reloadData("column-table", {data:cache});
+                                        syncTableData()
+                                    }},
+                                done: function () {
+                                    //layer.photos({photos: 'div[lay-id="data-table"]', anim: 5});
+                                    soulTable.render(this);
+                                }
                             });
 
                             table.on("toolbar(column-table)", function(obj) {
