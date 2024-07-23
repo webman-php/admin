@@ -353,6 +353,7 @@ class Crud extends Base
         }
         $ids = (array)$request->post($primary_key, []);
         if (!Auth::isSuperAdmin()){
+            $admin_ids = [];
             if ($this->dataLimit) {
                 $admin_ids = $this->model->where($primary_key, $ids)->pluck($this->dataLimitField)->toArray();
             }
@@ -393,11 +394,12 @@ class Crud extends Base
     protected function formatTree($items): Response
     {
         $format_items = [];
+        $primary_key = $this->model->getKeyName();
         foreach ($items as $item) {
             $format_items[] = [
-                'name' => $item->title ?? $item->name ?? $item->id,
-                'value' => (string)$item->id,
-                'id' => $item->id,
+                'name' => $this->guessName($item) ?: $item->$primary_key,
+                'value' => (string)$item->$primary_key,
+                'id' => $item->$primary_key,
                 'pid' => $item->pid,
             ];
         }
@@ -424,10 +426,11 @@ class Crud extends Base
     protected function formatSelect($items): Response
     {
         $formatted_items = [];
+        $primary_key = $this->model->getKeyName();
         foreach ($items as $item) {
             $formatted_items[] = [
-                'name' => $item->title ?? $item->name ?? $item->id,
-                'value' => $item->id
+                'name' => $this->guessName($item) ?: $item->$primary_key,
+                'value' => $item->$primary_key
             ];
         }
         return  $this->json(0, 'ok', $formatted_items);
@@ -452,5 +455,15 @@ class Crud extends Base
     protected function afterQuery($items)
     {
         return $items;
+    }
+
+    /**
+     * 猜测记录名称
+     * @param $item
+     * @return mixed
+     */
+    protected function guessName($item)
+    {
+        return $item->title ?? $item->name ?? $item->nickname ?? $item->username ?? $item->id;
     }
 }

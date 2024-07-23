@@ -206,21 +206,5 @@ class AdminController extends Crud
         return $this->json(0);
     }
 
-    /**
-     * 格式化下拉列表
-     * @param $items
-     * @return Response
-     */
-    protected function formatSelect($items): Response
-    {
-        $formatted_items = [];
-        foreach ($items as $item) {
-            $formatted_items[] = [
-                'name' => $item->nickname,
-                'value' => $item->id
-            ];
-        }
-        return  $this->json(0, 'ok', $formatted_items);
-    }
 
 }
