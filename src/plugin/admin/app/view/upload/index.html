@@ -434,20 +434,20 @@
                     console.log('obj.data', obj.data)
                     if (!obj.data.url || obj.data.url === '') {
                         layer.msg('图片地址错误！')
-                        return
+                        return;
                     }
-                    let autoImg = {}
-                    let img = new Image()
-                    img.src = obj.data.url
+                    let autoImg = {};
+                    let img = new Image();
+                    img.src = obj.data.url;
                     img.onload = function () {
-                        let max_height = $(window).height() - 50
-                        let max_width = $(window).width()
-                        let rate1 = max_height / obj.data['image_height']
-                        let rate2 = max_width / obj.data['image_width']
-                        let rate3 = 1
-                        let rate = Math.min(rate1, rate2, rate3)
-                        autoImg.height = obj.data['image_height'] * rate
-                        autoImg.width = obj.data['image_width'] * rate
+                        let max_height = $(window).height() - 50;
+                        let max_width = $(window).width();
+                        let rate1 = max_height / obj.data['image_height'];
+                        let rate2 = max_width / obj.data['image_width'];
+                        let rate3 = 1;
+                        let rate = Math.min(rate1, rate2, rate3);
+                        autoImg.height = obj.data['image_height'] * rate;
+                        autoImg.width = obj.data['image_width'] * rate;
                         layer.open({
                             type: 1,
                             title: false,
