@@ -584,7 +584,6 @@ class TableController extends Base
     public \$incrementing = false;
 
 EOF;
-;
                     }
                 }
                 $type = $this->getType($item->DATA_TYPE);
@@ -1230,7 +1229,7 @@ EOF;
         $format = $request->get('format', 'normal');
         $limit = $request->get('limit', $format === 'tree' ? 5000 : 10);
 
-        $allow_column = Util::db()->select("desc $table");
+        $allow_column = Util::db()->select("desc `$table`");
         if (!$allow_column) {
             return $this->json(2, '表不存在');
         }
