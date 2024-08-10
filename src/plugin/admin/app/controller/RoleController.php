@@ -55,6 +55,7 @@ class RoleController extends Crud
     {
         $id = $request->get('id');
         [$where, $format, $limit, $field, $order] = $this->selectInput($request);
+        $limit = 100000;
         $role_ids = Auth::getScopeRoleIds(true);
         if (!$id) {
             $where['id'] = ['in', $role_ids];
