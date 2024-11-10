@@ -27,8 +27,8 @@ class Util
 
     /**
      * 验证密码哈希
-     * @param $password
-     * @param $hash
+     * @param string $password
+     * @param string $hash
      * @return bool
      */
     public static function passwordVerify(string $password, string $hash): bool
@@ -109,7 +109,7 @@ class Util
      */
     public static function pdoQuote($var)
     {
-        return Util::db()->getPdo()->quote($var, \PDO::PARAM_STR);
+        return Util::db()->getPdo()->quote($var);
     }
 
     /**
