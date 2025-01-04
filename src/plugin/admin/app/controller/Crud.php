@@ -99,14 +99,43 @@ class Crud extends Base
         if (!in_array($field, $allow_column)) {
             $field = null;
         }
+        // foreach ($where as $column => $value) {
+        //     if (
+        //         $value === '' || !isset($allow_column[$column]) ||
+        //         is_array($value) && (empty($value) || !in_array($value[0], ['null', 'not null']) && !isset($value[1]))
+        //     ) {
+        //         unset($where[$column]);
+        //     }
+        // }
+        #支持列字段多条件查询
         foreach ($where as $column => $value) {
-            if (
-                $value === '' || !isset($allow_column[$column]) ||
-                is_array($value) && (empty($value) || !in_array($value[0], ['null', 'not null']) && !isset($value[1]))
-            ) {
+            if ($value === '' || !isset($allow_column[$column])) {
                 unset($where[$column]);
+                continue;
+            }
+
+            if (is_array($value)) {
+                // 如果是数组，检查每个条件是否有效
+                $validConditions = [];
+                foreach ($value as $condition) {
+
+                    if (is_array($condition) && count($condition) >= 2) {
+                        if (in_array($condition[0], ['null', 'not null']) || (isset($condition[1]) && $condition[1] !== '')) {
+                            $validConditions[] = $condition;
+                        }
+                    } elseif ($condition !== '') {
+
+                        $validConditions[] = $condition;
+                    }
+                }
+                if (empty($validConditions)) {
+                    unset($where[$column]);
+                } else {
+                    $where[$column] = $validConditions;
+                }
             }
         }
+        
         // 按照数据限制字段返回数据
         if (!Auth::isSuperAdmin()) {
             if ($this->dataLimit === 'personal') {
@@ -131,33 +160,68 @@ class Crud extends Base
     protected function doSelect(array $where, string $field = null, string $order= 'desc')
     {
         $model = $this->model;
-        foreach ($where as $column => $value) {
-            if (is_array($value)) {
-                if ($value[0] === 'like' || $value[0] === 'not like') {
-                    $model = $model->where($column, $value[0], "%$value[1]%");
-                } elseif (in_array($value[0], ['>', '=', '<', '<>'])) {
-                    $model = $model->where($column, $value[0], $value[1]);
-                } elseif ($value[0] == 'in' && !empty($value[1])) {
-                    $valArr = $value[1];
-                    if (is_string($value[1])) {
-                        $valArr = explode(",", trim($value[1]));
+        // foreach ($where as $column => $value) {
+        //     if (is_array($value)) {
+        //         if ($value[0] === 'like' || $value[0] === 'not like') {
+        //             $model = $model->where($column, $value[0], "%$value[1]%");
+        //         } elseif (in_array($value[0], ['>', '=', '<', '<>'])) {
+        //             $model = $model->where($column, $value[0], $value[1]);
+        //         } elseif ($value[0] == 'in' && !empty($value[1])) {
+        //             $valArr = $value[1];
+        //             if (is_string($value[1])) {
+        //                 $valArr = explode(",", trim($value[1]));
+        //             }
+        //             $model = $model->whereIn($column, $valArr);
+        //         } elseif ($value[0] == 'not in' && !empty($value[1])) {
+        //             $valArr = $value[1];
+        //             if (is_string($value[1])) {
+        //                 $valArr = explode(",", trim($value[1]));
+        //             }
+        //             $model = $model->whereNotIn($column, $valArr);
+        //         }elseif ($value[0] == 'null') {
+        //             $model = $model->whereNull($column);
+        //         } elseif ($value[0] == 'not null') {
+        //             $model = $model->whereNotNull($column);
+        //         } elseif ($value[0] !== '' || $value[1] !== '') {
+        //             $model = $model->whereBetween($column, $value);
+        //         }
+        //     } else {
+        //         $model = $model->where($column, $value);
+        //     }
+        // }
+        #支持列字段多条件查询
+        foreach ($where as $column => $conditions) {
+            if (!is_array($conditions)) {
+                $conditions = [$conditions];
+            }
+            foreach ($conditions as $condition) {
+                if (is_array($condition)) {
+                    if ($condition[0] === 'like' || $condition[0] === 'not like') {
+                        $model = $model->where($column, $condition[0], "%{$condition[1]}%");
+                    } elseif (in_array($condition[0], ['>', '=', '<', '<>'])) {
+                        $model = $model->where($column, $condition[0], $condition[1]);
+                    } elseif ($condition[0] == 'in' && !empty($condition[1])) {
+                        $valArr = $condition[1];
+                        if (is_string($condition[1])) {
+                            $valArr = explode(",", trim($condition[1]));
+                        }
+                        $model = $model->whereIn($column, $valArr);
+                    } elseif ($condition[0] == 'not in' && !empty($condition[1])) {
+                        $valArr = $condition[1];
+                        if (is_string($condition[1])) {
+                            $valArr = explode(",", trim($condition[1]));
+                        }
+                        $model = $model->whereNotIn($column, $valArr);
+                    } elseif ($condition[0] == 'null') {
+                        $model = $model->whereNull($column);
+                    } elseif ($condition[0] == 'not null') {
+                        $model = $model->whereNotNull($column);
+                    } elseif ($condition[0] == 'between' && is_array($condition[1]) && count($condition[1]) == 2) {
+                        $model = $model->whereBetween($column, $condition[1]);
                     }
-                    $model = $model->whereIn($column, $valArr);
-                } elseif ($value[0] == 'not in' && !empty($value[1])) {
-                    $valArr = $value[1];
-                    if (is_string($value[1])) {
-                        $valArr = explode(",", trim($value[1]));
-                    }
-                    $model = $model->whereNotIn($column, $valArr);
-                }elseif ($value[0] == 'null') {
-                    $model = $model->whereNull($column);
-                } elseif ($value[0] == 'not null') {
-                    $model = $model->whereNotNull($column);
-                } elseif ($value[0] !== '' || $value[1] !== '') {
-                    $model = $model->whereBetween($column, $value);
+                } else {
+                    $model = $model->where($column, $condition);
                 }
-            } else {
-                $model = $model->where($column, $value);
             }
         }
         if ($field) {
