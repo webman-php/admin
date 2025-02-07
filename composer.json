@@ -4,8 +4,8 @@
   "license": "MIT",
   "description": "Webman Admin",
   "require": {
-    "workerman/webman-framework": ">=1.4",
-    "illuminate/database": ">=7.30",
+    "workerman/webman-framework": ">=2.1",
+    "webman/database": ">=2.1",
     "illuminate/pagination": ">=7.30",
     "illuminate/events": ">=7.30",
     "intervention/image": "^2.7",
