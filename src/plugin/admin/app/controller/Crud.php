@@ -128,7 +128,7 @@ class Crud extends Base
      * @param string $order
      * @return EloquentBuilder|QueryBuilder|Model
      */
-    protected function doSelect(array $where, string $field = null, string $order= 'desc')
+    protected function doSelect(array $where, ?string $field = null, string $order= 'desc')
     {
         $model = $this->model;
         foreach ($where as $column => $value) {
