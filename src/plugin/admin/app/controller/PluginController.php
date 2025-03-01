@@ -508,7 +508,7 @@ class PluginController extends Base
      * @param array $extraDirs
      * @return mixed|string|null
      */
-    protected function findCmd(string $name, string $default = null, array $extraDirs = [])
+    protected function findCmd(string $name, ?string $default = null, array $extraDirs = [])
     {
         if (ini_get('open_basedir')) {
             $searchPath = array_merge(explode(PATH_SEPARATOR, ini_get('open_basedir')), $extraDirs);
