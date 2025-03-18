@@ -87,7 +87,7 @@ class IndexController
             'php_version' => PHP_VERSION,
             'workerman_version' =>  Worker::VERSION,
             'webman_version' => Util::getPackageVersion('workerman/webman-framework'),
-            'admin_version' => config('plugin.admin.app.version'),
+            'admin_version' => Util::getPackageVersion('webman/admin'),
             'mysql_version' => $mysql_version,
             'os' => PHP_OS,
             'day7_detail' => array_reverse($day7_detail),
