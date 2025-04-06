@@ -32,14 +32,7 @@ class Middleware implements MiddlewareInterface
                 $response = json(['code' => $code, 'msg' => $msg, 'type' => 'error']);
             } else {
                 if ($code === 401) {
-                    $response = response(<<<EOF
-<script>
-    if (self !== top) {
-        parent.location.reload();
-    }
-</script>
-EOF
-                    );
+                    $response = admin_error_401_script();
                 } else {
                     $request->app = '';
                     $request->plugin = 'admin';

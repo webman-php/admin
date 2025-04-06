@@ -5,6 +5,7 @@
 
 use plugin\admin\app\model\Admin;
 use plugin\admin\app\model\AdminRole;
+use support\Response;
 
 /**
  * 当前管理员id
@@ -84,3 +85,10 @@ function refresh_admin_session(bool $force = false)
     $session->set('admin', $admin);
 }
 
+function admin_error_401_script(): Response
+{
+  return response(<<<EOF
+<script>top.location.href = '/app/admin';</script>
+EOF
+  );
+}
