@@ -265,3 +265,19 @@
 	display: inline-block;
 	vertical-align: middle;
 }
+
+/* 显示子菜单图标并增加缩进 */
+.pear-nav-tree .layui-nav-child dd a i {
+	display: inline;
+	margin-left: 12px;
+	margin-right: 6px;
+}
+.pear-nav-tree .layui-nav-child dd a i[class=''] {
+	margin-right: 0;
+}
+.pear-nav-tree .layui-nav-child dd dl {
+	margin-left: 12px;
+}
+.pear-nav-tree .layui-nav-child dd a span {
+	margin-left: 0 !important;
+}
