@@ -1,4 +1,5 @@
 <?php
+
 namespace plugin\admin\app\common;
 
 use support\exception\BusinessException;
@@ -45,7 +46,7 @@ class Layui
      */
     protected function options($options): array
     {
-        array_walk_recursive($options, function(&$item, $key){
+        array_walk_recursive($options, function (&$item, $key) {
             if (is_string($item)) {
                 $item = htmlspecialchars($item);
                 if ($key === 'url') {
@@ -53,11 +54,11 @@ class Layui
                 }
             }
         });
-        $field = $options['field']??'';
+        $field = $options['field'] ?? '';
         $props = !empty($options['props']) ? $options['props'] : [];
-        $verify_string = !empty($props['lay-verify']) ? ' lay-verify="'.$props['lay-verify'].'"' : '';
+        $verify_string = !empty($props['lay-verify']) ? ' lay-verify="' . $props['lay-verify'] . '"' : '';
         $required_string = strpos($verify_string, 'required') ? ' required' : '';
-        $label = !empty($options['label']) ? '<label class="layui-form-label'.$required_string.'">'.$options['label'].'</label>' : '';
+        $label = !empty($options['label']) ? '<label class="layui-form-label' . $required_string . '">' . $options['label'] . '</label>' : '';
         $value = $props['value'] ?? '';
         $class = $props['class'] ?? 'layui-input-block';
 
@@ -73,8 +74,8 @@ class Layui
     {
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
 
-        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="'.$props['placeholder'].'"' : '';
-        $autocomplete_string = !empty($props['autocomplete']) ? ' autocomplete="'.$props['autocomplete'].'"' : '';
+        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="' . $props['placeholder'] . '"' : '';
+        $autocomplete_string = !empty($props['autocomplete']) ? ' autocomplete="' . $props['autocomplete'] . '"' : '';
         $disabled_string = !empty($props['disabled']) ? ' disabled' : '';
         $type = $props['type'] ?? 'text';
 
@@ -194,7 +195,7 @@ EOF;
     {
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
 
-        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="'.$props['placeholder'].'"' : '';
+        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="' . $props['placeholder'] . '"' : '';
         $disabled_string = !empty($props['disabled']) ? ' disabled' : '';
 
         $this->htmlContent .= <<<EOF
@@ -218,7 +219,7 @@ EOF;
     {
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
 
-        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="'.$props['placeholder'].'"' : '';
+        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="' . $props['placeholder'] . '"' : '';
         $disabled_string = !empty($props['disabled']) ? ' disabled' : '';
         $id = $field;
 
@@ -264,12 +265,12 @@ EOF;
     {
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
 
-        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="'.$props['placeholder'].'"' : '';
-        $autocomplete_string = !empty($props['autocomplete']) ? ' autocomplete="'.$props['autocomplete'].'"' : '';
+        $placeholder_string = !empty($props['placeholder']) ? ' placeholder="' . $props['placeholder'] . '"' : '';
+        $autocomplete_string = !empty($props['autocomplete']) ? ' autocomplete="' . $props['autocomplete'] . '"' : '';
         $disabled_string = !empty($props['disabled']) ? ' disabled' : '';
         $type = $props['type'] ?? 'text';
-        if (empty($value)){
-            $value='{}';
+        if (empty($value)) {
+            $value = '{}';
         }
         $this->htmlContent .= <<<EOF
 
@@ -368,6 +369,8 @@ EOF;
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
         $props['acceptMime'] = $props['acceptMime'] ?? 'image/gif,image/jpeg,image/jpg,image/png';
         $props['url'] = $props['url'] ?? '/app/admin/upload/image';
+        $props['multiple'] = $props['multiple'] ? 1 : 0;
+
         $id = $this->createId($field);
 
         unset($props['lay-verify']);
@@ -376,7 +379,8 @@ EOF;
         $props = $this->prepareProps($props);
         $options_string .= "\n" . $this->preparePropsToJsObject($props, 1, true);
 
-        $this->htmlContent .= <<<EOF
+        if ($props['multiple'] == 0) {
+            $this->htmlContent .= <<<EOF
 
 <div class="layui-form-item">
     $label
@@ -393,7 +397,7 @@ EOF;
 </div>
 
 EOF;
-        $this->jsContent .= <<<EOF
+            $this->jsContent .= <<<EOF
 
 // 字段 {$options['label']} $field
 layui.use(["upload", "layer"], function() {
@@ -422,6 +426,123 @@ layui.use(["upload", "layer"], function() {
 });
 
 EOF;
+        } else {
+            $this->htmlContent .= <<<EOF
+
+<div class="layui-form-item">
+    $label
+    <div class="$class">
+    
+        <div class="layui-upload">
+           <input type="text" class="uploader-list" style="display:none" name="$field" value="$value" id="$id"/>
+           <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+               预览图：
+               <div class="layui-upload-list uploader-list" style="overflow: auto;" id="uploader-list-$id">
+               </div>
+           </blockquote>
+
+           <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="multi-upload-$id" permission="app.admin.upload.image">
+               <i class="layui-icon layui-icon-upload"></i>多图上传
+           </button>
+           
+           <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-$id"  permission="app.admin.upload.attachment">
+            <i class="layui-icon layui-icon-align-left"></i>选择图片
+          </button>
+       </div>
+    </div>
+</div>
+
+EOF;
+            $this->jsContent .= <<<EOF
+
+// 字段 {$options['label']} $field
+layui.use(["upload", "layer"], function() {
+    var upload = layui.upload;
+    var $ = layui.$;
+    let multiple_images = layui.$("#$id").attr("value").split(",");
+    
+    
+    $("#attachment-choose-$id").on("click", function() {
+        parent.layer.open({
+            type: 2,
+            title: "选择附件",
+            content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",
+            area: ["95%", "90%"],
+            success: function (layero, index) {
+                parent.layui.$("#layui-layer" + index).data("callback", function (data) {
+                            //上传完毕
+       $('#uploader-list-$id').append(
+           '<div class="file-iteme">' +
+           '<div class="handle"><i class="layui-icon layui-icon-delete"></i></div>' +
+           '<img src='+ data.url +' alt="'+ data.name +'" >' +
+           '</div>'
+       );
+
+       //追加图片成功追加文件名至图片容器
+       multiple_images.push(data.url);
+       $('#$id').val(multiple_images);
+                });
+            }
+        });
+    });
+    
+    upload.render({
+        elem: '#multi-upload-$id',$options_string
+        before: function(obj){
+       layer.msg('图片上传中...', {
+           icon: 16,
+           shade: 0.01,
+           time: 0
+       })
+   },
+   done: function(res){
+       layer.close(layer.msg());//关闭上传提示窗口
+       //上传完毕
+       $('#uploader-list-$id').append(
+           '<div class="file-iteme">' +
+           '<div class="handle"><i class="layui-icon layui-icon-delete"></i></div>' +
+           '<img src='+ res.data.url +' alt="'+ res.data.name +'" >' +
+           '</div>'
+       );
+
+       //追加图片成功追加文件名至图片容器
+       multiple_images.push(res.data.url);
+       $('#$id').val(multiple_images);
+   }
+});
+
+//鼠标悬浮事件
+$(document).on("mouseenter mouseleave", ".file-iteme", function(event){
+   if(event.type === "mouseenter"){
+       //鼠标悬浮
+       $(this).children(".info").fadeIn("fast");
+       $(this).children(".handle").fadeIn("fast");
+   }else if(event.type === "mouseleave") {
+       //鼠标离开
+       $(this).children(".info").hide();
+       $(this).children(".handle").hide();
+   }
+});
+
+// 删除图片
+$(document).on("click", ".file-iteme .handle", function(event){
+   var delImg = $(this).parent().children("img").attr("src")
+   var index = multiple_images.indexOf(delImg);
+   if (index !== -1) {
+       multiple_images.splice(index, 1);
+   }
+   //重新赋值
+   $('#$id').val(multiple_images);
+   //删除标签
+   $(this).parent().remove();
+});
+//多图上传 end
+
+});
+
+EOF;
+        }
+
 
     }
 
@@ -444,7 +565,7 @@ EOF;
     public function datePicker($options)
     {
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
-        $value_string = $value ? ' value="'.$value.'"' : '';
+        $value_string = $value ? ' value="' . $value . '"' : '';
         $options_string = '';
         unset($props['required'], $props['lay-verify'], $props['value']);
         $props = $this->prepareProps($props);
@@ -463,7 +584,7 @@ EOF;
 EOF;
         $this->jsContent .= <<<EOF
 
-// 字段 {$options["label"]} $field
+// 字段 {$options['label']} $field
 layui.use(["laydate"], function() {
     layui.laydate.render({
         elem: "#$id",$options_string
@@ -548,7 +669,7 @@ EOF;
     {
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
 
-        $value_string = $value ? ' value="'.$value.'"' : '';
+        $value_string = $value ? ' value="' . $value . '"' : '';
         $id = $this->createId($field);
         $options_string = '';
         $props = $this->prepareProps($props);
@@ -647,7 +768,7 @@ EOF;
     {
         $options['props']['toolbar'] = array_merge_recursive([
             'show' => true,
-            'list' => [ 'ALL', 'CLEAR', 'REVERSE' ]
+            'list' => ['ALL', 'CLEAR', 'REVERSE']
         ], $options['props']['toolbar'] ?? []);
         $this->apiSelect($options);
     }
@@ -686,7 +807,7 @@ EOF;
             '$expandedKeys' => '$initValue'], $options['props']['tree'] ?? []);
         $options['props']['toolbar'] = array_merge_recursive([
             '$show' => true,
-            '$list' => [ 'ALL', 'CLEAR', 'REVERSE' ]
+            '$list' => ['ALL', 'CLEAR', 'REVERSE']
         ], $options['props']['toolbar'] ?? []);
         $this->apiSelect($options);
     }
@@ -712,11 +833,11 @@ EOF;
             if (is_array($item)) {
                 $item = json_encode($item, JSON_UNESCAPED_UNICODE);
                 $item = preg_replace('/"\$([^"]+)"/', '$1', $item);
-                $options_string .= "\n".($url?'                ':'        ')."$key: $item,";
+                $options_string .= "\n" . ($url ? '                ' : '        ') . "$key: $item,";
             } else if (is_string($item)) {
-                $options_string .= "\n".($url?'                ':'        ')."$key: \"$item\",";
+                $options_string .= "\n" . ($url ? '                ' : '        ') . "$key: \"$item\",";
             } else {
-                $options_string .= "\n".($url?'                ':'        ')."$key: ".var_export($item, true).",";
+                $options_string .= "\n" . ($url ? '                ' : '        ') . "$key: " . var_export($item, true) . ',';
             }
         }
 
@@ -824,7 +945,7 @@ EOF;
             if ($filter == 'form_show' && !$columns[$key]['nullable'] && $default === null && ($field !== 'password' || $type === 'insert')) {
                 if (!isset($props['lay-verify'])) {
                     $props['lay-verify'] = 'required';
-                // 非类似字符串类型不允许传空
+                    // 非类似字符串类型不允许传空
                 } elseif (!in_array($columns[$key]['type'], ['string', 'text', 'mediumText', 'longText', 'char', 'binary', 'json'])
                     && strpos($props['lay-verify'], 'required') === false) {
                     $props['lay-verify'] = 'required|' . $props['lay-verify'];
@@ -938,12 +1059,27 @@ EOF;
 EOF;
                     break;
                 case 'uploadimage':
-                    $templet = <<<EOF
+                    $props = Util::getControlProps($info['control'], $info['control_args']);
+                    $multiple = $props['multiple'] ?? 0;
+                    if ($multiple == 0) {
+                        $templet = <<<EOF
 
 		templet: function (d) {
 			return '<img src="'+encodeURI(d['$field'])+'" style="max-width:32px;max-height:32px;" alt="" />'
 		}
 EOF;
+                    } else {
+                        $templet = <<<EOF
+		                templet: function (d) {
+                            const images = d['$field'].split(',');
+                            let html = '';
+                            for (let img of images) {
+                                html += '<img src="' + encodeURI(img.trim()) + '" style="max-width:32px;max-height:32px;" alt="" />';
+                            }
+                            return html;
+						}
+EOF;
+                    }
                     break;
 
             }
@@ -961,7 +1097,7 @@ EOF;
                             $options[$option['value']] = $option['name'];
                         }
                     }
-                    $api_result .= "\napiResults[\"$field\"] = " . json_encode($options, JSON_UNESCAPED_UNICODE) . ";";
+                    $api_result .= "\napiResults[\"$field\"] = " . json_encode($options, JSON_UNESCAPED_UNICODE) . ';';
                 } else {
                     $api_result .= "\napiResults[\"$field\"] = [];";
                 }
@@ -1122,12 +1258,12 @@ EOF;
      */
     private function prepareProps($props)
     {
-        $raw_list = ['true','false','null','undefined'];
+        $raw_list = ['true', 'false', 'null', 'undefined'];
         foreach ($props as $k => $v) {
             if (is_array($v)) {
                 $props[$k] = $this->prepareProps($v);
             } elseif (!in_array($v, $raw_list) && !is_numeric($v)) {
-                if (strpos($v, "#") === 0){
+                if (strpos($v, '#') === 0) {
                     $props[$k] = substr($v, 1);
                 } else {
                     $props[$k] = "\"$v\"";
@@ -1145,7 +1281,7 @@ EOF;
             $string .= "$indent_string{\n";
         }
         foreach ($props as $k => $v) {
-            if (!preg_match("#^[a-zA-Z0-9_]+$#", $k)) {
+            if (!preg_match('#^[a-zA-Z0-9_]+$#', $k)) {
                 $k = "'$k'";
             }
             if (is_array($v)) {
@@ -1157,7 +1293,7 @@ EOF;
         if (!$sub) {
             $string .= "$indent_string}\n";
         }
-        return trim($string,"\n");
+        return trim($string, "\n");
     }
 
 
