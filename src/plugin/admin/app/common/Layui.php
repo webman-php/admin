@@ -418,7 +418,6 @@ layui.use(["upload", "layer"], function() {
     });
     layui.upload.render({
         elem: "#$id",$options_string
-        url: {$props['url']},
         done: function (res) {
             if (res.code > 0) return layui.layer.msg(res.msg);
             this.item.prev().val(res.data.url).prev().attr("src", res.data.url);
@@ -442,9 +441,13 @@ EOF;
                </div>
            </blockquote>
 
-           <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="multi-upload-$id">
+           <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="multi-upload-$id" permission="app.admin.upload.image">
                <i class="layui-icon layui-icon-upload"></i>多图上传
            </button>
+           
+           <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-$id"  permission="app.admin.upload.attachment">
+            <i class="layui-icon layui-icon-align-left"></i>选择图片
+          </button>
        </div>
     </div>
 </div>
@@ -457,10 +460,34 @@ layui.use(["upload", "layer"], function() {
     var upload = layui.upload;
     var $ = layui.$;
     let multiple_images = layui.$("#$id").attr("value").split(",");
+    
+    
+    $("#attachment-choose-$id").on("click", function() {
+        parent.layer.open({
+            type: 2,
+            title: "选择附件",
+            content: "/app/admin/upload/attachment?ext=jpg,jpeg,png,gif,bmp",
+            area: ["95%", "90%"],
+            success: function (layero, index) {
+                parent.layui.$("#layui-layer" + index).data("callback", function (data) {
+                            //上传完毕
+       $('#uploader-list-$id').append(
+           '<div class="file-iteme">' +
+           '<div class="handle"><i class="layui-icon layui-icon-delete"></i></div>' +
+           '<img src='+ data.url +' alt="'+ data.name +'" >' +
+           '</div>'
+       );
+
+       //追加图片成功追加文件名至图片容器
+       multiple_images.push(data.url);
+       $('#$id').val(multiple_images);
+                });
+            }
+        });
+    });
+    
     upload.render({
-        elem: '#multi-upload-$id',
-        url: {$props['url']},
-        multiple: true,
+        elem: '#multi-upload-$id',$options_string
         before: function(obj){
        layer.msg('图片上传中...', {
            icon: 16,
