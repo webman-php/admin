@@ -45,7 +45,7 @@ class TableController extends Base
         $form = Layui::buildForm($table, 'search');
         $table_info = Util::getSchema($table, 'table');
         $primary_key = $table_info['primary_key'][0] ?? null;
-        return raw_view("table/view", [
+        return raw_view('table/view', [
             'form' => $form,
             'table' => $table,
             'primary_key' => $primary_key,
@@ -60,7 +60,7 @@ class TableController extends Base
      */
     public function show(Request $request): Response
     {
-        $table_name = $request->get('table_name','');
+        $table_name = $request->get('table_name', '');
         $limit = (int)$request->get('limit', 10);
         $page = (int)$request->get('page', 1);
         $offset = ($page - 1) * $limit;
@@ -99,7 +99,7 @@ class TableController extends Base
     public function create(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return raw_view("table/create", []);
+            return raw_view('table/create', []);
         }
         $data = $request->post();
         $table_name = Util::filterAlphaNum($data['table']);
@@ -198,7 +198,7 @@ class TableController extends Base
     public function modify(Request $request): Response
     {
         if ($request->method() === 'GET') {
-            return raw_view("table/modify", ['table' => $request->get('table')]);
+            return raw_view('table/modify', ['table' => $request->get('table')]);
         }
         $data = $request->post();
         $old_table_name = Util::filterAlphaNum($data['old_table']);
@@ -280,7 +280,7 @@ class TableController extends Base
             if (!isset($type_method_map[$column['type']])) {
                 throw new BusinessException("不支持的类型{$column['type']}");
             }
-            $field = $column['old_field'] ?? $column['field'] ;
+            $field = $column['old_field'] ?? $column['field'];
             $old_column = $old_columns[$field] ?? [];
             // 类型更改
             foreach ($old_column as $key => $value) {
@@ -383,9 +383,8 @@ class TableController extends Base
         $form_schema_map = json_encode($form_schema_map, JSON_UNESCAPED_UNICODE);
         $option_name = $this->updateSchemaOption($table_name, $form_schema_map);
 
-        return $this->json(0,$option_name);
+        return $this->json(0, $option_name);
     }
-
 
 
     /**
@@ -404,7 +403,7 @@ class TableController extends Base
         $model_class = $inflector->classify($inflector->singularize($table_basename));
         $base_path = '/plugin/admin/app';
         if ($request->method() === 'GET') {
-            return raw_view("table/crud", [
+            return raw_view('table/crud', [
                 'table' => $table_name,
                 'model' => "$base_path/model/$model_class.php",
                 'controller' => "$base_path/controller/{$model_class}Controller.php",
@@ -428,7 +427,7 @@ class TableController extends Base
         $controller_file_name = Util::filterAlphaNum($controller_info['filename'] ?? '');
         $model_file_name = Util::filterAlphaNum($model_info['filename'] ?? '');
 
-        if ($controller_info['extension'] !== 'php' || $model_info['extension'] !== 'php' ) {
+        if ($controller_info['extension'] !== 'php' || $model_info['extension'] !== 'php') {
             return $this->json(1, '控制器和model必须以.php为后缀');
         }
 
@@ -539,7 +538,7 @@ class TableController extends Base
         }
 
         // 不是超级管理员，则需要给当前管理员这个菜单的权限
-        if (!in_array('*', $rule_ids) && $roles){
+        if (!in_array('*', $rule_ids) && $roles) {
             $role = Role::find(current($roles));
             if ($role) {
                 $role->rules .= ",{$menu->id}";
@@ -573,7 +572,7 @@ class TableController extends Base
             foreach (Util::db()->select("select COLUMN_NAME,DATA_TYPE,COLUMN_KEY,COLUMN_COMMENT from INFORMATION_SCHEMA.COLUMNS where table_name = '$table' and table_schema = '$database' order by ORDINAL_POSITION") as $item) {
                 if ($item->COLUMN_KEY === 'PRI') {
                     $pk = $item->COLUMN_NAME;
-                    $item->COLUMN_COMMENT .= "(主键)";
+                    $item->COLUMN_COMMENT .= '(主键)';
                     if (strpos(strtolower($item->DATA_TYPE), 'int') === false) {
                         $incrementing = <<<EOF
 /**
@@ -590,7 +589,9 @@ EOF;
                 $properties .= " * @property $type \${$item->COLUMN_NAME} {$item->COLUMN_COMMENT}\n";
                 $columns[$item->COLUMN_NAME] = $item->COLUMN_NAME;
             }
-        } catch (Throwable $e) {echo $e;}
+        } catch (Throwable $e) {
+            echo $e;
+        }
         if (!isset($columns['created_at']) || !isset($columns['updated_at'])) {
             $timestamps = <<<EOF
 /**
@@ -743,6 +744,7 @@ EOF;
      */
     protected function createTemplate($template_file_path, $table, $url_path_base, $primary_key, $controller_class_with_namespace)
     {
+
         $this->mkdir($template_file_path . '/index.html');
         $code_base = Util::controllerToUrlPath($controller_class_with_namespace);
         $code_base = str_replace('/', '.', trim($code_base, '/'));
@@ -773,6 +775,7 @@ EOF
             : '';
         $html = str_replace("\n", "\n" . str_repeat('    ', 2), $html);
         $js = $form->js(3);
+
         $table_js = Layui::buildTable($table, 4);
         $template_content = <<<EOF
 
@@ -987,6 +990,7 @@ EOF;
         file_put_contents("$template_file_path/index.html", $template_content);
 
         $form = Layui::buildForm($table);
+
         $html = $form->html(5);
         $js = $form->js(3);
         $template_content = <<<EOF
@@ -1029,7 +1033,7 @@ EOF;
         <script src="/app/admin/admin/js/permission.js"></script>
         
         <script>
-
+            
             // 相关接口
             const INSERT_API = "$url_path_base/insert";
             $js
@@ -1074,6 +1078,8 @@ EOF;
         file_put_contents("$template_file_path/insert.html", $template_content);
 
         $form = Layui::buildForm($table, 'update');
+
+
         $html = $form->html(5);
         $js = $form->js(6);
         $template_content = <<<EOF
@@ -1121,7 +1127,6 @@ EOF;
             const PRIMARY_KEY = "$primary_key";
             const SELECT_API = "$url_path_base/select" + location.search;
             const UPDATE_API = "$url_path_base/update";
-
             // 获取数据库记录
             layui.use(["form", "util", "popup"], function () {
                 let $ = layui.$;
@@ -1143,6 +1148,19 @@ EOF;
                             } else {
                                 obj.attr("value", value);
                                 obj[0].value = value;
+                            }
+                            
+                            // 多图渲染
+                            if (obj[0].classList.contains('uploader-list')) {
+                                let multiple_images = value.split(",");
+                                $.each(multiple_images, function(index, value) {
+                                    $('#uploader-list-'+ key).append(
+                                        '<div class="file-iteme">' +
+                                        '<div class="handle"><i class="layui-icon layui-icon-delete"></i></div>' +
+                                        '<img src='+value +' alt="'+ value +'" >' +
+                                        '</div>'
+                                    );
+                                });
                             }
                         });
                         $js
@@ -1250,7 +1268,7 @@ EOF;
                     } elseif (in_array($value[0], ['>', '=', '<', '<>', 'not like'])) {
                         $paginator = $paginator->where($column, $value[0], $value[1]);
                     } else {
-                        if($value[0] !== '' || $value[1] !== '') {
+                        if ($value[0] !== '' || $value[1] !== '') {
                             $paginator = $paginator->whereBetween($column, $value);
                         }
                     }
@@ -1295,7 +1313,7 @@ EOF;
         if ($request->method() === 'GET') {
             $table = $request->get('table');
             $form = Layui::buildForm($table);
-            return raw_view("table/insert", [
+            return raw_view('table/insert', [
                 'form' => $form,
                 'table' => $table
             ]);
@@ -1348,8 +1366,8 @@ EOF;
             $table_info = Util::getSchema($table, 'table');
             $primary_key = $table_info['primary_key'][0] ?? null;
             $value = htmlspecialchars($request->get($primary_key, ''));
-            $form = Layui::buildForm($table,'update');
-            return raw_view("table/update", [
+            $form = Layui::buildForm($table, 'update');
+            return raw_view('table/update', [
                 'primary_key' => $primary_key,
                 'value' => $value,
                 'form' => $form,
@@ -1601,7 +1619,7 @@ EOF;
         }
 
         if (!$nullable) {
-            $sql .= "NOT NULL ";
+            $sql .= 'NOT NULL ';
         }
 
         if ($method != 'text' && $default !== null) {
