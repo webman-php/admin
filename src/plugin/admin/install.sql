@@ -25,11 +25,11 @@ CREATE TABLE IF NOT EXISTS `wa_admins` (
 
 CREATE TABLE IF NOT EXISTS `wa_options` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL COMMENT '键',
+  `name` varchar(128) NOT NULL COMMENT '键',
   `value` longtext NOT NULL COMMENT '值',
   `created_at` datetime NOT NULL DEFAULT '2022-08-15 00:00:00' COMMENT '创建时间',
   `updated_at` datetime NOT NULL DEFAULT '2022-08-15 00:00:00' COMMENT '更新时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='选项表';
 
