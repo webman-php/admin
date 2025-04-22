@@ -369,7 +369,7 @@ EOF;
         [$label, $field, $value, $props, $verify_string, $required_string, $class] = $this->options($options);
         $props['acceptMime'] = $props['acceptMime'] ?? 'image/gif,image/jpeg,image/jpg,image/png';
         $props['url'] = $props['url'] ?? '/app/admin/upload/image';
-        $props['multiple'] = $props['multiple'] ? 1 : 0;
+        $props['multiple'] = $props['multiple'] ?? 0;
 
         $id = $this->createId($field);
 
@@ -1070,12 +1070,17 @@ EOF;
 EOF;
                     } else {
                         $templet = <<<EOF
+
 		                templet: function (d) {
-                            const images = d['$field'].split(',');
-                            let html = '';
+		                    let html = '';
+		                    if(d['$field']){
+		                    const images = d['$field'].split(',');
+                        
                             for (let img of images) {
                                 html += '<img src="' + encodeURI(img.trim()) + '" style="max-width:32px;max-height:32px;" alt="" />';
                             }
+		                    }
+                            
                             return html;
 						}
 EOF;
