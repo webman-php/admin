@@ -459,7 +459,7 @@ EOF;
 layui.use(["upload", "layer"], function() {
     var upload = layui.upload;
     var $ = layui.$;
-    let multiple_images = layui.$("#$id").attr("value").split(",");
+    let multiple_images = layui.$("#$id").attr("value") ? layui.$("#$id").attr("value").split(",") : [];
     
     
     $("#attachment-choose-$id").on("click", function() {

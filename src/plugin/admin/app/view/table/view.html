@@ -133,7 +133,13 @@
                                 };
                             } else if (control === "uploadimage") {
                                 schema.templet = function (d) {
-                                    return '<img src="'+encodeURI(d[field])+'" style="max-width:32px;max-height:32px;" />';
+                                    if (!d[field]) return "";
+                                    let images = d[field].split(",");
+                                    let imagesHtml = '';
+                                    for (let i in images) {
+                                        imagesHtml += '<img src="'+encodeURI(images[i])+'" style="max-width:32px;max-height:32px;" />';
+                                    }
+                                    return imagesHtml;
                                 };
                             } else if (["select", "selectmulti", "treeselect", "treeselectmulti"].indexOf(control) !== -1) {
                                 let props = getControlProps(item.control_args);
