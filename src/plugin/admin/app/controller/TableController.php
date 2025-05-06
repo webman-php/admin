@@ -415,6 +415,8 @@ class TableController extends Base
         $controller_file = '/' . trim($request->post('controller', ''), '/');
         $model_file = '/' . trim($request->post('model', ''), '/');
         $overwrite = $request->post('overwrite');
+        $ismodel = $request->post('ismodel');
+
         if ($controller_file === '/' || $model_file === '/') {
             return $this->json(1, '控制器和model不能为空');
         }
@@ -440,7 +442,7 @@ class TableController extends Base
         }
 
         if (!$overwrite) {
-            if (is_file(base_path($controller_file))) {
+            if (!$ismodel && is_file(base_path($controller_file))) {
                 return $this->json(1, "$controller_file 已经存在");
             }
             if (is_file(base_path($model_file))) {
@@ -479,6 +481,11 @@ class TableController extends Base
 
             // 创建model
             $this->createModel($model_class, $model_namespace, base_path($model_file), $table_name);
+            // 仅生成模型
+            if($ismodel){
+                Util::resumeFileMonitor();
+                return $this->json(0);
+            }
 
             $controller_suffix = $plugin ? config("plugin.$plugin.app.controller_suffix") : config('app.controller_suffix');
             $controller_class = $controller_file_name;
@@ -511,7 +518,10 @@ class TableController extends Base
             $model_class_with_namespace = "$model_namespace\\$model_class";
             $primary_key = (new $model_class_with_namespace)->getKeyName();
             $url_path_base = ($plugin ? "/app/$plugin/" : '/') . ($app ? "$app/" : '') . $template_path;
+            Util::$curdIsSort = true;// 后续查询均使用排序
             $this->createTemplate(base_path($template_file_path), $table_name, $url_path_base, $primary_key, "$controller_namespace\\$controller_class");
+            Util::$curdIsSort = false;// 关闭 防止静态类不会销毁产生的错误
+
         } finally {
             Util::resumeFileMonitor();
         }
