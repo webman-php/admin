@@ -2,7 +2,7 @@
 
 namespace plugin\admin\app\common;
 
-use process\Monitor;
+use app\process\Monitor;
 use Throwable;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Builder;
