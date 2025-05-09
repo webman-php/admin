@@ -80,8 +80,8 @@ class Crud extends Base
      */
     protected function selectInput(Request $request): array
     {
-        $field = $request->get('field');
-        $order = $request->get('order', 'asc');
+        $field = $request->get('field', $this->model->getKeyName());
+        $order = $request->get('order', 'desc');
         $format = $request->get('format', 'normal');
         $limit = (int)$request->get('limit', $format === 'tree' ? 1000 : 10);
         $limit = $limit <= 0 ? 10 : $limit;
