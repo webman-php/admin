@@ -11,7 +11,9 @@ function toggleSearchFormShow()
     }
     let btns = $('.top-search-from .toggle-btn a');
     let toggle = toggleSearchFormShow;
+    let searchExpand = $('.top-search-from').attr("data-search-expand");
     if (typeof toggle.hide === 'undefined') {
+        toggle.hide = searchExpand === 'on';
         btns.on('click', function () {
             toggle();
         });
