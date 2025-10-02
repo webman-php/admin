@@ -122,10 +122,14 @@
                         width: 130,
                     }
                 ];
+                let expended_ids = [];
 
                 // 渲染表格
                 function render()
                 {
+                    $('.treeTable-icon.open[lay-ttype="dir"]').each(function () {
+                        expended_ids.push(`.treeTable-icon[lay-ttype="dir"][lay-tid="${$(this).attr("lay-tid")}"]`);
+                    });
                     treeTable.render({
                         elem: "#data-table",
                         url: SELECT_API,
@@ -141,7 +145,21 @@
                             title: "刷新",
                             layEvent: "refresh",
                             icon: "layui-icon-refresh",
-                        }, "filter", "print", "exports"]
+                        }, "filter", "print", "exports"],
+                        done: ()=>{
+                            expended_ids.forEach(function (sel) {
+                              console.log(sel)
+                              $(sel).click();
+                            });
+                            expended_ids = [];
+                            top.layui && top.layui.admin.menuRender({
+                              ...top.layui.admin.readConfig(),
+                              menu:{
+                                ... top.layui.admin.readConfig().menu,
+                                select: window.frameElement.id
+                              }
+                            })
+                        }
                     });
                 }
 
@@ -149,7 +167,7 @@
                 let apis = [];
                 let apiResults = {};
                 apiResults["pid"] = [];
-                apis.push(["pid", "/app/admin/rule/select?format=tree&type=0,1"]);
+                // apis.push(["pid", "/app/admin/rule/select?format=tree&type=0,1"]);
                 apiResults["type"] = ["目录","菜单","权限"];
                 let count = apis.length;
                 layui.each(apis, function (k, item) {
@@ -271,19 +289,7 @@
 
                 // 刷新表格
                 window.refreshTable = function() {
-                    table.reloadData("data-table", {
-                        scrollPos: "fixed",
-                        done: function (res, curr) {
-                            if (curr > 1 && res.data && !res.data.length) {
-                                curr = curr - 1;
-                                table.reloadData("data-table", {
-                                    page: {
-                                        curr: curr
-                                    },
-                                })
-                            }
-                        }
-                    });
+                    render()
                 }
             })
 
