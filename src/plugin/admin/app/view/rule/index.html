@@ -152,6 +152,13 @@
                               $(sel).click();
                             });
                             expended_ids = [];
+                            top.layui && top.layui.admin.menuRender({
+                              ...top.layui.admin.readConfig(),
+                              menu:{
+                                ... top.layui.admin.readConfig().menu,
+                                select: window.frameElement.id
+                              }
+                            })
                         }
                     });
                 }
