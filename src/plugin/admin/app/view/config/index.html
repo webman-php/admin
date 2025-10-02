@@ -235,6 +235,7 @@
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
+                            top.layui.admin.logoRender(top.layui.admin.readConfig())
                             return layui.popup.success("操作成功");
                         }
                     });
