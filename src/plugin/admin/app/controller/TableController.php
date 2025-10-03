@@ -757,10 +757,10 @@ EOF;
             $html
             <div class="layui-form-item layui-inline">
                 <label class="layui-form-label"></label>
-                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+                <button class="layui-btn layui-btn-md layui-btn-primary" lay-submit lay-filter="table-query">
                     <i class="layui-icon layui-icon-search"></i>查询
                 </button>
-                <button type="reset" class="pear-btn pear-btn-md" lay-submit lay-filter="table-reset">
+                <button type="reset" class="layui-btn layui-btn-md" lay-submit lay-filter="table-reset">
                     <i class="layui-icon layui-icon-refresh"></i>重置
                 </button>
             </div>
@@ -784,8 +784,7 @@ EOF
     <head>
         <meta charset="utf-8">
         <title>浏览页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
     </head>
     <body class="pear-container">
     
@@ -801,18 +800,18 @@ EOF
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="$code_base.insert">
+            <button class="layui-btn layui-btn-primary layui-btn-md" lay-event="add" permission="$code_base.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="$code_base.delete">
+            <button class="layui-btn layui-btn-danger layui-btn-md" lay-event="batchRemove" permission="$code_base.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="$code_base.update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="$code_base.delete">删除</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="edit" permission="$code_base.update">编辑</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="remove" permission="$code_base.delete">删除</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
@@ -999,9 +998,8 @@ EOF;
     <head>
         <meta charset="UTF-8">
         <title>新增页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
         <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
     </head>
     <body>
 
@@ -1015,11 +1013,11 @@ EOF;
 
             <div class="bottom">
                 <div class="button-container">
-                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit=""
+                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit=""
                         lay-filter="save">
                         提交
                     </button>
-                    <button type="reset" class="pear-btn pear-btn-md">
+                    <button type="reset" class="layui-btn layui-btn-md">
                         重置
                     </button>
                 </div>
@@ -1088,9 +1086,8 @@ EOF;
     <head>
         <meta charset="UTF-8">
         <title>更新页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
         <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
         
     </head>
     <body>
@@ -1105,10 +1102,10 @@ EOF;
 
             <div class="bottom">
                 <div class="button-container">
-                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="save">
+                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit="" lay-filter="save">
                         提交
                     </button>
-                    <button type="reset" class="pear-btn pear-btn-md">
+                    <button type="reset" class="layui-btn layui-btn-md">
                         重置
                     </button>
                 </div>

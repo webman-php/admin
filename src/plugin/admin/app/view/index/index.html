@@ -4,14 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>主页</title>
-        <!-- 依 赖 样 式 -->
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <!-- 加 载 样 式 -->
-        <link rel="stylesheet" href="/app/admin/admin/css/loader.css" />
-        <!-- 布 局 样 式 -->
-        <link rel="stylesheet" href="/app/admin/admin/css/admin.css" />
-        <!-- 重置样式 -->
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
+        <link rel="stylesheet" href="/app/admin/css/index.css" />
     </head>
     <!-- 结 构 代 码 -->
     <body class="layui-layout-body pear-admin">
@@ -36,14 +30,14 @@
                 <!-- 顶 部 右 侧 菜 单 -->
                 <ul class="layui-nav layui-layout-right">
                     <li class="layui-nav-item layui-hide-xs"><a href="#" class="menuSearch layui-icon layui-icon-search"></a></li>
-                    <li class="layui-nav-item layui-hide-xs"><a href="#" class="fullScreen layui-icon layui-icon-screen-full"></a></li>
                     <li class="layui-nav-item layui-hide-xs message"></li>
+                    <li class="layui-nav-item layui-hide-xs"><a href="#" class="fullScreen layui-icon layui-icon-screen-full"></a></li>
                     <li class="layui-nav-item user">
                         <!-- 头 像 -->
                         <a class="layui-icon layui-icon-username" href="javascript:;"></a>
                         <!-- 功 能 菜 单 -->
                         <dl class="layui-nav-child">
-                            <dd><a user-menu-url="/app/admin/account/index" user-menu-id="10" user-menu-title="基本资料">基本资料</a></dd>
+                            <dd><a user-menu-url="/app/admin/account/index" user-menu-id="10" user-menu-title="基本资料" user-menu-type="_iframe">基本资料</a></dd>
                             <dd><a href="javascript:void(0);" class="logout">注销登录</a></dd>
                         </dl>
                     </li>
@@ -58,11 +52,11 @@
                     <!-- 图 标 -->
                     <img class="logo">
                     <!-- 标 题 -->
-                    <a href="/"><span class="title"></span></a>
+                    <span class="title"></span>
                 </div>
                 <!-- 菜 单 内 容 -->
                 <div class="layui-side-scroll">
-                    <div id="sideMenu"></div>
+                    <div id="side"></div>
                 </div>
             </div>
             <!-- 视 图 页 面 -->
@@ -71,16 +65,11 @@
                 <div id="content"></div>
             </div>
             <!-- 页脚 -->
-            <div class="layui-footer layui-text">
-                <span class="left">
-                    Released under the MIT license.
-                </span>
-                <span class="center"></span>
-            </div>
+            <div class="layui-footer layui-text"></div>
             <!-- 遮 盖 层 -->
             <div class="pear-cover"></div>
             <!-- 加 载 动 画 -->
-            <div class="loader-main">
+            <div class="loader-wrapper">
                 <!-- 动 画 对 象 -->
                 <div class="loader"></div>
             </div>
@@ -90,7 +79,7 @@
             <a href="#" class="layui-icon layui-icon-shrink-right"></a>
         </div>
         <!-- 依 赖 脚 本 -->
-        <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
+        <script src="/app/admin/component/layui/layui.js?v=2.11.2"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
         <!-- 框 架 初 始 化 -->
         <script>
@@ -100,31 +89,36 @@
                 Account: {}
             };
 
-            layui.use(["admin","jquery","popup","drawer"], function() {
+            layui.use(["admin","jquery","popup"], function() {
                 var $ = layui.$;
                 var admin = layui.admin;
                 var popup = layui.popup;
 
-                admin.setConfigType("json");
-                admin.setConfigPath("/app/admin/config/get");
+                admin.setConfigurationPath("/app/admin/config/get");
 
                 admin.render();
 
                 // 登出逻辑
                 admin.logout(function(){
-                    $.ajax({
-                        url: "/app/admin/account/logout",
-                        dataType: "json",
-                        success: function (res) {
-                            if (res.code) {
-                                return popup.error(res.msg);
+                    return new Promise(function(resolve, reject) {
+                        $.ajax({
+                            url: "/app/admin/account/logout",
+                            dataType: "json",
+                            success: function (res) {
+                                if (res.code) {
+                                    return popup.error(res.msg);
+                                }
+                                popup.success("注销成功",function(){
+                                    location.reload();
+                                })
+                                resolve();
+                            },
+                            error: function (res) {
+                                popup.error("注销失败");
+                                reject();
                             }
-                            popup.success("注销成功",function(){
-                                location.reload();
-                            })
-                        }
-                    });
-                    return false;
+                        });
+                    })
                 })
 
                 $.ajax({

@@ -36,3 +36,11 @@ layui.$(function () {
     toggleSearchFormShow();
 });
 
+layui.use(['admin'], function () {
+    layui.admin.changeTheme()
+    window.addEventListener('storage',ev =>  {
+        if (ev.key === 'theme-color-color') {
+            layui.admin.changeTheme()
+        }
+    })
+});

@@ -1,0 +1,104 @@
+<html>
+
+<body>
+    <div class="pear-container">
+        <div class="layui-row layui-col-space10">
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        PearAdmin【兼容 tabPage 与 page 模式】
+                    </div>
+                    <div class="layui-card-body">
+                        <button class="layui-btn refresh">刷新页面</button>
+                        <button class="layui-btn changePage">切换页面</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md6">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        PearAdmin.tabPage
+                    </div>
+                    <div class="layui-card-body">
+                        <button class="layui-btn removeCurrentTab">删除当前选项卡</button>
+                        <button class="layui-btn removeAllTab">删除所有选项卡</button>
+                        <button class="layui-btn removeOtherTab">删除其他选项卡</button>
+                        <button class="layui-btn removeTab">删除指定选项卡</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    layui.use(['jquery'], function () {
+        var $ = layui.jquery;
+
+        /**
+         * 刷新页面
+         * 
+         * @param null
+         */
+        $(".refresh").click(function () {
+            PearAdmin.refresh();
+        });
+
+        /**
+         * 切换页面
+         * 
+         * @param opt 选项
+         */
+        $(".changePage").click(function () {
+            PearAdmin.changePage({ id: "999", title: "New Page", type: "_iframe", url: "http://www.layui-vue.com" });
+        });
+
+        /**
+         * 删除选中选项卡
+         * 
+         * @param null
+         */
+        $(".removeCurrentTab").click(function () {
+            PearAdmin.instances.tabPage.removeCurrentTab();
+        });
+
+        /**
+         * 删除所有选项卡
+         * 
+         * @param null
+         */
+        $(".removeAllTab").click(function () {
+            PearAdmin.instances.tabPage.removeTab();
+        });
+
+        /**
+         * 删除其他选项卡
+         * 
+         * @param null
+         */
+        $(".removeOtherTab").click(function () {
+            PearAdmin.instances.tabPage.removeOtherTab();
+        });
+
+        /**
+         * 删除所有选项卡
+         * 
+         * @param null
+         */
+        $(".removeTab").click(function () {
+            PearAdmin.instances.tabPage.removeTab(21);
+        });
+
+        /**
+         * 刷新当前选项卡
+         * 
+         * @param null
+         */
+        $(".refreshTab").click(function () {
+            PearAdmin.instances.tabPage.refresh();
+        });
+        
+    });
+</script>
+
+</html>

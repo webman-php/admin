@@ -1,0 +1,3 @@
+.pear-tab-page .layui-tab-content .layui-tab-item:has(iframe){
+    overflow-y: hidden;
+}

@@ -4,8 +4,17 @@
     <head>
         <meta charset="utf-8">
         <title></title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
+        <style>
+            /* 所有类以 layui-icon-* 开头的元素 */
+            i[class^="layui-icon-"] {
+                font-family: layui-icon !important;
+                font-size: 16px;
+                font-style: normal;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+        </style>
     </head>
     <body class="pear-container">
 
@@ -18,18 +27,18 @@
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.rule.insert">
+            <button class="layui-btn layui-btn-primary" lay-event="add" permission="app.admin.rule.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.rule.delete">
+            <button class="layui-btn layui-btn-danger" lay-event="batchRemove" permission="app.admin.rule.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.rule.update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.rule.delete">删除</button>
+            <button class="layui-btn layui-btn-xs " lay-event="edit" permission="app.admin.rule.update">编辑</button>
+            <button class="layui-btn layui-btn-xs " lay-event="remove" permission="app.admin.rule.delete">删除</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
@@ -48,12 +57,11 @@
             const UPDATE_URL = "/app/admin/rule/update";
 
             // 表格渲染
-            layui.use(["table", "treetable", "form", "common", "popup", "util"], function() {
+            layui.use(["common"],function() {
                 let table = layui.table;
-                let form = layui.form;
                 let $ = layui.$;
                 let common = layui.common;
-                let treeTable = layui.treetable;
+                let treeTable = layui.treeTable;
                 let util = layui.util;
 
                 // 表格头部列数据
@@ -63,9 +71,13 @@
                     },{
                         title: "标题",
                         field: "title",
+                        templet: function (d) {
+                            return util.escape(d["title"]);
+                        }
                     },{
                         title: "图标",
                         field: "icon",
+                        hide: true,
                         templet: function (d) {
                             return '<i class="layui-icon ' + util.escape(d["icon"]) + '"></i>';
                         }
@@ -122,20 +134,25 @@
                         width: 130,
                     }
                 ];
-                let expended_ids = [];
 
                 // 渲染表格
+                let first = true;
                 function render()
                 {
-                    $('.treeTable-icon.open[lay-ttype="dir"]').each(function () {
-                        expended_ids.push(`.treeTable-icon[lay-ttype="dir"][lay-tid="${$(this).attr("lay-tid")}"]`);
-                    });
                     treeTable.render({
                         elem: "#data-table",
                         url: SELECT_API,
+                        tree: {
+                            customName:{
+                                id: "id",
+                                pid: "pid",
+                                name: "title",
+                            },
+                            data:{
+                                isSimpleData: true,
+                            },
+                        },
                         treeColIndex: 1,
-                        treeIdName: "id",
-                        treePidName: "pid",
                         treeDefaultClose: true,
                         cols: [cols],
                         skin: "line",
@@ -147,18 +164,13 @@
                             icon: "layui-icon-refresh",
                         }, "filter", "print", "exports"],
                         done: ()=>{
-                            expended_ids.forEach(function (sel) {
-                              console.log(sel)
-                              $(sel).click();
-                            });
-                            expended_ids = [];
-                            top.layui && top.layui.admin.menuRender({
-                              ...top.layui.admin.readConfig(),
-                              menu:{
-                                ... top.layui.admin.readConfig().menu,
-                                select: window.frameElement.id
-                              }
-                            })
+                            if (first) {
+                                first = false;
+                            } else {
+                                top.layui && top.layui.admin.configurationProvider().then(conf=>{
+                                    top.layui.admin.menuRender({...conf,menu:{...conf.menu,select:6}})
+                                })
+                            }
                         }
                     });
                 }
@@ -200,6 +212,12 @@
                 if (!count) {
                     render();
                 }
+
+                table.on("row(data-table)", function(obj) {
+                    treeTable.expandNode(obj.config.id, {
+                        index: obj.index,
+                    });
+                })
 
                 // 删除或编辑行事件
                 table.on("tool(data-table)", function(obj) {

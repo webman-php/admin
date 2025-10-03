@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>失败</title>
+	<link rel="stylesheet" href="../../admin/css/other/result.css" />
+</head>
+
+<body>
+	<div class="pear-container">
+		<div class="layui-card">
+			<div class="layui-card-body">
+				<div class="pear-result">
+					<div class="error">
+						<svg viewBox="64 64 896 896" data-icon="close-circle" width="80px" height="80px"
+							fill="currentColor" aria-hidden="true" focusable="false" class="">
+							<path
+								d="M685.4 354.8c0-4.4-3.6-8-8-8l-66 .3L512 465.6l-99.3-118.4-66.1-.3c-4.4 0-8 3.5-8 8 0 1.9.7 3.7 1.9 5.2l130.1 155L340.5 670a8.32 8.32 0 0 0-1.9 5.2c0 4.4 3.6 8 8 8l66.1-.3L512 564.4l99.3 118.4 66 .3c4.4 0 8-3.5 8-8 0-1.9-.7-3.7-1.9-5.2L553.5 515l130.1-155c1.2-1.4 1.8-3.3 1.8-5.2z">
+							</path>
+							<path
+								d="M512 65C264.6 65 64 265.6 64 513s200.6 448 448 448 448-200.6 448-448S759.4 65 512 65zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z">
+							</path>
+						</svg>
+					</div>
+					<h2 class="title">提交失败</h2>
+					<p class="description">
+						请核对并修改以下信息后，再重新提交。如果仅是简单操作，使用 Message 全局提示反馈即可。
+						本文字区域可以展示简单的补充说明，如果有类似展示
+						“单据”的需求，下面这个灰色区域可以呈现比较复杂的内容。
+					</p>
+					<div class="extra">
+						<button class="layui-btn layui-btn-sm">返回修改</button>
+						&nbsp;&nbsp;&nbsp;
+						<button class="layui-btn layui-btn-primary layui-btn-sm">返回首页</button>
+					</div>
+					<div class="content">
+						您提交的内容有如下错误:
+						<br />
+						<br />
+						<div class="layui-timeline">
+							<div class="layui-timeline-item">
+								<i class="layui-icon layui-timeline-axis layui-icon-error" style="color:red;"></i>
+								<div class="layui-timeline-content layui-text">
+									<div class="layui-timeline-title">您的账户已被冻结
+										<a>立即解冻<i class="layui-icon layui-icon-right"></i></a>
+									</div>
+								</div>
+							</div>
+							<div class="layui-timeline-item">
+								<i class="layui-icon layui-timeline-axis layui-icon-error" style="color:red;"></i>
+								<div class="layui-timeline-content layui-text">
+									<div class="layui-timeline-title">您的账户还不具备申请资格
+										<a>立即升级<i class="layui-icon layui-icon-right"></i></a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>

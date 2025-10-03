@@ -329,10 +329,10 @@ layui.define(['layer', 'form'], function(exports) {
 			'    <div class="layui-input-' + size + '">\n' +
 			'      <span></span>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
-			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'" permission="app.admin.upload.file">\n' +
+			'      <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="'+key+'" permission="app.admin.upload.file">\n' +
 			'        <i class="layui-icon layui-icon-upload"></i>'+uploadWords+'\n' +
 			'      </button>\n' +
-			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'" permission="app.admin.upload.attachment">\n' +
+			'      <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="attachment-choose-'+key+'" permission="app.admin.upload.attachment">\n' +
 			'	     <i class="layui-icon layui-icon-align-left"></i>'+selectWords+'\n' +
 			'      </button>\n' +
 			'    </div>\n' +
@@ -348,10 +348,10 @@ layui.define(['layer', 'form'], function(exports) {
 			'    <div class="layui-input-' + size + '">\n' +
 			'      <img class="img-3" src=""/>\n' +
 			'      <input type="text" style="display:none" name="'+key+'" value="" />\n' +
-			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="'+key+'" permission="app.admin.upload.image">\n' +
+			'      <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="'+key+'" permission="app.admin.upload.image">\n' +
 			'        <i class="layui-icon layui-icon-upload"></i>'+uploadWords+'\n' +
 		    '      </button>\n' +
-			'      <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-'+key+'" permission="app.admin.upload.attachment">\n' +
+			'      <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="attachment-choose-'+key+'" permission="app.admin.upload.attachment">\n' +
 			'	     <i class="layui-icon layui-icon-align-left"></i>'+selectWords+'\n' +
 			'      </button>\n' +
 			'    </div>\n' +
@@ -434,8 +434,8 @@ layui.define(['layer', 'form'], function(exports) {
 	function submits(size) {
 		var html = '  <div class="layui-form-item">\n' +
 			'    <div class="layui-input-' + size + '">\n' +
-			'      <button class="pear-btn pear-btn-primary" lay-submit="" lay-filter="formDemo">立即提交</button>\n' + //变更
-			'      <button type="reset" class="pear-btn">重置</button>\n' + //变更
+			'      <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="formDemo">立即提交</button>\n' + //变更
+			'      <button type="reset" class="layui-btn">重置</button>\n' + //变更
 			'    </div>\n' +
 			'  </div>\n';
 		return html;

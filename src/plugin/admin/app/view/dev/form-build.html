@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
 		<title>表单生成器</title>
-		<link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
 		<style>
 			html,body{background-color: whitesmoke}
 			.layui-fluid{margin-top: 15px;}
@@ -18,7 +18,7 @@
 			.js-show{min-height: 360px;}
 			.layui-card-body {padding: 10px;}
 			.button{line-height: 100% !important;}
-			.content .pear-btn-md, .content .pear-btn-sm, .content .pear-btn-xs, .content .pear-btn {
+			.content .layui-btn-md, .content .layui-btn-sm, .content .layui-btn-xs, .content .layui-btn {
 				line-height: 100%;
 				letter-spacing: 2px;
 				padding: 0 15px;
@@ -34,44 +34,44 @@
 					<div class="layui-card nav click-but">
 						<div class="layui-card-header">长</div>
 						<div class="layui-card-body">
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="text">输入框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="password">密码框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="select">选择框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="checkbox_a">复选框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="checkbox_b">开关</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="radio">单选框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="textarea">文本域</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="icon">图标</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="multiSelect">下拉多选</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="treeSelectOne">树单选</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="tree">树多选</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="upload">上传文件</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="uploadImg">上传图片</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="submit">提交</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="text">输入框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="password">密码框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="select">选择框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="checkbox_a">复选框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="checkbox_b">开关</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="radio">单选框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="textarea">文本域</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="icon">图标</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="multiSelect">下拉多选</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="treeSelectOne">树单选</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="tree">树多选</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="upload">上传文件</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="uploadImg">上传图片</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="submit">提交</button>
 						</div>
 					</div>
 					<div class="layui-card nav">
 						<div class="layui-card-header">短</div>
 						<div class="layui-card-body">
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="text">输入框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="password">密码框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="select">选择框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="checkbox_a">复选框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="checkbox_b">开关</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="radio">单选框</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="textarea">文本域</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="icon">图标</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="multiSelect">下拉多选</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="treeSelectOne">树单选</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="tree">树多选</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="upload">上传文件</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="inline" data-type="uploadImg">上传图片</button>
-							<button class="pear-btn pear-btn-sm" plain data-size="block" data-type="submit">提交</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="text">输入框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="password">密码框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="select">选择框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="checkbox_a">复选框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="checkbox_b">开关</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="radio">单选框</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="textarea">文本域</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="icon">图标</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="multiSelect">下拉多选</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="treeSelectOne">树单选</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="tree">树多选</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="upload">上传文件</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="inline" data-type="uploadImg">上传图片</button>
+							<button class="layui-btn layui-btn-sm" plain data-size="block" data-type="submit">提交</button>
 						</div>
 					</div>
 					<div class="layui-card nav">
 						<div class="layui-card-body">
-							<button class="pear-btn pear-btn-danger pear-btn-sm del-form" data-type="del"> <i class="layui-icon layui-font-16">&#xe640;</i></button>
+							<button class="layui-btn layui-btn-danger layui-btn-sm del-form" data-type="del"> <i class="layui-icon layui-font-16">&#xe640;</i></button>
 						</div>
 					</div>
 

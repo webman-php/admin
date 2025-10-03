@@ -1,0 +1,36 @@
+@import "/app/admin/component/pear/css/pear.css";
+@import "/app/admin/admin/css/admin.css";
+@import "/app/admin/admin/css/admin.dark.css";
+@import "/app/admin/admin/css/variables.css";
+/*@import "/app/admin/admin/css/reset.css";*/
+
+.layui-btn.layui-btn-primary {
+    background-color: var(--global-primary-color);
+    color: #fff;
+}
+.layui-btn.layui-btn-primary:hover {
+    background-color: var(--global-primary-color);
+    color: #fff;
+}
+.layui-btn {
+    background-color: white;
+    color: #5f5f5f;
+    border-color: #d2d2d2;
+}
+.layui-btn:hover {
+    color: #333;
+}
+.layui-btn-danger {
+    background-color: #ff5722;
+    color: white;
+}
+.layui-btn-danger:hover {
+    color: white;
+}
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+    background-color: var(--global-primary-color);
+}
+.layui-form-checked[lay-skin="primary"] > i {
+    background-color: var(--global-primary-color);
+    border-color: var(--global-primary-color);
+}

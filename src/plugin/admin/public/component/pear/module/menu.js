@@ -5,15 +5,15 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 		$ = layui.jquery,
 		element = layui.element;
 
-	var pearMenu = function (opt) {
+	var menu = function (opt) {
 		this.option = opt;
 	};
 
-	pearMenu.prototype.render = function (opt) {
+	menu.prototype.render = function (opt) {
 
 		var option = {
 			elem: opt.elem,
-			async: opt.async,
+			async: typeof opt.async === 'undefined' ? true : opt.async,
 			parseData: opt.parseData,
 			url: opt.url,
 			method: opt.method ? opt.method : "GET",
@@ -21,16 +21,18 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 			defaultSelect: opt.defaultSelect,
 			control: opt.control,
 			controlWidth: opt.controlWidth ? opt.controlWidth : "auto",
-			defaultMenu: opt.defaultMenu,
+			defaultMenu: opt.defaultMenu || 0,
 			accordion: opt.accordion,
-			height: opt.height,
-			theme: opt.theme,
+			height: opt.height || "100%",
+			theme: opt.theme || "dark-theme",
 			data: opt.data ? opt.data : [],
 			change: opt.change ? opt.change : function () { },
 			done: opt.done ? opt.done : function () { }
 		}
+
 		var tempDone = option.done;
-		option.done = function(){
+
+		option.done = function () {
 			if (option.control) {
 				rationalizeHeaderControlWidthAuto(option);
 			}
@@ -40,21 +42,19 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 		if (option.async) {
 			if (option.method === "GET") {
 				getData(option.url).then(function (data) {
-					option.data = data.data; //变更
+					option.data = data;
 					renderMenu(option);
 				});
 			} else {
 				postData(option.url).then(function (data) {
-					option.data = data.data; //变更
+					option.data = data;
 					renderMenu(option);
 				});
 			}
 		} else {
-			// 延时返回，和 javascript 执行时序关联
 			window.setTimeout(function () { renderMenu(option); }, 500);
 		}
 
-		// 处理高度
 		$("#" + opt.elem).height(option.height)
 
 		setTimeout(function () {
@@ -83,10 +83,14 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 			});
 		}, 1000)
 
-    return new pearMenu(option);
+		return new menu(option);
 	}
 
-	pearMenu.prototype.click = function (clickEvent) {
+	menu.prototype.cache = function () {
+		return this.option.data;
+	}
+
+	menu.prototype.click = function (clickEvent) {
 		var _this = this;
 		$("body").on("click", "#" + _this.option.elem + " .site-demo-active", function () {
 			var dom = $(this);
@@ -96,7 +100,8 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 				menuPath: dom.attr("menu-title"),
 				menuIcon: dom.attr("menu-icon"),
 				menuUrl: dom.attr("menu-url"),
-				openType: dom.attr("open-type")
+				menuType: dom.attr("menu-type"),
+				menuOpenType: dom.attr("menu-open-type")
 			};
 			var doms = hash(dom);
 			if (doms != null) {
@@ -139,14 +144,14 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 		return d;
 	}
 
-	pearMenu.prototype.skin = function (skin) {
+	menu.prototype.skin = function (skin) {
 		var menu = $(".pear-nav-tree[lay-filter='" + this.option.elem + "']").parent();
 		menu.removeClass("dark-theme");
 		menu.removeClass("light-theme");
 		menu.addClass(skin);
 	}
 
-	pearMenu.prototype.selectItem = function (pearId) {
+	menu.prototype.selectItem = function (pearId) {
 		if (this.option.control != false) {
 			$("#" + this.option.elem + " a[menu-id='" + pearId + "']").parents(".layui-side-scroll ").find("ul").css({
 				display: "none"
@@ -209,7 +214,7 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 	}
 
 	var activeMenus;
-	pearMenu.prototype.collapse = function (time) {
+	menu.prototype.collapse = function (time) {
 		var elem = this.option.elem;
 		var config = this.option;
 		if ($("#" + this.option.elem).is(".pear-nav-mini")) {
@@ -223,12 +228,12 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 			isHoverMenu(false, config);
 			var that = this;
 			$("#" + this.option.elem)
-			.promise()
-			.done(function () {
-				if (that.option.control) {
-					rationalizeHeaderControlWidth(that.option);
-				}
-			})
+				.promise()
+				.done(function () {
+					if (that.option.control) {
+						rationalizeHeaderControlWidth(that.option);
+					}
+				})
 		} else {
 			activeMenus = $("#" + this.option.elem).find(".layui-nav-itemed>a");
 			$("#" + this.option.elem).find(".layui-nav-itemed").removeClass("layui-nav-itemed");
@@ -238,13 +243,13 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 			}, 400);
 			var that = this;
 			$("#" + this.option.elem)
-			.promise()
-			.done(function () {
-				isHoverMenu(true, config);
-				if (that.option.control) {
-					rationalizeHeaderControlWidth(that.option);
-				}
-			})		
+				.promise()
+				.done(function () {
+					isHoverMenu(true, config);
+					if (that.option.control) {
+						rationalizeHeaderControlWidth(that.option);
+					}
+				})
 		}
 	}
 
@@ -278,13 +283,12 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 			}
 		}
 		element.init();
-		downShow(option);
 		option.done();
 	}
 
 	function createMenu(option) {
 		var menuHtml = '<div style="height:100%!important;" class="pear-side-scroll layui-side-scroll ' + option.theme + '"><ul lay-filter="' + option.elem +
-			'" class="layui-nav arrow   pear-menu layui-nav-tree pear-nav-tree">'
+			'" class="layui-nav arrow   pear-menu layui-nav-tree pear-nav-tree" ' + (option.accordion ? "lay-accordion" : "") + '>'
 		$.each(option.data, function (i, item) {
 			var content = '<li class="layui-nav-item" >';
 			if (i == option.defaultOpen) {
@@ -304,7 +308,7 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 					'" ' + target + '><i class="' + item.icon + '"></i><span>' + item.title +
 					'</span></a>';
 			} else if (item.type == 1) {
-				content += '<a class="' + className + '" menu-type="' + item.type + '" menu-url="' + item.href + '" menu-id="' +
+				content += '<a class="' + className + '" menu-type="' + item.type + '" menu-open-type="' + item.openType + '"  menu-url="' + item.href + '" menu-id="' +
 					item.id +
 					'" menu-title="' + item.title + '"  href="' + href + '"  ' + target + '><i class="' + item.icon +
 					'"></i><span>' + item.title + '</span></a>';
@@ -322,7 +326,7 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 	}
 
 	function createMenuAndControl(option) {
-		var control = '<div style="white-space: nowrap;overflow-x: scroll;overflow: hidden;" class="control"><ul class="layui-nav pear-nav-control pc layui-hide-xs" style="width: fit-content;">';
+		var control = '<div style="width: ' + option.controlWidth + 'px;white-space: nowrap;overflow-x: scroll;overflow: hidden;" class="control"><ul class="layui-nav pear-nav-control pc layui-hide-xs" style="width: fit-content;">';
 		var controlPe = '<ul class="layui-nav pear-nav-control layui-hide-sm">';
 		// 声 明 头 部
 		var menu = '<div class="layui-side-scroll ' + option.theme + '">'
@@ -374,7 +378,7 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 						'</span></a>';
 				} else if (note.type == 1) {
 					// 创 建 菜 单 结 构
-					content += '<a ' + target + ' class="' + className + '" menu-type="' + note.type + '" menu-url="' + note.href +
+					content += '<a ' + target + ' class="' + className + '" menu-open-type="' + note.openType + '" menu-type="' + note.type + '" menu-url="' + note.href +
 						'" menu-id="' + note.id +
 						'" menu-title="' + note.title + '" href="' + href + '"><i class="' + note.icon +
 						'"></i><span>' + note.title + '</span></a>';
@@ -433,7 +437,7 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 						'"><i class="' + note.icon + '"></i><span>' + note.title + '</span></a>';
 				} else if (note.type == 1) {
 					// 创 建 菜 单 结 构
-					content += '<a ' + target + ' class="' + className + '" menu-type="' + note.type + '" menu-url="' + note.href +
+					content += '<a ' + target + ' class="' + className + '" menu-open-type="' + note.openType + '" menu-type="' + note.type + '" menu-url="' + note.href +
 						'" menu-id="' + note.id + '" menu-title="' + note.title + '" menu-icon="' + note.icon + '" href="' + href +
 						'" ><i class="' + note.icon + '"></i><span>' + note.title + '</span></a>';
 				}
@@ -448,49 +452,6 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 		}
 		content += '</dl>';
 		return content;
-	}
-
-	function downShow(option) {
-		$("body #" + option.elem).on("click", "a[menu-type='0']", function () {
-			if (!$("#" + option.elem).is(".pear-nav-mini")) {
-				var superEle = $(this).parent();
-				var ele = $(this).next('.layui-nav-child');
-				var heights = ele.children("dd").length * 48;
-
-				if ($(this).parent().is(".layui-nav-itemed")) {
-					if (option.accordion) {
-						var currentDom = $(this).parent().siblings('.layui-nav-itemed').children('.layui-nav-child');
-						currentDom.animate({
-							height: '0px'
-						}, 240, function () {
-							currentDom.css({
-								height: "auto",
-							});
-							$(this).parent().removeClass("layui-nav-itemed");
-							$(this).find('.layui-nav-itemed').removeClass("layui-nav-itemed");
-						});
-					}
-					ele.height(0);
-					ele.animate({
-						height: heights + "px"
-					}, 240, function () {
-						ele.css({
-							height: "auto"
-						});
-					});
-				} else {
-					$(this).parent().addClass("layui-nav-itemed");
-					ele.animate({
-						height: "0px"
-					}, 240, function () {
-						ele.css({
-							height: "auto"
-						});
-						$(this).parent().removeClass("layui-nav-itemed");
-					});
-				}
-			}
-		})
 	}
 
 	/** 二 级 悬 浮 菜 单*/
@@ -557,15 +518,16 @@ layui.define(['table', 'jquery', 'element'], function (exports) {
 		$("#" + option.control + " .control").css({ "width": rationalizeWidth, "transition": "width .15s" });
 	}
 
-	function rationalizeHeaderControlWidthAuto(option){
+	function rationalizeHeaderControlWidthAuto(option) {
 		$(window).on('resize', function () {
 			rationalizeHeaderControlWidth(option);
 		})
-
 		$(document).ready(function () {
-			rationalizeHeaderControlWidth(option);
+			setTimeout(() => {
+				rationalizeHeaderControlWidth(option);
+			}, 1000);
 		});
 	}
 
-	exports(MOD_NAME, new pearMenu());
+	exports(MOD_NAME, new menu());
 })

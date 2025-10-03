@@ -4,8 +4,7 @@
     <head>
         <meta charset="utf-8">
         <title>浏览页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
     </head>
     <body class="pear-container">
     
@@ -21,10 +20,10 @@
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.role.insert">
+            <button class="layui-btn layui-btn-primary layui-btn-md" lay-event="add" permission="app.admin.role.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.role.delete">
+            <button class="layui-btn layui-btn-danger layui-btn-md" lay-event="batchRemove" permission="app.admin.role.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
@@ -32,8 +31,8 @@
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
             {{# if(d.id!==1&&d.pid&&!d.isRoot){ }}
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.role.update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.role.delete">删除</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="edit" permission="app.admin.role.update">编辑</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="remove" permission="app.admin.role.delete">删除</button>
             {{# } }}
         </script>
 
@@ -71,6 +70,7 @@
                     },{
 						title: "主键",
 						field: "id",
+                        hide: true,
 					},{
 						title: "权限",
 						field: "rules",
