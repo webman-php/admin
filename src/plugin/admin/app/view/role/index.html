@@ -52,8 +52,8 @@
             const UPDATE_URL = "/app/admin/role/update";
             
             // 表格渲染
-            layui.use(["table", "treetable", "form", "common", "popup", "util"], function() {
-                let treeTable = layui.treetable;
+            layui.use(["common"], function() {
+                let treeTable = layui.treeTable;
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
@@ -118,9 +118,17 @@
                     treeTable.render({
 				        elem: "#data-table",
 				        url: SELECT_API,
+                        tree: {
+                            customName:{
+                                id: "id",
+                                pid: "pid",
+                                name: "title",
+                            },
+                            data:{
+                                isSimpleData: true,
+                            },
+                        },
                         treeColIndex: 1,
-                        treeIdName: "id",
-                        treePidName: "pid",
                         treeDefaultClose: false,
                         cols: [cols],
                         skin: "line",
