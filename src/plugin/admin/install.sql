@@ -96,6 +96,7 @@ CREATE TABLE IF NOT EXISTS `wa_rules` (
   `updated_at` datetime NOT NULL COMMENT '更新时间',
   `href` varchar(255) DEFAULT NULL COMMENT 'url',
   `type` int(11) NOT NULL DEFAULT '1' COMMENT '类型',
+  `open_type` varchar(255) DEFAULT NULL COMMENT '打开方式',
   `weight` int(11) DEFAULT '0' COMMENT '排序',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='权限规则';

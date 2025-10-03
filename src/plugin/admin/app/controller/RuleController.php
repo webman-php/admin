@@ -78,7 +78,7 @@ class RuleController extends Crud
             $item['name'] = $item['title'];
             $item['value'] = $item['id'];
             $item['icon'] = $item['icon'] ? "layui-icon {$item['icon']}" : '';
-            $item['openType'] = $item['openType'] ?? '_iframe';
+            $item['openType'] = $item['open_type'] ?? '_iframe';
             $item['isParent'] = !!$item['pid'];
             $formatted_items[] = $item;
         }
