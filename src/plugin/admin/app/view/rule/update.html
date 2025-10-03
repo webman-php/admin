@@ -63,6 +63,13 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">打开方式</label>
+                        <div class="layui-input-block">
+                            <div name="open_type" id="open_type" value="_iframe" ></div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">排序</label>
                         <div class="layui-input-block">
                             <input type="number" name="weight" value="0" class="layui-input">
@@ -163,6 +170,22 @@
                                 name: "type",
                                 initValue: initValue,
                                 data: [{"value":"0","name":"目录"},{"value":"1","name":"菜单"},{"value":"2","name":"权限"}],
+                                model: {"icon":"hidden","label":{"type":"text"}},
+                                clickClose: true,
+                                radio: true,
+                            })
+                        });
+
+                        // 打开方式下拉列表
+                        layui.use(["jquery", "xmSelect"], function() {
+                            let value = layui.$("#open_type").attr("value");
+                            let initValue = value ? value.split(",") : [];
+                            layui.xmSelect.render({
+                                el: "#open_type",
+                                name: "open_type",
+                                initValue: initValue,
+                                data: [{"value":"_iframe","name":"嵌套网页"},{"value":"_layer","name":"弹窗网页"},{"value":"_blank","name":"新建标签"},{"value":"_component","name":"普通路由"}],
+                                value: "1",
                                 model: {"icon":"hidden","label":{"type":"text"}},
                                 clickClose: true,
                                 radio: true,
