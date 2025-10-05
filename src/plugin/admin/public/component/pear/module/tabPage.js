@@ -287,13 +287,20 @@ layui.define(['jquery', 'element', 'dropdown'], function (exports) {
 			var that = this;
 
 			if (opt.type === "_iframe") {
-
+                const iframeLoad = $("#" + this.option.elem).find(".pear-tab-page-loading");
+                iframeLoad.show();
 				element.tabAdd(this.option.elem, {
 					id: opt.id,
 					title: title,
 					content: `<iframe id="${opt.id}" type="${opt.type}" data-frameid="${opt.id}" scrolling="auto" frameborder="0" src="${opt.url}" style="width:100%;height:100%;" allowfullscreen="true"></iframe>`
 				});
-
+                $(`#${opt.id}`).on("load", function () {
+                    iframeLoad.fadeOut(1000, function () {
+                        iframeLoad.css({
+                            display: "none"
+                        });
+                    });
+                });
 			} else {
 
 				$.ajax({
@@ -344,11 +351,20 @@ layui.define(['jquery', 'element', 'dropdown'], function (exports) {
 
 				var that = this;
 				if (opt.type === "_iframe") {
+                    const iframeLoad = $("#" + this.option.elem).find(".pear-tab-page-loading");
+                    iframeLoad.show();
 					element.tabAdd(this.option.elem, {
 						id: opt.id,
 						title: title,
 						content: `<iframe id="${opt.id}" type="${opt.type}" data-frameid="${opt.id}" scrolling="auto" frameborder="0" src="${opt.url}" style="width:100%;height:100%;" allowfullscreen="true"></iframe>`
 					});
+                    $(`#${opt.id}`).on("load", function () {
+                        iframeLoad.fadeOut(1000, function () {
+                            iframeLoad.css({
+                                display: "none"
+                            });
+                        });
+                    });
 				} else {
 					$.ajax({
 						url: opt.url,
