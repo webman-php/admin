@@ -270,7 +270,8 @@ layui.define(['jquery', 'tools', 'element', 'yaml', 'form', 'tabPage', 'menu', '
 					pearAdmin.instances.page = page.render({
 						elem: 'content',
 						title: '首页',
-						url: param.tab.index.href
+						url: param.tab.index.href,
+                        type: '_iframe',
 					});
 
 					pearAdmin.instances.menu.click(function (dom, data) {
@@ -570,7 +571,7 @@ layui.define(['jquery', 'tools', 'element', 'yaml', 'form', 'tabPage', 'menu', '
 			} else {
 				pearAdmin.instances.page.changePage({
 					href: $(this).attr("user-menu-url"),
-					type: "_component"
+                    type: $(this).attr("user-menu-type"),
 				}, true);
 			}
 		});

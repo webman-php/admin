@@ -19,7 +19,8 @@ layui.define(['jquery', 'element'], function (exports) {
 			url: opt.url,
 			width: opt.width || "100%",
 			height: opt.height || "100%",
-			title: opt.title
+			title: opt.title,
+            type: opt.type || "_iframe"
 		}
 		renderContent(option);
 		return new page(option);
@@ -33,7 +34,16 @@ layui.define(['jquery', 'element'], function (exports) {
 	page.prototype.changePage = function (options) {
 		const $frame = $(`#${this.option.elem} .pear-page-content`);
 		if (options.type === "_iframe") {
+            const iframeLoad = $("#" + this.option.elem).find(".pear-page-loading");
+            iframeLoad.show();
 			$frame.html(`<iframe src='${options.href}' scrolling='auto' frameborder='0' allowfullscreen='true'></iframe>`);
+            $frame.find("iframe").on("load", () => {
+                iframeLoad.fadeOut(1000, function () {
+                    iframeLoad.css({
+                        display: "none"
+                    });
+                });
+            });
 		} else {
 			$.ajax({
 				url: options.href,
@@ -99,7 +109,16 @@ layui.define(['jquery', 'element'], function (exports) {
 		var $frame = $("#" + option.elem).find(".pear-page-content");
 
 		if (option.type === "_iframe") {
+            const iframeLoad = $("#" + option.elem).find(".pear-page-loading");
+            iframeLoad.show();
 			$frame.html(`<iframe src='${option.url}' scrolling='auto' frameborder='0' allowfullscreen='true'></iframe>`);
+            $frame.find("iframe").on("load", () => {
+                iframeLoad.fadeOut(1000, function () {
+                    iframeLoad.css({
+                        display: "none"
+                    });
+                });
+            });
 		} else {
 			$.ajax({
 				url: option.url,
