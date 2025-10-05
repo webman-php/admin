@@ -42,20 +42,6 @@
                     </div>
 
                     <div class="layui-form-item">
-                        <label class="layui-form-label">url</label>
-                        <div class="layui-input-block">
-                            <input type="text" name="href" value="" class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">图标</label>
-                        <div class="layui-input-block">
-                            <input name="icon" id="icon" />
-                        </div>
-                    </div>
-
-                    <div class="layui-form-item">
                         <label class="layui-form-label">类型</label>
                         <div class="layui-input-block">
                             <div name="type" id="type" value="1" ></div>
@@ -63,9 +49,23 @@
                     </div>
 
                     <div class="layui-form-item">
+                        <label class="layui-form-label">url</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="href" value="" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
                         <label class="layui-form-label">打开方式</label>
                         <div class="layui-input-block">
                             <div name="open_type" id="open_type" value="_iframe" ></div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">图标</label>
+                        <div class="layui-input-block">
+                            <input name="icon" id="icon" />
                         </div>
                     </div>
 
@@ -142,6 +142,20 @@
             layui.use(["jquery", "xmSelect"], function() {
                 let value = layui.$("#type").attr("value");
                 let initValue = value ? value.split(",") : [];
+                const toggleOpenType = val => {
+                    if (val !== '1'){
+                        layui.$('.layui-form-item:has(#open_type)').hide();
+                        layui.$('.layui-form-item:has([name="href"])').hide();
+                    }else{
+                        layui.$('.layui-form-item:has(#open_type)').show();
+                        layui.$('.layui-form-item:has([name="href"])').show();
+                    }
+                    if (val === '2'){
+                        layui.$('.layui-form-item:has(#icon)').hide();
+                    }else{
+                        layui.$('.layui-form-item:has(#icon)').show();
+                    }
+                };
                 layui.xmSelect.render({
                     el: "#type",
                     name: "type",
@@ -151,12 +165,16 @@
                     model: {"icon":"hidden","label":{"type":"text"}},
                     clickClose: true,
                     radio: true,
+                    on: data => {
+                        toggleOpenType(data.change[0].value);
+                    },
                 })
+                toggleOpenType(value);
             });
 
             // 打开方式下拉列表
             layui.use(["jquery", "xmSelect"], function() {
-                let value = layui.$("#open_type").attr("value");
+                let value = layui.$("#open_type").attr("value") || '_iframe';
                 let initValue = value ? value.split(",") : [];
                 layui.xmSelect.render({
                     el: "#open_type",

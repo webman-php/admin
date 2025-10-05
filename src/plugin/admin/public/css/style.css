@@ -45,3 +45,15 @@ i[class^="layui-icon-"] {
     background-color: var(--global-primary-color);
     border-color: var(--global-primary-color);
 }
+
+.layui-form-label.required::after {
+    content: "*";
+    color: red;
+    display: inline-block;
+    padding: 7px 5px;
+    line-height: 20px;
+    text-align: right;
+    position: absolute;
+    right: 0;
+    top: 5px;
+}
