@@ -288,7 +288,8 @@
                                     return layui.popup.failure(res.msg);
                                 }
                                 return layui.popup.success("操作成功", function () {
-                                    return obj ? obj.del() : refreshTable();
+                                    // obj && obj.del()
+                                    return refreshTable();
                                 });
                             }
                         })
