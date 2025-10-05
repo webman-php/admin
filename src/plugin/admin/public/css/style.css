@@ -4,6 +4,14 @@
 @import "/app/admin/admin/css/variables.css";
 /*@import "/app/admin/admin/css/reset.css";*/
 
+i[class^="layui-icon-"] {
+    font-family: layui-icon !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 .layui-btn.layui-btn-primary {
     background-color: var(--global-primary-color);
     color: #fff;
@@ -27,10 +35,13 @@
 .layui-btn-danger:hover {
     color: white;
 }
+
 .layui-laypage .layui-laypage-curr .layui-laypage-em {
     background-color: var(--global-primary-color);
 }
-.layui-form-checked[lay-skin="primary"] > i {
+
+.layui-form-checked[lay-skin="primary"] > i,
+.layui-form-onswitch {
     background-color: var(--global-primary-color);
     border-color: var(--global-primary-color);
 }

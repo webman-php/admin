@@ -904,7 +904,7 @@ EOF
                         title: "新增",
                         shade: 0.1,
                         maxmin: true,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: INSERT_URL
                     });
                 }
@@ -917,7 +917,7 @@ EOF
                         title: "修改",
                         shade: 0.1,
                         maxmin: true,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
@@ -1000,6 +1000,7 @@ EOF;
         <title>新增页面</title>
         <link rel="stylesheet" href="/app/admin/css/style.css" />
         <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
+        <link rel="stylesheet" href="/app/admin/css/form-box.css" />
     </head>
     <body>
 
@@ -1088,7 +1089,7 @@ EOF;
         <title>更新页面</title>
         <link rel="stylesheet" href="/app/admin/css/style.css" />
         <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
-        
+        <link rel="stylesheet" href="/app/admin/css/form-box.css" />
     </head>
     <body>
 
