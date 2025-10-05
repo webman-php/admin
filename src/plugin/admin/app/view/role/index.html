@@ -52,14 +52,14 @@
             const UPDATE_URL = "/app/admin/role/update";
             
             // 表格渲染
-            layui.use(["common"], function() {
+            layui.use(["common", "popup"], function() {
                 let treeTable = layui.treeTable;
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
                 let common = layui.common;
                 let util = layui.util;
-                
+
 				// 表头参数
 				let cols = [
 					{
@@ -111,7 +111,7 @@
 						width: 120,
 					}
 				];
-				
+
 				// 渲染表格
 				function render()
 				{
@@ -141,7 +141,7 @@
                         }, "filter", "print", "exports"]
 				    });
 				}
-				
+
 				// 获取表格中下拉或树形组件数据
 				let apis = [];
 				apis.push(["rules", "/app/admin/rule/get?type=0,1,2"]);
@@ -180,7 +180,7 @@
 				if (!count) {
 				    render();
 				}
-				
+
                 // 编辑或删除行事件
                 table.on("tool(data-table)", function(obj) {
                     if (obj.event === "remove") {
@@ -211,7 +211,7 @@
                     })
                     return false;
                 });
-                
+
                 // 表格顶部搜索重置事件
                 form.on("submit(table-reset)", function(data) {
                     table.reload("data-table", {
@@ -237,7 +237,7 @@
                         type: 2,
                         title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: INSERT_URL
                     });
                 }
@@ -249,7 +249,7 @@
                         type: 2,
                         title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
