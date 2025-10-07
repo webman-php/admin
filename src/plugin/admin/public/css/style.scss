@@ -13,6 +13,24 @@ i[class^="layui-icon-"] {
 }
 
 .pear-nav-tree {
+  .layui-nav-child {
+    dd {
+      a {
+        i {
+          &.layui-icon {
+            display: inline-block;
+            margin-left: 26px;
+            margin-right: 6px;
+
+            & + span {
+              margin-left: 0 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
   .layui-nav-item {
     a {
       &:hover {

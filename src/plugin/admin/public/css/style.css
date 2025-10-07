@@ -11,6 +11,14 @@ i[class^=layui-icon-] {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.pear-nav-tree .layui-nav-child dd a i.layui-icon {
+  display: inline-block;
+  margin-left: 26px;
+  margin-right: 6px;
+}
+.pear-nav-tree .layui-nav-child dd a i.layui-icon + span {
+  margin-left: 0 !important;
+}
 .pear-nav-tree .layui-nav-item a:hover {
   background-color: var(--global-primary-color);
   color: white !important;
