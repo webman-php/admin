@@ -1,6 +1,8 @@
 .layui-form {
 	width: 320px !important;
 	margin: auto !important;
+}
+body[background] .layui-form {
 	padding-top: 160px !important;
 }
 

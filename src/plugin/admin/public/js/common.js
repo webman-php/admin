@@ -35,24 +35,3 @@ function toggleSearchFormShow()
 layui.$(function () {
     toggleSearchFormShow();
 });
-
-layui.use(['admin'], function () {
-    function changeDarkTheme() {
-        let dark = localStorage.getItem('dark')
-        if (dark === 'true') {
-            layui.$('body').addClass('pear-admin-dark')
-        } else {
-            layui.$('body').removeClass('pear-admin-dark')
-        }
-    }
-    layui.admin.changeTheme()
-    changeDarkTheme()
-    window.addEventListener('storage',ev =>  {
-        if (ev.key === 'theme-color-color') {
-            layui.admin.changeTheme()
-        }
-        if (ev.key === 'dark') {
-            changeDarkTheme()
-        }
-    })
-});

@@ -2,7 +2,8 @@
 @import "/app/admin/admin/css/admin.css";
 @import "/app/admin/admin/css/admin.dark.css";
 @import "/app/admin/admin/css/variables.css";
-/*@import "/app/admin/admin/css/reset.css";*/
+@import "/app/admin/admin/css/reset.css";
+@import "/app/admin/css/form-box.css";
 
 i[class^="layui-icon-"] {
   font-family: layui-icon !important;
@@ -71,6 +72,7 @@ i[class^="layui-icon-"] {
 
   &:hover {
     opacity: 0.8;
+    color: inherit;
   }
 
   &.layui-btn-primary {
@@ -85,6 +87,15 @@ i[class^="layui-icon-"] {
 
   &.layui-btn-danger {
     background-color: #ff5722;
+    color: white;
+
+    &:hover {
+      color: white;
+    }
+  }
+
+  &.layui-btn-success {
+    background-color: #16BAAAFF;
     color: white;
 
     &:hover {
