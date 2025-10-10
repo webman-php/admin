@@ -127,6 +127,9 @@
                             }
                             return layui.popup.success("操作成功", function () {
                                 parent.layer.close(parent.layer.getFrameIndex(window.name));
+                                top.layui && top.layui.admin && top.layui.admin.configurationProvider().then(conf=>{
+                                    top.layui.admin.menuRender({...conf,menu:{...conf.menu,select:6}})
+                                })
                             });
                         }
                     });

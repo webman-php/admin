@@ -32,11 +32,3 @@ layui.$(function () {
         }
     });
 });
-
-if (!window.toggleSearchFormShow) {
-    (()=>{
-        const el = document.createElement('script');
-        el.src = '/app/admin/admin/js/common.js';
-        document.body.appendChild(el);
-    })()
-}

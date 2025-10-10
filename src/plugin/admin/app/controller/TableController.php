@@ -401,7 +401,7 @@ class TableController extends Base
         $table_basename = strpos($table_name, $prefix) === 0 ? substr($table_name, strlen($prefix)) : $table_name;
         $inflector = InflectorFactory::create()->build();
         $model_class = $inflector->classify($inflector->singularize($table_basename));
-        $base_path = '/plugin/admin/app';
+        $base_path = '/app/admin';
         if ($request->method() === 'GET') {
             return raw_view('table/crud', [
                 'table' => $table_name,
@@ -525,6 +525,7 @@ class TableController extends Base
         $menu->title = $title;
         $menu->icon = $icon;
         $menu->href = "$url_path_base/index";
+        $menu->open_type = '_iframe';
         $menu->save();
 
         $roles = admin('roles');
