@@ -419,6 +419,10 @@ class TableController extends Base
             return $this->json(1, '控制器和model不能为空');
         }
 
+        if (str_starts_with($controller_file, $base_path) && !config('middleware.admin')) {
+            return $this->json(1, "请先设置鉴权中间件：config('middleware.admin')");
+        }
+
         $controller_info = pathinfo($controller_file);
         $model_info = pathinfo($model_file);
         $controller_path = Util::filterPath($controller_info['dirname'] ?? '');
