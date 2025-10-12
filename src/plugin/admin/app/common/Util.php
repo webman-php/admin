@@ -14,6 +14,8 @@ use Workerman\Worker;
 
 class Util
 {
+    static public $curdIsSort = false;// 控制是否启用排序（只有在一键生成菜单时才启用排序）
+
     /**
      * 密码哈希
      * @param $password
@@ -444,12 +446,32 @@ class Util
         foreach ($data['forms'] as $field => $item) {
             if (isset($form_schema_map[$field])) {
                 $data['forms'][$field] = $form_schema_map[$field];
+                if(self::$curdIsSort)
+                    $data['columns'][$field]['_weight_'] = $form_schema_map[$field]['_weight_']?:0;
             }
         }
-
+        if(self::$curdIsSort){
+            // 按照我们内置的字段 进行排序
+            $data['forms'] = self::arraySort(array_values($data['forms']),'_weight_',SORT_ASC);
+            $data['columns'] = self::arraySort(array_values($data['columns']),'_weight_',SORT_ASC);
+        }
         return $section ? $data[$section] : $data;
     }
-
+    /**
+     * 二维数组根据某个字段排序
+     * @param array $array 要排序的数组
+     * @param string $keys   要排序的键字段
+     * @param string $sort  排序类型  SORT_ASC     SORT_DESC
+     * @return array 排序后的数组
+     */
+    protected static function arraySort($array, $keys, $sort = SORT_DESC) {
+        $keysValue = [];
+        foreach ($array as $k => $v) {
+            $keysValue[$k] = $v[$keys];
+        }
+        array_multisort($keysValue, $sort, $array);
+        return $array;
+    }
     /**
      * 获取字段长度或默认值
      * @param $schema
