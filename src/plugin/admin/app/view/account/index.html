@@ -127,6 +127,9 @@
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
+                            setTimeout(function () {
+                              top.location.reload();
+                            }, 1000)
                             return layui.popup.success("操作成功");
                         }
                     });
