@@ -1,16 +1,16 @@
 {
 	"logo": {
-		"title": "Webman Admin",
-		"image": "/app/admin/admin/images/logo.png"
+		"title": "Pear Admin",
+		"image": "admin/images/logo.png"
 	},
 	"menu": {
-		"data": "/app/admin/rule/get",
+		"data": "admin/data/menu.json",
 		"method": "GET",
 		"accordion": true,
 		"collapse": false,
 		"control": false,
-		"controlWidth": 2000,
-		"select": "0",
+		"controlWidth": 500,
+		"select": "10",
 		"async": true
 	},
 	"tab": {
@@ -20,14 +20,14 @@
 		"preload": false,
 		"max": "30",
 		"index": {
-			"id": "0",
-			"href": "/app/admin/index/dashboard",
-			"title": "仪表盘"
+			"id": "10",
+			"href": "view/console/console1.html",
+			"title": "首页"
 		}
 	},
 	"theme": {
 		"defaultColor": "2",
-		"defaultMenu": "light-theme",
+		"defaultMenu": "dark-theme",
 		"defaultHeader": "light-theme",
 		"allowCustom": true,
 		"banner": false
@@ -35,13 +35,13 @@
 	"colors": [
 		{
 			"id": "1",
-			"color": "#36b368",
-			"second": "#f0f9eb"
+			"color": "#2d8cf0",
+			"second": "#ecf5ff"
 		},
 		{
 			"id": "2",
-			"color": "#2d8cf0",
-			"second": "#ecf5ff"
+			"color": "#36b368",
+			"second": "#f0f9eb"
 		},
 		{
 			"id": "3",
@@ -60,11 +60,11 @@
 		}
 	],
 	"other": {
-		"keepLoad": "500",
+		"keepLoad": "1200",
 		"autoHead": false,
 		"footer": false
 	},
 	"header": {
-		"message": false
+		"message": "admin/data/message.json"
 	}
 }

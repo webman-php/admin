@@ -1,35 +1,39 @@
-layui.define(['message', 'table', 'jquery', 'element', 'yaml', 'form', 'tab', 'menu', 'frame', 'theme', 'convert'],
-    function(exports) {
-        "use strict";
+layui.define(['jquery', 'element'],
+    function (exports) {
+
         var $ = layui.jquery;
         var defer = $.Deferred();
-        var fullScreen = new function() {
+        var fullScreen = new function () {
+
             this.func = null;
-            this.onFullchange = function(func){
+
+            this.onFullchange = function (func) {
                 this.func = func;
-                var evts = ['fullscreenchange','webkitfullscreenchange','mozfullscreenchange','MSFullscreenChange'];
-                for(var i=0;i<evts.length && func;i++) {
+                var evts = ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'];
+                for (var i = 0; i < evts.length && func; i++) {
                     window.addEventListener(evts[i], this.func);
                 }
             }
-            this.fullScreen = function(dom){
-                    var docElm = dom && document.querySelector(dom) || document.documentElement;
-                    if (docElm.requestFullscreen) {
-                        docElm.requestFullscreen();
-                    } else if (docElm.mozRequestFullScreen) {
-                        docElm.mozRequestFullScreen();
-                    } else if (docElm.webkitRequestFullScreen) {
-                        docElm.webkitRequestFullScreen();
-                    } else if (docElm.msRequestFullscreen) {
-                        docElm.msRequestFullscreen();
-                    }else{
-                        defer.reject("");
-                    }
-                    defer.resolve("返回值");
+
+            this.fullScreen = function (dom) {
+                var docElm = dom && document.querySelector(dom) || document.documentElement;
+                if (docElm.requestFullscreen) {
+                    docElm.requestFullscreen();
+                } else if (docElm.mozRequestFullScreen) {
+                    docElm.mozRequestFullScreen();
+                } else if (docElm.webkitRequestFullScreen) {
+                    docElm.webkitRequestFullScreen();
+                } else if (docElm.msRequestFullscreen) {
+                    docElm.msRequestFullscreen();
+                } else {
+                    defer.reject("");
+                }
+                defer.resolve("返回值");
                 return defer.promise();
             }
-            this.fullClose = function(){
-                if(this.isFullscreen()) {
+
+            this.fullClose = function () {
+                if (this.isFullscreen()) {
                     if (document.exitFullscreen) {
                         document.exitFullscreen();
                     } else if (document.mozCancelFullScreen) {
@@ -43,12 +47,14 @@ layui.define(['message', 'table', 'jquery', 'element', 'yaml', 'form', 'tab', 'm
                 defer.resolve("返回值");
                 return defer.promise();
             }
-            this.isFullscreen = function(){
+
+            this.isFullscreen = function () {
                 return document.fullscreenElement ||
                     document.msFullscreenElement ||
                     document.mozFullScreenElement ||
                     document.webkitFullscreenElement || false;
             }
         };
+        
         exports('fullscreen', fullScreen);
     })

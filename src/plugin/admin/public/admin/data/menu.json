@@ -1,0 +1,313 @@
+[
+	{
+		"id": 1,
+		"title": "工作空间",
+		"icon": "layui-icon layui-icon-console",
+		"type": 0,
+		"children": [
+			{
+				"id": "10",
+				"title": "分析页",
+				"icon": "layui-icon layui-icon-console",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/analysis/index.html"
+			},
+			{
+				"id": "11",
+				"title": "工作台",
+				"icon": "layui-icon layui-icon-console",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/console/index.html"
+			}
+		]
+	},
+	{
+		"id": 9,
+		"title": "列表页面",
+		"icon": "layui-icon layui-icon-auz",
+		"type": 0,
+		"children": [
+			{
+				"id": 91,
+				"title": "查询表格",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/listing/table.html"
+			}
+		]
+	},
+	{
+		"id": 2,
+		"title": "扩展组件",
+		"icon": "layui-icon layui-icon-auz",
+		"type": 0,
+		"children": [
+			{
+				"id": 21,
+				"title": "核心方法",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/component/admin.html"
+			},
+			{
+				"id": 23,
+				"title": "高级栅格",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/component/grid.html"
+			},
+			{
+				"id": 24,
+				"title": "消息提示",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/component/toast.html"
+			},
+			{
+				"id": 25,
+				"title": "路由过渡",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/component/nprogress.html"
+			}
+		]
+	},
+	{
+		"id": "result",
+		"title": "结果页面",
+		"icon": "layui-icon layui-icon-auz",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": "success",
+				"title": "成功页面",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/result/success.html"
+			},
+			{
+				"id": "failure",
+				"title": "失败页面",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/result/error.html"
+			}
+		]
+	},
+	{
+		"id": "exception",
+		"title": "异常页面",
+		"icon": "layui-icon layui-icon-auz",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": "403",
+				"title": "403",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/exception/403.html"
+			},
+			{
+				"id": "404",
+				"title": "404",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/exception/404.html"
+			},
+			{
+				"id": "500",
+				"title": "500",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/exception/500.html"
+			}
+		]
+	},
+	{
+		"id": "open",
+		"title": "菜单模式",
+		"icon": "layui-icon layui-icon-auz",
+		"type": 0,
+		"children": [
+			{
+				"id": "a",
+				"title": "普通路由",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 1,
+				"openType": "_component",
+				"href": "view/result/success.html"
+			},
+			{
+				"id": "b",
+				"title": "嵌套网页",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_iframe",
+				"href": "http://www.layui-vue.com"
+			},
+			{
+				"id": "c",
+				"title": "新建标签",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_blank",
+				"href": "http://www.layui-vue.com"
+			},
+			{
+				"id": "d",
+				"title": "弹窗网页",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 1,
+				"openType": "_layer",
+				"href": "http://www.layui-vue.com"
+			}
+		]
+	},
+	{
+		"id": "deep",
+		"title": "深度测试",
+		"icon": "layui-icon layui-icon-auz",
+		"type": 0,
+		"href": "",
+		"children": [
+			{
+				"id": "deep1-1",
+				"title": "二级菜单",
+				"icon": "layui-icon layui-icon-face-smile",
+				"type": 0,
+				"openType": "_component",
+				"href": "view/result/success.html",
+				"children": [
+					{
+						"id": "deep1-1-1",
+						"title": "三级菜单",
+						"icon": "layui-icon layui-icon-face-smile",
+						"type": 0,
+						"openType": "_component",
+						"href": "view/result/success.html",
+						"children": [
+							{
+								"id": "deep1-1-1-1",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-smile",
+								"type": 1,
+								"openType": "_component",
+								"href": "view/result/success.html"
+							},
+							{
+								"id": "deep1-1-1-2",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-cry",
+								"type": 1,
+								"openType": "_blank",
+								"href": "http://www.layui-vue.com"
+							}
+						]
+					},
+					{
+						"id": "deep1-1-2",
+						"title": "三级菜单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 0,
+						"openType": "_blank",
+						"href": "http://www.layui-vue.com",
+						"children": [
+							{
+								"id": "deep1-1-2-1",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-smile",
+								"type": 1,
+								"openType": "_component",
+								"href": "view/result/success.html"
+							},
+							{
+								"id": "deep1-1-2-2",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-cry",
+								"type": 1,
+								"openType": "_blank",
+								"href": "http://www.layui-vue.com"
+							}
+						]
+					}
+				]
+			},
+			{
+				"id": "deep1-2",
+				"title": "二级菜单",
+				"icon": "layui-icon layui-icon-face-cry",
+				"type": 0,
+				"openType": "_blank",
+				"href": "http://www.layui-vue.com",
+				"children": [
+					{
+						"id": "deep1-2-1",
+						"title": "三级菜单",
+						"icon": "layui-icon layui-icon-face-smile",
+						"type": 0,
+						"openType": "_component",
+						"href": "view/result/success.html",
+						"children": [
+							{
+								"id": "deep1-2-1-1",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-smile",
+								"type": 1,
+								"openType": "_component",
+								"href": "view/result/success.html"
+							},
+							{
+								"id": "deep1-2-1-2",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-cry",
+								"type": 1,
+								"openType": "_blank",
+								"href": "http://www.layui-vue.com"
+							}
+						]
+					},
+					{
+						"id": "deep1-2-2",
+						"title": "三级菜单",
+						"icon": "layui-icon layui-icon-face-cry",
+						"type": 0,
+						"openType": "_blank",
+						"href": "http://www.layui-vue.com",
+						"children": [
+							{
+								"id": "deep1-2-2-1",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-smile",
+								"type": 1,
+								"openType": "_component",
+								"href": "view/result/success.html"
+							},
+							{
+								"id": "deep1-2-2-2",
+								"title": "四级菜单",
+								"icon": "layui-icon layui-icon-face-cry",
+								"type": 1,
+								"openType": "_blank",
+								"href": "http://www.layui-vue.com"
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+]

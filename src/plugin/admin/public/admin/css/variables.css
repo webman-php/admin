@@ -1,0 +1,9 @@
+:root {
+
+    /* 主题颜色 */
+    --global-primary-color: #16baaa;
+
+    /** 圆角度数 */
+    --global-border-radius: 4px;
+    
+}

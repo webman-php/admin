@@ -1,0 +1,25 @@
+<div class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-header">基础使用</div>
+        <div class="layui-card-body">
+           <button class="layui-btn start">开始</button>
+           <button class="layui-btn done">停止</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use(['nprogress', 'jquery', 'layer', 'code', 'element'], function() {
+			var nprogress = layui.nprogress;
+			var layer = layui.layer;
+			var $ = layui.jquery;
+
+			$(".start").click(function() {
+				nprogress.start();
+			});
+
+            $(".done").click(function() {
+				nprogress.done();
+			});
+		});
+</script>

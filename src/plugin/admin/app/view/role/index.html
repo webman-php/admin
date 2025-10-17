@@ -4,8 +4,7 @@
     <head>
         <meta charset="utf-8">
         <title>浏览页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
     </head>
     <body class="pear-container">
     
@@ -21,10 +20,10 @@
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="app.admin.role.insert">
+            <button class="layui-btn layui-btn-primary layui-btn-md" lay-event="add" permission="app.admin.role.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="app.admin.role.delete">
+            <button class="layui-btn layui-btn-danger layui-btn-md" lay-event="batchRemove" permission="app.admin.role.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
@@ -32,15 +31,15 @@
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
             {{# if(d.id!==1&&d.pid&&!d.isRoot){ }}
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="app.admin.role.update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="app.admin.role.delete">删除</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="edit" permission="app.admin.role.update">编辑</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="remove" permission="app.admin.role.delete">删除</button>
             {{# } }}
         </script>
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
-        <script src="/app/admin/admin/js/common.js"></script>
+        <script src="/app/admin/js/permission.js"></script>
+        <script src="/app/admin/js/common.js"></script>
         
         <script>
 
@@ -53,14 +52,14 @@
             const UPDATE_URL = "/app/admin/role/update";
             
             // 表格渲染
-            layui.use(["table", "treetable", "form", "common", "popup", "util"], function() {
-                let treeTable = layui.treetable;
+            layui.use(["common", "popup"], function() {
+                let treeTable = layui.treeTable;
                 let table = layui.table;
                 let form = layui.form;
                 let $ = layui.$;
                 let common = layui.common;
                 let util = layui.util;
-                
+
 				// 表头参数
 				let cols = [
 					{
@@ -71,6 +70,7 @@
                     },{
 						title: "主键",
 						field: "id",
+                        hide: true,
 					},{
 						title: "权限",
 						field: "rules",
@@ -111,16 +111,24 @@
 						width: 120,
 					}
 				];
-				
+
 				// 渲染表格
 				function render()
 				{
                     treeTable.render({
 				        elem: "#data-table",
 				        url: SELECT_API,
+                        tree: {
+                            customName:{
+                                id: "id",
+                                pid: "pid",
+                                name: "title",
+                            },
+                            data:{
+                                isSimpleData: true,
+                            },
+                        },
                         treeColIndex: 1,
-                        treeIdName: "id",
-                        treePidName: "pid",
                         treeDefaultClose: false,
                         cols: [cols],
                         skin: "line",
@@ -133,7 +141,7 @@
                         }, "filter", "print", "exports"]
 				    });
 				}
-				
+
 				// 获取表格中下拉或树形组件数据
 				let apis = [];
 				apis.push(["rules", "/app/admin/rule/get?type=0,1,2"]);
@@ -172,7 +180,7 @@
 				if (!count) {
 				    render();
 				}
-				
+
                 // 编辑或删除行事件
                 table.on("tool(data-table)", function(obj) {
                     if (obj.event === "remove") {
@@ -203,7 +211,7 @@
                     })
                     return false;
                 });
-                
+
                 // 表格顶部搜索重置事件
                 form.on("submit(table-reset)", function(data) {
                     table.reload("data-table", {
@@ -229,7 +237,7 @@
                         type: 2,
                         title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: INSERT_URL
                     });
                 }
@@ -241,7 +249,7 @@
                         type: 2,
                         title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }

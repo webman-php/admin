@@ -1,0 +1,218 @@
+html,
+body{
+	height: 100%;
+}
+
+.login-page {
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.layui-row {
+	width: 1000px;
+	height: 600px;
+	box-shadow: 2px 0 6px rgba(0, 21, 41, .20);
+	border: 3px solid whitesmoke;
+	border-radius: 15px;
+}
+
+.login-bg {
+	height: 100%;
+	box-sizing: border-box;
+	background-color: rgb(250, 250, 250);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-bottom-left-radius: 15px;
+	border-top-left-radius: 15px;
+}
+
+.login-bg-img {
+	width: 90%;
+	display: inline-block;
+	margin: 0 auto;
+}
+
+.login-form {
+	height: 100%;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background-color: #fff;
+	border-bottom-right-radius: 15px;
+	border-top-right-radius: 15px;
+}
+
+.form-center {
+	background: #fff;
+	box-sizing: border-box;
+	flex-flow: row wrap;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.form-center-box {
+	width: 360px;
+}
+
+.top-log-title {
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	margin-bottom: 30px;
+}
+
+.top-log {
+	width: 50px;
+	border-radius: 12px;
+	margin-right: 20px;
+	height: 50px;
+}
+
+.top-log-title span {
+	font-size: 32px;
+	font-weight: 700;
+	color: var(--global-primary-color);
+}
+
+.top-desc {
+	font-size: 14px;
+	color: #808695;
+
+}
+
+.tab-log-method {
+	width: 100%;
+	display: flex;
+	padding: 20px 0px;
+}
+
+.tab-log-method-item {
+	flex: 1;
+	box-sizing: border-box;
+	padding: 5px 50px;
+	text-align: right;
+	color: #1f2225;
+	font-size: 16px;
+}
+
+.tab-log-method-item:nth-child(2) {
+	text-align: left;
+}
+
+.tab-log-method-item>span {
+	display: inline-block;
+	width: 40px;
+	text-align: center;
+	height: 30px;
+	border-bottom: 2px solid transparent;
+}
+
+.tab-log-method-item>span:hover {
+	cursor: pointer;
+	color: #16baaa;
+	border-bottom: 2px solid #16baaa;
+}
+
+.tab-log-verification {
+	width: 100%;
+	display: flex;
+}
+
+.verification-text {
+	flex: 2;
+	box-sizing: border-box;
+	margin-right: 20px;
+}
+
+.verification-img {
+	flex: 1;
+	box-sizing: border-box;
+	border: 1px solid #eeeeee;
+	border-radius: 4px;
+	height: 40px;
+	overflow: hidden;
+	text-align: center;
+}
+
+.remember-passsword {
+	margin: 20px 0;
+	width: 100%;
+	display: flex;
+	box-sizing: border-box;
+}
+
+.remember-cehcked {
+	flex: 1;
+	text-align: left;
+}
+
+.greenText {
+	color: #16baaa;
+	cursor: pointer;
+}
+
+
+.login-btn {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.login-btn>.layui-btn {
+	width: 100%;
+}
+
+.other-login {
+	width: 100%;
+	box-sizing: border-box;
+	margin: 20px 0 0;
+	text-align: left;
+	display: flex;
+}
+
+.other-login-methods {
+	display: inline-block;
+	flex: 1;
+}
+
+.layui-input {
+	border-radius: 4px;
+	line-height: 40px;
+	height: 40px;
+}
+
+.layui-btn {
+	border-radius: 4px;
+	background-color: var(--global-primary-color);
+}
+
+@media(min-width: 992px) and  (max-width:1200px){
+	.layui-row{
+		width: 900px;
+	}
+}
+@media(min-width: 768px) and (max-width:992px){
+	.layui-row{
+		width: 90%;
+	}
+	.form-center{width: 90%;}
+}
+@media (max-width:768px){
+	.layui-row{
+		width: 90%;
+	}
+	.login-form {
+		border-bottom-left-radius: 15px;
+		border-top-left-radius: 15px;
+	}
+	.form-center-box{width: 95%;}
+}
