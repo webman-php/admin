@@ -1197,7 +1197,7 @@ layui.each(apis, function (k, item) {
     let [field, url] = item;
     $.ajax({
         url: url,
-        dateType: "json",
+        dataType: "json",
         success: function (res) {
             if (res.code) {
                 return layui.popup.failure(res.msg);
