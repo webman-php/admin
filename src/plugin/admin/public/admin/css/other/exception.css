@@ -1,0 +1,28 @@
+.pear-exception {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 70px 40px
+}
+
+.pear-exception .title {
+    margin-top: 20px;
+}
+
+.pear-exception .title p {
+    color: rgb(0, 0, 0);
+    font-size: 20px;
+}
+
+.pear-exception .description {
+    margin-top: 10px;
+    color: #8D9095;
+    font-size: 14px;
+}
+
+.pear-exception .extra {
+    margin: 30px;
+}

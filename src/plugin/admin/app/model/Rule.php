@@ -14,6 +14,7 @@ use plugin\admin\app\model\Base;
  * @property string $updated_at 更新时间
  * @property string $href url
  * @property integer $type 类型
+ * @property integer $open_type 菜单打开方式
  * @property integer $weight 排序
  */
 class Rule extends Base

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>通知组件</title>
+	</head>
+	<body>
+		<div class="pear-container">
+			<div class="layui-row layui-col-space10">
+				<div class="layui-col-md6">
+					<div class="layui-card">
+						<div class="layui-card-header">基础使用</div>
+						<div class="layui-card-body">
+							<button class="toast-info layui-btn">通用消息</button>
+							<button class="toast-success layui-btn">成功消息</button>
+							<button class="toast-failure layui-btn">错误消息</button>
+							<button class="toast-warning layui-btn">警告消息</button>
+							<button class="toast-question layui-btn">问题消息</button>
+						</div>
+					</div>
+				</div>
+				<div class="layui-col-md6">
+					<div class="layui-card">
+						<div class="layui-card-header">位置选项</div>
+						<div class="layui-card-body">
+							<button class="toast-top-left-btn layui-btn">上左位置</button>
+							<button class="toast-top-center-btn layui-btn">上中位置</button>
+							<button class="toast-top-right-btn layui-btn">上右位置</button>
+							<button class="toast-bottom-left-btn layui-btn">下左位置</button>
+							<button class="toast-bottom-center-btn layui-btn">下中位置</button>
+							<button class="toast-bottom-right-btn layui-btn">下右位置</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		layui.use(['toast', 'toast', 'jquery', 'layer', 'code', 'element'], function() {
+			var toast = layui.toast;
+			var layer = layui.layer;
+			var $ = layui.jquery;
+
+			$(".toast-success").click(function() {
+				toast.success({
+					message: 'You forgot important data',
+				});
+			});
+			$(".toast-failure").click(function() {
+				toast.error({
+					message: 'You forgot important data',
+				});
+			});
+			$(".toast-warning").click(function() {
+				toast.warning({
+					message: 'You forgot important data',
+				});
+			});
+			$(".toast-info").click(function() {
+				toast.info({
+					message: 'You forgot important data',
+				});
+			});
+			$(".toast-question").click(function() {
+				toast.question({
+					message: 'You forgot important data',
+				});
+			});
+			$(".toast-top-left-btn").click(function(){
+				toast.info({
+					message: 'You forgot important data',
+					position: 'topLeft'
+				});
+			})
+			$(".toast-top-center-btn").click(function(){
+				toast.info({
+					message: 'You forgot important data',
+					position: 'topCenter'
+				});
+			})
+			$(".toast-top-right-btn").click(function(){
+				toast.info({
+					message: 'You forgot important data',
+					position: 'topRight'
+				});
+			})
+			
+			$(".toast-bottom-left-btn").click(function(){
+				toast.info({
+					message: 'You forgot important data',
+					position: 'bottomLeft'
+				});
+			})
+			$(".toast-bottom-center-btn").click(function(){
+				toast.info({
+					message: 'You forgot important data',
+					position: 'bottomCenter'
+				});
+			})
+			$(".toast-bottom-right-btn").click(function(){
+				toast.info({
+					message: 'You forgot important data',
+					position: 'bottomRight'
+				});
+			})
+		});
+	</script>
+
+</html>

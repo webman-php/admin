@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>新增页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
+        <link rel="stylesheet" href="/app/admin/css/form-box.css" />
     </head>
     <body>
 
@@ -39,11 +39,11 @@
 
             <div class="bottom">
                 <div class="button-container">
-                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit=""
+                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit=""
                         lay-filter="save">
                         提交
                     </button>
-                    <button type="reset" class="pear-btn pear-btn-md">
+                    <button type="reset" class="layui-btn layui-btn-md">
                         重置
                     </button>
                 </div>
@@ -53,7 +53,8 @@
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
+        <script src="/app/admin/js/common.js"></script>
+        <script src="/app/admin/js/permission.js"></script>
         
         <script>
 
@@ -73,6 +74,8 @@
                             name: "rules",
                             initValue: initValue,
                             data: res.data,
+                            autoRow: true,
+                            height: 'auto',
                             tree: {"show":true,expandedKeys:initValue},
                             toolbar: {show:true,list:["ALL","CLEAR","REVERSE"]},
                         })
@@ -98,6 +101,8 @@
                             model: {"icon":"hidden","label":{"type":"text"}},
                             clickClose: true,
                             radio: true,
+                            autoRow: true,
+                            height: 'auto',
                             tree: {show: true,"strict":false,"clickCheck":true,"clickExpand":false,expandedKeys:true},
                             on: function(data){
                                 let id = data.arr[0] ? data.arr[0].value : "";

@@ -401,7 +401,7 @@ class TableController extends Base
         $table_basename = strpos($table_name, $prefix) === 0 ? substr($table_name, strlen($prefix)) : $table_name;
         $inflector = InflectorFactory::create()->build();
         $model_class = $inflector->classify($inflector->singularize($table_basename));
-        $base_path = '/plugin/admin/app';
+        $base_path = '/app/admin';
         if ($request->method() === 'GET') {
             return raw_view('table/crud', [
                 'table' => $table_name,
@@ -417,6 +417,10 @@ class TableController extends Base
         $overwrite = $request->post('overwrite');
         if ($controller_file === '/' || $model_file === '/') {
             return $this->json(1, '控制器和model不能为空');
+        }
+
+        if (str_starts_with($controller_file, $base_path) && !config('middleware.admin')) {
+            return $this->json(1, "请先设置鉴权中间件：config('middleware.admin')");
         }
 
         $controller_info = pathinfo($controller_file);
@@ -525,6 +529,7 @@ class TableController extends Base
         $menu->title = $title;
         $menu->icon = $icon;
         $menu->href = "$url_path_base/index";
+        $menu->open_type = '_iframe';
         $menu->save();
 
         $roles = admin('roles');
@@ -757,10 +762,10 @@ EOF;
             $html
             <div class="layui-form-item layui-inline">
                 <label class="layui-form-label"></label>
-                <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="table-query">
+                <button class="layui-btn layui-btn-md layui-btn-primary" lay-submit lay-filter="table-query">
                     <i class="layui-icon layui-icon-search"></i>查询
                 </button>
-                <button type="reset" class="pear-btn pear-btn-md" lay-submit lay-filter="table-reset">
+                <button type="reset" class="layui-btn layui-btn-md" lay-submit lay-filter="table-reset">
                     <i class="layui-icon layui-icon-refresh"></i>重置
                 </button>
             </div>
@@ -784,8 +789,7 @@ EOF
     <head>
         <meta charset="utf-8">
         <title>浏览页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
     </head>
     <body class="pear-container">
     
@@ -801,24 +805,24 @@ EOF
 
         <!-- 表格顶部工具栏 -->
         <script type="text/html" id="table-toolbar">
-            <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add" permission="$code_base.insert">
+            <button class="layui-btn layui-btn-primary layui-btn-md" lay-event="add" permission="$code_base.insert">
                 <i class="layui-icon layui-icon-add-1"></i>新增
             </button>
-            <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove" permission="$code_base.delete">
+            <button class="layui-btn layui-btn-danger layui-btn-md" lay-event="batchRemove" permission="$code_base.delete">
                 <i class="layui-icon layui-icon-delete"></i>删除
             </button>
         </script>
 
         <!-- 表格行工具栏 -->
         <script type="text/html" id="table-bar">
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="edit" permission="$code_base.update">编辑</button>
-            <button class="pear-btn pear-btn-xs tool-btn" lay-event="remove" permission="$code_base.delete">删除</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="edit" permission="$code_base.update">编辑</button>
+            <button class="layui-btn layui-btn-xs tool-btn" lay-event="remove" permission="$code_base.delete">删除</button>
         </script>
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
-        <script src="/app/admin/admin/js/common.js"></script>
+        <script src="/app/admin/js/permission.js"></script>
+        <script src="/app/admin/js/common.js"></script>
         
         <script>
 
@@ -905,7 +909,7 @@ EOF
                         title: "新增",
                         shade: 0.1,
                         maxmin: true,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: INSERT_URL
                     });
                 }
@@ -918,7 +922,7 @@ EOF
                         title: "修改",
                         shade: 0.1,
                         maxmin: true,
-                        area: [common.isModile()?"100%":"500px", common.isModile()?"100%":"450px"],
+                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
                         content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
@@ -999,9 +1003,9 @@ EOF;
     <head>
         <meta charset="UTF-8">
         <title>新增页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
         <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/form-box.css" />
     </head>
     <body>
 
@@ -1015,11 +1019,11 @@ EOF;
 
             <div class="bottom">
                 <div class="button-container">
-                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit=""
+                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit=""
                         lay-filter="save">
                         提交
                     </button>
-                    <button type="reset" class="pear-btn pear-btn-md">
+                    <button type="reset" class="layui-btn layui-btn-md">
                         重置
                     </button>
                 </div>
@@ -1030,7 +1034,7 @@ EOF;
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
         <script src="/app/admin/component/jsoneditor/jsoneditor.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
+        <script src="/app/admin/js/permission.js"></script>
         
         <script>
             
@@ -1088,10 +1092,9 @@ EOF;
     <head>
         <meta charset="UTF-8">
         <title>更新页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
         <link rel="stylesheet" href="/app/admin/component/jsoneditor/css/jsoneditor.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
-        
+        <link rel="stylesheet" href="/app/admin/css/form-box.css" />
     </head>
     <body>
 
@@ -1105,10 +1108,10 @@ EOF;
 
             <div class="bottom">
                 <div class="button-container">
-                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="save">
+                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit="" lay-filter="save">
                         提交
                     </button>
-                    <button type="reset" class="pear-btn pear-btn-md">
+                    <button type="reset" class="layui-btn layui-btn-md">
                         重置
                     </button>
                 </div>
@@ -1119,7 +1122,7 @@ EOF;
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
         <script src="/app/admin/component/jsoneditor/jsoneditor.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
+        <script src="/app/admin/js/permission.js"></script>
         
         <script>
 

@@ -1,0 +1,77 @@
+.text-center {
+    text-align: center;
+}
+
+.user-info {
+    width: 110px;
+    height: 110px;
+    line-height: 110px;
+    position: relative;
+    display: inline-block;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    margin: 0 auto;
+}
+
+.user-name {
+    padding-top: 20px;
+    font-size: 20px !important;
+}
+
+.user-home {
+    padding-top: 8px;
+    margin-top: 10px;
+    font-size: 13.5px;
+}
+
+.user-desc {
+    height: 45px;
+    border-top: 1px whitesmoke solid;
+    text-align: center;
+    line-height: 45px;
+    font-size: 13.5px;
+}
+
+.blog-title {
+    padding-left: 13.5px;
+}
+
+.blog-content {
+    padding-left: 13px;
+    font-size: 13px;
+    color: dimgray;
+}
+
+.layui-tab-title {
+    border-bottom: none;
+}
+
+.message-board {
+    padding: 0 10px 10px;
+}
+
+.message-board li {
+    position: relative;
+    padding: 10px 0;
+    border-bottom: 1px solid #EEE;
+}
+
+.message-board li p {
+    padding-bottom: 10px;
+    padding-top: 3px;
+}
+
+.message-board li>span {
+    color: #999;
+    height: 24px;
+    line-height: 24px;
+}
+
+.message-board .message-board-reply {
+    position: absolute;
+    right: 20px;
+    bottom: 12px;
+    height: 24px;
+    line-height: 24px;
+}

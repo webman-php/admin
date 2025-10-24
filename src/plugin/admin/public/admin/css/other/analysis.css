@@ -1,0 +1,65 @@
+.top-panel {
+	border-radius: 4px;
+	text-align: center;
+}
+
+.top-panel>.layui-card-body {
+	height: 60px;
+}
+
+.top-panel-number {
+	line-height: 60px;
+	font-size: 29px;
+	border-right: 1px solid #eceff9;
+}
+
+.top-panel-tips {
+	padding-left: 8px;
+	padding-top: 16px;
+	line-height: 30px;
+	font-size: 12px;
+}
+
+.top-panel-tips i {
+	font-size: 33px;
+}
+
+.top-panel-tips svg {
+	margin-top: -12px;
+	width: 50px;
+	height: 50px;
+}
+
+.dynamic-status {
+	padding: 0 10px 10px;
+}
+
+.dynamic-status dd {
+	padding: 15px 0;
+	border-bottom: 1px solid #EEE;
+	display: -webkit-flex;
+	display: flex;
+}
+
+.dynamic-status dd div.dynamic-status-img {
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	margin-right: 15px;
+}
+
+.dynamic-status dd div.dynamic-status-img a {
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	text-align: center;
+	line-height: 32px;
+}
+
+.dynamic-status dd div span {
+	color: #BBB;
+}
+
+.dynamic-status dd div a {
+	color: #01AAED;
+}

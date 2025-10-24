@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>更新页面</title>
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
+        <link rel="stylesheet" href="/app/admin/css/form-box.css" />
     </head>
     <body>
 
@@ -46,10 +46,10 @@
                         <div class="layui-input-block">
                             <img class="img-3" src=""/>
                             <input type="text" style="display:none" name="avatar" value="" />
-                            <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="avatar" permission="app.admin.upload.avatar">
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="avatar" permission="app.admin.upload.avatar">
                                 <i class="layui-icon layui-icon-upload"></i>上传图片
                             </button>
-                            <button type="button" class="pear-btn pear-btn-primary pear-btn-sm" id="attachment-choose-avatar" permission="app.admin.upload.attachment">
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-sm" id="attachment-choose-avatar" permission="app.admin.upload.attachment">
                                 <i class="layui-icon layui-icon-align-left"></i>选择图片
                             </button>
                         </div>
@@ -138,10 +138,10 @@
 
             <div class="bottom">
                 <div class="button-container">
-                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="save">
+                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit="" lay-filter="save">
                         提交
                     </button>
-                    <button type="reset" class="pear-btn pear-btn-md">
+                    <button type="reset" class="layui-btn layui-btn-md">
                         重置
                     </button>
                 </div>
@@ -151,7 +151,8 @@
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
+        <script src="/app/admin/js/common.js"></script>
+        <script src="/app/admin/js/permission.js"></script>
         <script>
 
             // 相关接口

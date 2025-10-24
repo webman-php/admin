@@ -21,6 +21,17 @@ Route::any('/app/admin/account/captcha/{type}', [AccountController::class, 'capt
 
 Route::any('/app/admin/dict/get/{name}', [DictController::class, 'get']);
 
+/**
+ * @deprecated 用于兼容旧版本
+ */
+Route::any('/app/admin/admin/js/{file}', function (Request $request, $file) {
+    return response()->withFile(base_path() . '/plugin/admin/public/js/' . $file);
+});
+Route::any('/app/admin/admin/css/pages/{file}', function (Request $request, $file) {
+    return response()->withFile(base_path() . '/plugin/admin/public/css/' . $file);
+});
+
 Route::fallback(function (Request $request) {
     return response($request->uri() . ' not found' , 404);
 }, 'admin');
+

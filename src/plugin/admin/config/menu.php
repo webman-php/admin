@@ -140,291 +140,311 @@ return [
         'type' => 0,
         'children' => [
             [
-                'key' => 'demo1',
                 'title' => '工作空间',
-                'type' => 0,
+                'key' => 'demo1',
                 'icon' => 'layui-icon-console',
-                'href' => '',
+                'weight' => 1000,
+                'type' => 0,
                 'children' => [
                     [
+                        'title' => '分析页',
                         'key' => 'demo10',
-                        'title' => '控制后台',
-                        'icon' => 'layui-icon-console',
+                        'href' => '/app/admin/view/analysis/index.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/console/console1.html'
-                    ], [
-                        'key' => 'demo13',
-                        'title' => '数据分析',
-                        'icon' => 'layui-icon-console',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/console/console2.html'
-                    ], [
-                        'key' => 'demo14',
-                        'title' => '百度一下',
-                        'icon' => 'layui-icon-console',
-                        'type' => 1,
-                        'href' => 'http://www.baidu.com'
-                    ], [
-                        'key' => 'demo15',
-                        'title' => '主题预览',
-                        'icon' => 'layui-icon-console',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/system/theme.html'
-                    ]
-                ]
-            ],
-            [
-                'key' => 'demo20',
-                'title' => '常用组件',
-                'icon' => 'layui-icon-component',
-                'type' => 0,
-                'href' => '',
-                'children' => [
+                        'open_type' => '_component', // _component _layer _iframe
+                        'weight' => 1000,
+                    ],
                     [
-                        'key' => 'demo2011',
-                        'title' => '功能按钮',
-                        'icon' => 'layui-icon-face-smile',
+                        'title' => '工作台',
+                        'key' => 'demo11',
+                        'href' => '/app/admin/view/console/index.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/document/button.html'
-                    ], [
-                        'key' => 'demo2014',
-                        'title' => '表单集合',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/form.html'
-                    ], [
-                        'key' => 'demo2010',
-                        'title' => '字体图标',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/icon.html'
-                    ], [
-                        'key' => 'demo2012',
-                        'title' => '多选下拉',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/select.html'
-                    ], [
-                        'key' => 'demo2013',
-                        'title' => '动态标签',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/tag.html'
-                    ], [
-                        'key' => 'demo2031',
-                        'title' => '数据表格',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/table.html'
-                    ], [
-                        'key' => 'demo2032',
-                        'title' => '分布表单',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/step.html'
-                    ], [
-                        'key' => 'demo2033',
-                        'title' => '树形表格',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/treetable.html'
-                    ], [
-                        'key' => 'demo2034',
-                        'title' => '树状结构',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/dtree.html'
-                    ], [
-                        'key' => 'demo2035',
-                        'title' => '文本编辑',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/tinymce.html'
-                    ], [
-                        'key' => 'demo2036',
-                        'title' => '卡片组件',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/card.html'
-                    ], [
-                        'key' => 'demo2021',
-                        'title' => '抽屉组件',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/drawer.html'
-                    ], [
-                        'key' => 'demo2022',
-                        'title' => '消息通知',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/notice.html'
-                    ], [
-                        'key' => 'demo2024',
-                        'title' => '加载组件',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/loading.html'
-                    ], [
-                        'key' => 'demo2023',
-                        'title' => '弹层组件',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/popup.html'
-                    ], [
-                        'key' => 'demo60131',
-                        'title' => '多选项卡',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/tab.html'
-                    ], [
-                        'key' => 'demo60132',
-                        'title' => '数据菜单',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/menu.html'
-                    ], [
-                        'key' => 'demo2041',
-                        'title' => '哈希加密',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/encrypt.html'
-                    ], [
-                        'key' => 'demo2042',
-                        'title' => '图标选择',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/iconPicker.html'
-                    ], [
-                        'key' => 'demo2043',
-                        'title' => '省市级联',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/area.html'
-                    ], [
-                        'key' => 'demo2044',
-                        'title' => '数字滚动',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/count.html'
-                    ], [
-                        'key' => 'demo2045',
-                        'title' => '顶部返回',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/document/topBar.html'
+                        'open_type' => '_component',
+                        'weight' => 900,
                     ]
                 ]
             ],
             [
-                'key' => 'demo666',
-                'title' => '结果页面',
+                'title' => '列表页面',
+                'key' => 'demo9',
                 'icon' => 'layui-icon-auz',
+                'weight' => 900,
                 'type' => 0,
-                'href' => '',
                 'children' => [
                     [
+                        'title' => '查询表格',
+                        'key' => 'demo91',
+                        'href' => '/app/admin/view/listing/table.html',
+                        'type' => 1,
+                        'open_type' => '_component',
+                        'weight' => 1000,
+                    ]
+                ]
+            ],
+            [
+                'title' => '扩展组件',
+                'key' => 'demo2',
+                'icon' => 'layui-icon-auz',
+                'weight' => 800,
+                'type' => 0,
+                'children' => [
+                    [
+                        'title' => '核心方法',
+                        'key' => 'demo21',
+                        'href' => '/app/admin/view/component/admin.html',
+                        'type' => 1,
+                        'open_type' => '_component',
+                        'weight' => 1000,
+                    ],
+                    [
+                        'title' => '高级栅格',
+                        'key' => 'demo23',
+                        'href' => '/app/admin/view/component/grid.html',
+                        'type' => 1,
+                        'open_type' => '_component',
+                        'weight' => 900,
+                    ],
+                    [
+                        'title' => '消息提示',
+                        'key' => 'demo24',
+                        'href' => '/app/admin/view/component/toast.html',
+                        'type' => 1,
+                        'open_type' => '_component',
+                        'weight' => 800,
+                    ],
+                    [
+                        'title' => '路由过渡',
+                        'key' => 'demo25',
+                        'href' => '/app/admin/view/component/nprogress.html',
+                        'type' => 1,
+                        'open_type' => '_component',
+                        'weight' => 700,
+                    ]
+                ]
+            ],
+            [
+                'title' => '结果页面',
+                'key' => 'demo666',
+                'icon' => 'layui-icon-auz',
+                'weight' => 700,
+                'type' => 0,
+                'children' => [
+                    [
+                        'title' => '成功页面',
                         'key' => 'demo667',
-                        'title' => '成功',
-                        'icon' => 'layui-icon-face-smile',
+                        'href' => '/app/admin/view/result/success.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/result/success.html'
-                    ], [
+                        'open_type' => '_component',
+                        'weight' => 1000,
+                    ],
+                    [
+                        'title' => '失败页面',
                         'key' => 'demo668',
-                        'title' => '失败',
-                        'icon' => 'layui-icon-face-cry',
+                        'href' => '/app/admin/view/result/error.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/result/error.html'
+                        'open_type' => '_component',
+                        'weight' => 900,
                     ]
                 ]
             ],
             [
+                'title' => '异常页面',
                 'key' => 'demo-error',
-                'title' => '错误页面',
-                'icon' => 'layui-icon-face-cry',
+                'icon' => 'layui-icon-auz',
+                'weight' => 600,
                 'type' => 0,
-                'href' => '',
                 'children' => [
                     [
-                        'key' => 'demo403',
                         'title' => '403',
-                        'icon' => 'layui-icon-face-smile',
+                        'key' => 'demo403',
+                        'href' => '/app/admin/view/exception/403.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/error/403.html'
-                    ], [
-                        'key' => 'demo404',
+                        'open_type' => '_component',
+                        'weight' => 1000,
+                    ],
+                    [
                         'title' => '404',
-                        'icon' => 'layui-icon-face-cry',
+                        'key' => 'demo404',
+                        'href' => '/app/admin/view/exception/404.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/error/404.html'
-                    ], [
-                        'key' => 'demo500',
+                        'open_type' => '_component',
+                        'weight' => 900,
+                    ],
+                    [
                         'title' => '500',
-                        'icon' => 'layui-icon-face-cry',
+                        'key' => 'demo500',
+                        'href' => '/app/admin/view/exception/500.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/error/500.html'
-                    ]
-
-                ]
-            ],
-            [
-                'key' => 'demo-system',
-                'title' => '系统管理',
-                'icon' => 'layui-icon-set-fill',
-                'type' => 0,
-                'href' => '',
-                'children' => [
-                    [
-                        'key' => 'demo601',
-                        'title' => '用户管理',
-                        'icon' => 'layui-icon-face-smile',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/system/user.html'
-                    ], [
-                        'key' => 'demo602',
-                        'title' => '角色管理',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/system/role.html'
-                    ], [
-                        'key' => 'demo603',
-                        'title' => '权限管理',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/system/power.html'
-                    ], [
-                        'key' => 'demo604',
-                        'title' => '部门管理',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/system/deptment.html'
-                    ], [
-                        'key' => 'demo605',
-                        'title' => '行为日志',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/system/log.html'
-                    ], [
-                        'key' => 'demo606',
-                        'title' => '数据字典',
-                        'icon' => 'layui-icon-face-cry',
-                        'type' => 1,
-                        'href' => '/app/admin/demos/system/dict.html'
+                        'open_type' => '_component',
+                        'weight' => 800,
                     ]
                 ]
             ],
             [
-                'key' => 'demo-common',
-                'title' => '常用页面',
-                'icon' => 'layui-icon-template-1',
+                'title' => '菜单模式',
+                'key' => 'demo-open',
+                'icon' => 'layui-icon-auz',
+                'weight' => 500,
                 'type' => 0,
-                'href' => '',
                 'children' => [
                     [
-                        'key' => 'demo702',
-                        'title' => '空白页面',
-                        'icon' => 'layui-icon-face-smile',
+                        'title' => '普通路由',
+                        'key' => 'demo-a',
+                        'href' => '/app/admin/view/result/success.html',
                         'type' => 1,
-                        'href' => '/app/admin/demos/system/space.html'
+                        'open_type' => '_component',
+                        'weight' => 1000,
+                    ],
+                    [
+                        'title' => '嵌套网页',
+                        'key' => 'demo-b',
+                        'href' => 'http://www.layui-vue.com',
+                        'type' => 1,
+                        'open_type' => '_iframe',
+                        'weight' => 900,
+                    ],
+                    [
+                        'title' => '新建标签',
+                        'key' => 'demo-c',
+                        'href' => 'http://www.layui-vue.com',
+                        'type' => 1,
+                        'open_type' => '_blank',
+                        'weight' => 800,
+                    ],
+                    [
+                        'title' => '弹窗网页',
+                        'key' => 'demo-d',
+                        'href' => 'http://www.layui-vue.com',
+                        'type' => 1,
+                        'open_type' => '_layer',
+                        'weight' => 700,
+                    ]
+                ]
+            ],
+            [
+                'title' => '深度测试',
+                'key' => 'demo-deep',
+                'icon' => 'layui-icon-auz',
+                'weight' => 400,
+                'type' => 0,
+                'children' => [
+                    [
+                        'title' => '二级菜单',
+                        'key' => 'demo-deep1-1',
+                        'href' => '/app/admin/view/result/success.html',
+                        'type' => 0,
+                        'weight' => 1000,
+                        'children' => [
+                            [
+                                'title' => '三级菜单',
+                                'key' => 'demo-deep1-1-1',
+                                'href' => '/app/admin/view/result/success.html',
+                                'type' => 0,
+                                'weight' => 1000,
+                                'children' => [
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-1-1-1',
+                                        'href' => '/app/admin/view/result/success.html',
+                                        'type' => 1,
+                                        'open_type' => '_component',
+                                        'weight' => 1000,
+                                    ],
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-1-1-2',
+                                        'href' => 'http://www.layui-vue.com',
+                                        'type' => 1,
+                                        'open_type' => '_blank',
+                                        'weight' => 900,
+                                    ]
+                                ]
+                            ],
+                            [
+                                'title' => '三级菜单',
+                                'key' => 'demo-deep1-1-2',
+                                'href' => 'http://www.layui-vue.com',
+                                'type' => 0,
+                                'weight' => 900,
+                                'children' => [
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-1-2-1',
+                                        'href' => '/app/admin/view/result/success.html',
+                                        'type' => 1,
+                                        'open_type' => '_component',
+                                        'weight' => 1000,
+                                    ],
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-1-2-2',
+                                        'href' => 'http://www.layui-vue.com',
+                                        'type' => 1,
+                                        'open_type' => '_blank',
+                                        'weight' => 900,
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ],
+                    [
+                        'title' => '二级菜单',
+                        'key' => 'demo-deep1-2',
+                        'href' => 'http://www.layui-vue.com',
+                        'type' => 0,
+                        'weight' => 900,
+                        'children' => [
+                            [
+                                'title' => '三级菜单',
+                                'key' => 'demo-deep1-2-1',
+                                'href' => '/app/admin/view/result/success.html',
+                                'type' => 0,
+                                'weight' => 1000,
+                                'children' => [
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-2-1-1',
+                                        'href' => '/app/admin/view/result/success.html',
+                                        'type' => 1,
+                                        'open_type' => '_component',
+                                        'weight' => 1000,
+                                    ],
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-2-1-2',
+                                        'href' => 'http://www.layui-vue.com',
+                                        'type' => 1,
+                                        'open_type' => '_blank',
+                                        'weight' => 900,
+                                    ]
+                                ]
+                            ],
+                            [
+                                'title' => '三级菜单',
+                                'key' => 'demo-deep1-2-2',
+                                'href' => 'http://www.layui-vue.com',
+                                'type' => 0,
+                                'weight' => 900,
+                                'children' => [
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-2-2-1',
+                                        'href' => '/app/admin/view/result/success.html',
+                                        'type' => 1,
+                                        'open_type' => '_component',
+                                        'weight' => 1000,
+                                    ],
+                                    [
+                                        'title' => '四级菜单',
+                                        'key' => 'demo-deep1-2-2-2',
+                                        'href' => 'http://www.layui-vue.com',
+                                        'type' => 1,
+                                        'open_type' => '_blank',
+                                        'weight' => 900,
+                                    ]
+                                ]
+                            ]
+                        ]
                     ]
                 ]
             ]

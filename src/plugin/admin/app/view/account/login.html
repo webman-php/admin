@@ -4,9 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
         <title>登录</title>
-        <!-- 样 式 文 件 -->
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/pages/login.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
+        <link rel="stylesheet" href="/app/admin/css/login.css" />
     </head>
     <!-- 代 码 结 构 -->
     <body background="/app/admin/admin/images/background.svg" style="background-size: cover;">
@@ -26,7 +25,7 @@
                 <img class="codeImage" width="120px"/>
             </div>
             <div class="layui-form-item">
-                <button type="submit" class="pear-btn pear-btn-primary login" lay-submit lay-filter="login">
+                <button type="submit" class="layui-btn login layui-btn-primary" lay-submit lay-filter="login">
                     登 入
                 </button>
             </div>
@@ -42,8 +41,9 @@
         <!-- 资 源 引 入 -->
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
+        <script src="/app/admin/js/common.js"></script>
         <script>
-            layui.use(['form', 'button', 'popup', 'layer', 'theme', 'admin'], function() {
+            layui.use(["popup"], function() {
 
                 var $ = layui.$, layer = layui.layer, form = layui.form;
                 function switchCaptcha() {

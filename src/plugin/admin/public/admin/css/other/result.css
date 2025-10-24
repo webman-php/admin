@@ -1,0 +1,40 @@
+.pear-result {
+	text-align: center;
+
+}
+.pear-result .success svg {
+	color: #32C682;
+	text-align: center;
+	margin-top: 40px;
+
+}
+.pear-result .error svg {
+	color: #f56c6c;
+	text-align: center;
+	margin-top: 40px;
+
+}
+.pear-result .title {
+	margin-top: 25px;
+
+}
+.pear-result .description {
+	margin-top: 25px;
+	width: 60%;
+	margin-left: 20%;
+	color: rgba(0, 0, 0, .45);
+}
+.pear-result .content {
+	margin-top: 20px;
+	width: 80%;
+	border-radius: 4px;
+	background-color: whitesmoke;
+	padding: 20px 32px;
+	margin-left: 10%;
+	margin-bottom: 30px;
+	text-align: left;
+}
+.pear-result .extra {
+	padding-top: 10px;
+	margin-top: 25px;
+}

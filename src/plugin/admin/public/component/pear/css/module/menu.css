@@ -1,7 +1,7 @@
 .pear-nav-tree {
-	width: 230px;
+	width: 230px !important;
 	border-radius: 0px;
-	background-color: #001529;
+	background-color: #28333E;
 }
 
 .pear-nav-tree .layui-nav-item>a {
@@ -16,7 +16,7 @@
 	line-height: 48px;
 }
 
-.pear-nav-tree  .layui-nav-item>a .layui-nav-more {
+.pear-nav-tree .layui-nav-item>a .layui-nav-more {
 	padding: 0px;
 }
 
@@ -24,7 +24,8 @@
 	width: 0px;
 	height: 0px;
 }
-.pear-side-scroll{
+
+.pear-side-scroll {
 	width: 230px;
 }
 
@@ -33,7 +34,7 @@
 .layui-nav-tree .layui-this,
 .layui-nav-tree .layui-this>a,
 .layui-nav-tree .layui-this>a:hover {
-	background-color: #5FB878;
+	background-color: var(--global-primary-color);
 }
 
 .pear-nav-tree .toast {
@@ -100,7 +101,7 @@
 	font-size: 14px;
 }
 
-.pear-nav-control.pc li{
+.pear-nav-control.pc li {
 	display: inline-block;
 }
 
@@ -112,15 +113,15 @@
 	background-color: whitesmoke;
 }
 
-.pear-nav-control.pc *{
-	color: darkslategray!important;
+.pear-nav-control.pc * {
+	color: darkslategray !important;
 }
 
-.pear-nav-control.pc .layui-nav-bar{
-	display: none!important;
+.pear-nav-control.pc .layui-nav-bar {
+	display: none !important;
 }
 
-.pear-nav-control .layui-nav-child{
+.pear-nav-control .layui-nav-child {
 	border: 1px solid whitesmoke;
 	border-radius: 6px;
 	width: 150px;
@@ -134,6 +135,7 @@
 	display: block !important;
 	background: transparent !important;
 }
+
 .pear-nav-tree .layui-nav-hover:before {
 	content: '';
 	position: absolute;
@@ -143,70 +145,77 @@
 	top: 0;
 	border-radius: 4px;
 	overflow: hidden;
-	background-color: #001529;
+	background-color: #28333E;
 	display: block;
 	box-shadow: 0px 0px 3px lightgray;
 }
+
 .pear-nav-tree .layui-nav-hover a span {
 	display: inline-block !important;
 }
+
 .pear-nav-tree .layui-nav-hover a i {
 	display: none;
 }
+
 .pear-nav-tree .layui-nav-child dd a span {
 	margin-left: 26px !important;
 }
+
 .pear-nav-tree .layui-nav-child dd a i {
 	display: none;
 }
+
 .pear-nav-tree .layui-nav-hover dd a span {
 	margin-left: 0px !important;
 }
+
 .pear-nav-tree dl {
 	padding-top: 0;
 	padding-bottom: 0;
 }
+
 /** 亮 样 式*/
-.dark-theme .layui-nav-tree{
-	background-color: #001529!important; 
+.dark-theme .layui-nav-tree {
+	background-color: #28333E !important;
 }
 
-.light-theme{
-	background-color: white!important;
+.light-theme {
+	background-color: white !important;
 }
 
 .light-theme .pear-nav-tree,
 .light-theme .pear-nav-tree .layui-nav-hover:before,
-.light-theme .pear-nav-tree .layui-nav-child{
-	background-color: white!important;
+.light-theme .pear-nav-tree .layui-nav-child {
+	background-color: white !important;
 }
 
 .light-theme .pear-nav-tree a,
-.light-theme .pear-nav-tree .layui-nav-more{
-	color: dimgray!important;
+.light-theme .pear-nav-tree .layui-nav-more {
+	color: dimgray !important;
 	border-top-color: dimgray;
 }
 
-.light-theme .pear-nav-tree .layui-nav-itemed>a>.layui-nav-more{
-	border-top-color: white!important;
-	border-bottom-color: dimgray!important;
+.light-theme .pear-nav-tree .layui-nav-itemed>a>.layui-nav-more {
+	border-top-color: white !important;
+	border-bottom-color: dimgray !important;
 }
 
 .light-theme .pear-nav-tree .layui-this a,
-.light-theme .pear-nav-tree .layui-this{
-	color: white!important;
-	background-color: #5FB878!important;
-	
+.light-theme .pear-nav-tree .layui-this {
+	color: white !important;
+	background-color: var(--global-primary-color) !important;
+
 }
 
-.light-theme .pear-nav-tree .layui-this a:hover{
-	background-color: #5FB878!important;
-	
+.light-theme .pear-nav-tree .layui-this a:hover {
+	background-color: var(--global-primary-color) !important;
+
 }
- 
-.light-theme .pear-nav-tree .layui-nav-bar{
+
+.light-theme .pear-nav-tree .layui-nav-bar {
 	display: none;
-	
+
 }
 
 /** 下 拉 图 标 */
@@ -247,6 +256,7 @@
 	width: 12px;
 	text-align: center;
 }
+
 .pear-nav-tree.arrow .layui-nav-child.layui-nav-hover>dd>a>.layui-nav-more {
 	display: inline-block !important;
 	transform: rotate(270deg);
@@ -264,20 +274,4 @@
 	content: '\e61a';
 	display: inline-block;
 	vertical-align: middle;
-}
-
-/* 显示子菜单图标并增加缩进 */
-.pear-nav-tree .layui-nav-child dd a i {
-	display: inline;
-	margin-left: 12px;
-	margin-right: 6px;
-}
-.pear-nav-tree .layui-nav-child dd a i[class=''] {
-	margin-right: 0;
-}
-.pear-nav-tree .layui-nav-child dd dl {
-	margin-left: 12px;
-}
-.pear-nav-tree .layui-nav-child dd a span {
-	margin-left: 0 !important;
 }

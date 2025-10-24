@@ -78,6 +78,8 @@ class RuleController extends Crud
             $item['name'] = $item['title'];
             $item['value'] = $item['id'];
             $item['icon'] = $item['icon'] ? "layui-icon {$item['icon']}" : '';
+            $item['openType'] = $item['open_type'] ?? '_iframe';
+            $item['isParent'] = !!$item['pid'];
             $formatted_items[] = $item;
         }
 
@@ -89,6 +91,9 @@ class RuleController extends Crud
         }
         $this->removeNotContain($tree_items, 'type', $types);
         $menus = $this->empty_filter(Tree::arrayValues($tree_items));
+        if ($request->get('original')){
+            return json($menus);
+        }
         return $this->json(0, 'ok', $menus);
     }
 

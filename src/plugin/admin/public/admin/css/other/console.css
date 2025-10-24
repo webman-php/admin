@@ -1,0 +1,81 @@
+
+.shortcut-menu {
+    width: 100%;
+	height: 66px;
+	background-color: #F8F8F8;
+	display: inline-block;
+	border-radius: 5px;
+	text-align: center;
+	margin-bottom: 3px;
+}
+
+.shortcut-menu i {
+	font-size: 30px;
+	height: 66px;
+	line-height: 66px;
+}
+
+.shortcut-menu:hover {
+    box-shadow: 2px 0 8px 0 lightgray !important;
+}
+
+.shortcut-menu-label {
+    width: 100%;
+    display: inline-block;
+    text-align: center;
+}
+
+.deputy {
+	width: 100%;
+	height: 90px;
+	background-color: #F8F8F8;
+	display: inline-block;
+	border-radius: 5px;
+	text-align: center;
+	margin-bottom: 3px;
+}
+
+.deputy:hover {
+	box-shadow: 2px 0 8px 0 lightgray !important;
+}
+
+.deputy .deputy-label {
+	color: gray;
+	margin-top: 14px;
+	font-size: 14px;
+}
+
+.deputy .deputy-count {
+    margin-top: 12px;
+	color: var(--global-primary-color);
+	font-size: 30px;
+}
+
+.message-board {
+	padding: 0 10px 10px;
+}
+
+.message-board li {
+	position: relative;
+	padding: 10px 0;
+	border-bottom: 1px solid #EEE;
+}
+
+.message-board li p {
+	padding-bottom: 10px;
+	padding-top: 3px;
+}
+
+.message-board li>span {
+	color: #999;
+	height: 24px;
+	line-height: 24px;
+}
+
+.message-board .message-board-reply {
+	position: absolute;
+	right: 20px;
+	bottom: 12px;
+	height: 24px;
+	line-height: 24px;
+}

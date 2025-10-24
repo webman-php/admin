@@ -3,9 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <title></title>
-        <link rel="stylesheet" href="/app/admin/component/layui/css/layui.css?v=2.8.12" />
-        <link rel="stylesheet" href="/app/admin/component/pear/css/pear.css" />
-        <link rel="stylesheet" href="/app/admin/admin/css/reset.css" />
+        <link rel="stylesheet" href="/app/admin/css/style.css" />
     </head>
     <body class="pear-container">
         <style>
@@ -48,10 +46,10 @@
                             </div>
                             <div class="layui-form-item">
                                 <div class="layui-input-block">
-                                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="saveBaseInfo">
+                                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit="" lay-filter="saveBaseInfo">
                                         提交
                                     </button>
-                                    <button type="reset" class="pear-btn pear-btn-md">
+                                    <button type="reset" class="layui-btn layui-btn-md">
                                         重置
                                     </button>
                                 </div>
@@ -83,10 +81,10 @@
                             </div>
                             <div class="layui-form-item">
                                 <div class="layui-input-block">
-                                    <button type="submit" class="pear-btn pear-btn-primary pear-btn-md" lay-submit="" lay-filter="savePassword">
+                                    <button type="submit" class="layui-btn layui-btn-primary layui-btn-md" lay-submit="" lay-filter="savePassword">
                                         提交
                                     </button>
-                                    <button type="reset" class="pear-btn pear-btn-md">
+                                    <button type="reset" class="layui-btn layui-btn-md">
                                         重置
                                     </button>
                                 </div>
@@ -104,10 +102,11 @@
 
         <script src="/app/admin/component/layui/layui.js?v=2.8.12"></script>
         <script src="/app/admin/component/pear/pear.js"></script>
-        <script src="/app/admin/admin/js/permission.js"></script>
+        <script src="/app/admin/js/common.js"></script>
+        <script src="/app/admin/js/permission.js"></script>
         <script>
 
-            layui.use(["form", "popup"], function () {
+            layui.use(['popup'], function () {
                 let form = layui.form;
                 let $ = layui.$;
                 $.ajax({
@@ -128,6 +127,9 @@
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
+                            setTimeout(function () {
+                              top.location.reload();
+                            }, 1000)
                             return layui.popup.success("操作成功");
                         }
                     });

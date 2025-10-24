@@ -1,0 +1,124 @@
+@import "/app/admin/component/pear/css/pear.css";
+@import "/app/admin/admin/css/admin.css";
+@import "/app/admin/admin/css/admin.dark.css";
+@import "/app/admin/admin/css/variables.css";
+@import "/app/admin/admin/css/reset.css";
+@import "/app/admin/css/form-box.css";
+i[class^=layui-icon-] {
+  font-family: layui-icon !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.pear-nav-tree .layui-nav-child dd a i.layui-icon {
+  display: inline-block;
+  margin-left: 26px;
+  margin-right: 6px;
+}
+.pear-nav-tree .layui-nav-child dd a i.layui-icon + span {
+  margin-left: 0 !important;
+}
+.pear-nav-tree .layui-nav-item a:hover {
+  background-color: var(--global-primary-color);
+  color: white !important;
+  opacity: 0.6;
+}
+.pear-nav-tree .layui-nav-item a:hover > .layui-nav-more {
+  color: white !important;
+}
+
+.layui-tab-brief > .layui-tab-title .layui-this {
+  color: var(--global-primary-color);
+}
+.layui-tab-brief > .layui-tab-title .layui-this::after {
+  border-bottom-color: var(--global-primary-color);
+}
+.layui-tab-brief > .layui-tab-more li.layui-this::after {
+  border-bottom-color: var(--global-primary-color);
+}
+
+.layui-btn {
+  background-color: transparent;
+  color: #5f5f5f;
+  border-color: #d2d2d2;
+}
+.layui-btn:hover {
+  opacity: 0.8;
+  color: inherit;
+}
+.layui-btn.layui-btn-primary {
+  background-color: var(--global-primary-color);
+  color: #fff;
+}
+.layui-btn.layui-btn-primary:hover {
+  background-color: var(--global-primary-color);
+  color: #fff;
+}
+.layui-btn.layui-btn-danger {
+  background-color: #ff5722;
+  color: white;
+}
+.layui-btn.layui-btn-danger:hover {
+  color: white;
+}
+.layui-btn.layui-btn-success {
+  background-color: #16baaa;
+  color: white;
+}
+.layui-btn.layui-btn-success:hover {
+  color: white;
+}
+
+.layui-laypage .layui-laypage-curr .layui-laypage-em {
+  background-color: var(--global-primary-color);
+}
+
+.layui-form-checked[lay-skin=primary] > i,
+.layui-form-onswitch {
+  background-color: var(--global-primary-color);
+  border-color: var(--global-primary-color);
+}
+
+.layui-form-label.required::after {
+  content: "*";
+  color: red;
+  display: inline-block;
+  padding: 7px 5px;
+  line-height: 20px;
+  text-align: right;
+  position: absolute;
+  right: 0;
+  top: 5px;
+}
+
+/* dark theme */
+.pear-admin-dark .layui-table .layui-table-click, .pear-admin-dark .layui-table .layui-table-hover, .pear-admin-dark .layui-table .layui-table[lay-even] tbody tr:nth-child(2n) {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+.pear-admin-dark .layui-table .layui-table-grid-down, .pear-admin-dark .layui-table .layui-table-cell-c {
+  background-color: rgb(112, 112, 112);
+  color: white;
+  border-width: 0;
+}
+.pear-admin-dark .layui-form .layui-form-label {
+  color: white;
+}
+.pear-admin-dark .layui-form xm-select {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+.pear-admin-dark .layui-form xm-select .label-content {
+  color: white;
+}
+.pear-admin-dark .layui-form .bottom {
+  background-color: rgba(0, 0, 0, 0.85);
+}
+.pear-admin-dark .layui-form .layui-iconpicker .layui-anim, .pear-admin-dark .layui-form .layui-iconpicker .layui-iconpicker-list {
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  color: white;
+}
+.pear-admin-dark .layui-form .layui-iconpicker .layui-iconpicker-icon {
+  background-color: rgba(0, 0, 0, 0.85);
+  color: white;
+}

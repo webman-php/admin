@@ -1,0 +1,66 @@
+
+.mainBox::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+}
+
+.mainBox::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.mainBox::-webkit-scrollbar-track {
+    background: white;
+    border-radius: 2px;
+}
+
+.mainBox::-webkit-scrollbar-thumb {
+    background: #E6E6E6;
+    border-radius: 2px;
+}
+
+.mainBox::-webkit-scrollbar-thumb:hover {
+    background: #E6E6E6;
+}
+
+.mainBox::-webkit-scrollbar-corner {
+    background: #f6f6f6;
+}
+
+.mainBox {
+    width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    bottom: 50px;
+    overflow: auto;
+}
+
+.bottom {
+    width: 100%;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 50px;
+    line-height: 50px;
+    background-color: #F8F8F8;
+    border-top: 1px solid #eee;
+}
+
+.button-container {
+    position: absolute;
+    right: 15px;
+}
+
+.main-container {
+    margin: 15px;
+}
+
+.main-container .layui-form-item {
+    margin-bottom: 15px !important;
+    margin-top: 10px !important;
+}
+
+.main-container.mr-5{
+    margin-right: 48px;
+}

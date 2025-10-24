@@ -1,0 +1,39 @@
+.pear-message-center {
+    width: 360px;
+    height: 100%;
+}
+
+.pear-message-center .layui-tab .layui-tab-title{
+    display: flex;
+}
+
+.pear-message-center .layui-tab .layui-tab-title .layui-this::after {
+    display: none;
+}
+
+.pear-message-center .layui-tab .layui-tab-title li {
+    flex: 1;
+}
+
+.pear-message-center .message-item img {
+	margin-left: 8px;
+	width: 33px !important;
+	height: 33px !important;
+	border-radius: 50px;
+	margin-right: 15px;
+}
+
+.pear-message-center .message-item {
+	height: 64px !important;
+	line-height: 45px !important;
+	padding-right: 20px;
+	padding-left: 20px;
+	border-bottom: 1px solid whitesmoke;
+	padding-top: 10px;
+	padding-bottom: 15px;
+}
+
+.pear-message-center .message-item .extra {
+	float: right;
+	right: 10px;
+}
