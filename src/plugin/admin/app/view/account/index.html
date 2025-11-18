@@ -146,6 +146,9 @@
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
+                            setTimeout(()=>{
+                                top.location.reload();
+                            }, 2000)
                             return layui.popup.success("操作成功");
                         }
                     });
