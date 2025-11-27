@@ -127,3 +127,6 @@ i[class^=layui-icon-] {
   display: none;
   pointer-events: none;
 }
+*[permission][show] {
+  display: inherit;
+}
