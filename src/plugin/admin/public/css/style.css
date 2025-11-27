@@ -125,4 +125,5 @@ i[class^=layui-icon-] {
 
 *[permission] {
   display: none;
+  pointer-events: none;
 }
