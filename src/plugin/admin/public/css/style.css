@@ -122,3 +122,7 @@ i[class^=layui-icon-] {
   background-color: rgba(0, 0, 0, 0.85);
   color: white;
 }
+
+*[permission] {
+  display: none;
+}
