@@ -12,7 +12,7 @@ layui.$(function () {
             let isSuperAdmin = false;
             // codes里有*，说明是超级管理员，拥有所有权限
             if (codes.indexOf('*') !== -1) {
-                $("head").append("<style>*[permission]{display: initial}</style>");
+                $("head").append("<style>*[permission]{display: initial; pointer-events: auto;}</style>");
                 isSuperAdmin = true;
             }
             if (self !== top) {
@@ -27,7 +27,7 @@ layui.$(function () {
                 codes[k] = '*[permission^="'+code+'"]';
             });
             if (codes.length) {
-                $("head").append("<style>" + codes.join(",") + "{display: initial}</style>");
+                $("head").append("<style>" + codes.join(",") + "{display: initial; pointer-events: auto;}</style>");
             }
         }
     });
