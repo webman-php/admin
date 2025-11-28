@@ -7,10 +7,10 @@
         <link rel="stylesheet" href="/app/admin/css/style.css" />
     </head>
     <body class="pear-container">
-    
+
         <!-- 顶部查询表单 -->
-        
-        
+
+
         <!-- 数据表格 -->
         <div class="layui-card">
             <div class="layui-card-body">
@@ -40,7 +40,7 @@
         <script src="/app/admin/component/pear/pear.js"></script>
         <script src="/app/admin/js/permission.js"></script>
         <script src="/app/admin/js/common.js"></script>
-        
+
         <script>
 
             // 相关常量
@@ -50,9 +50,9 @@
             const DELETE_API = "/app/admin/role/delete";
             const INSERT_URL = "/app/admin/role/insert";
             const UPDATE_URL = "/app/admin/role/update";
-            
+
             // 表格渲染
-            layui.use(["common", "popup"], function() {
+            layui.use(["common", "popup"], function () {
                 let treeTable = layui.treeTable;
                 let table = layui.table;
                 let form = layui.form;
@@ -60,76 +60,76 @@
                 let common = layui.common;
                 let util = layui.util;
 
-				// 表头参数
-				let cols = [
-					{
-						type: "checkbox"
-					},{
+                // 表头参数
+                let cols = [
+                    {
+                        type: "checkbox"
+                    }, {
                         title: "角色组",
                         field: "name",
-                    },{
-						title: "主键",
-						field: "id",
+                    }, {
+                        title: "主键",
+                        field: "id",
                         hide: true,
-					},{
-						title: "权限",
-						field: "rules",
-						templet: function (d) {
-							let field = "rules";
-							if (typeof d[field] == "undefined") return "";
-							let items = [];
-							layui.each((d[field] + "").split(","), function (k , v) {
-								items.push(apiResults[field][v] || v);
-							});
-							return util.escape(items.join(","));
-						},
+                    }, {
+                        title: "权限",
+                        field: "rules",
+                        templet: function (d) {
+                            let field = "rules";
+                            if (typeof d[field] == "undefined") return "";
+                            let items = [];
+                            layui.each((d[field] + "").split(","), function (k, v) {
+                                items.push(apiResults[field][v] || v);
+                            });
+                            return util.escape(items.join(","));
+                        },
                         hide: true,
-					},{
-						title: "创建时间",
-						field: "created_at",
-					},{
-						title: "更新时间",
-						field: "updated_at",
-					},{
-						title: "父级",
-						field: "pid",
-						templet: function (d) {
-							let field = "pid";
-							if (typeof d[field] == "undefined") return "";
-							let items = [];
-							layui.each((d[field] + "").split(","), function (k , v) {
-								items.push(apiResults[field][v] || v);
-							});
-							return util.escape(items.join(","));
-						},
+                    }, {
+                        title: "创建时间",
+                        field: "created_at",
+                    }, {
+                        title: "更新时间",
+                        field: "updated_at",
+                    }, {
+                        title: "父级",
+                        field: "pid",
+                        templet: function (d) {
+                            let field = "pid";
+                            if (typeof d[field] == "undefined") return "";
+                            let items = [];
+                            layui.each((d[field] + "").split(","), function (k, v) {
+                                items.push(apiResults[field][v] || v);
+                            });
+                            return util.escape(items.join(","));
+                        },
                         hide: true,
-					},{
-						title: "操作",
-						toolbar: "#table-bar",
-						align: "center",
-						fixed: "right",
-						width: 120,
-					}
-				];
+                    }, {
+                        title: "操作",
+                        toolbar: "#table-bar",
+                        align: "center",
+                        fixed: "right",
+                        width: 120,
+                    }
+                ];
 
-				// 渲染表格
-				function render()
-				{
+                // 渲染表格
+                function render() {
                     treeTable.render({
-				        elem: "#data-table",
-				        url: SELECT_API,
+                        elem: "#data-table",
+                        url: SELECT_API,
                         tree: {
-                            customName:{
+                            customName: {
                                 id: "id",
                                 pid: "pid",
-                                name: "title",
+                                name: "name",
                             },
-                            data:{
+                            data: {
                                 isSimpleData: true,
                             },
+                            view:{
+                                expandAllDefault: true
+                            }
                         },
-                        treeColIndex: 1,
-                        treeDefaultClose: false,
                         cols: [cols],
                         skin: "line",
                         size: "lg",
@@ -139,50 +139,58 @@
                             layEvent: "refresh",
                             icon: "layui-icon-refresh",
                         }, "filter", "print", "exports"]
-				    });
-				}
+                    });
+                }
 
-				// 获取表格中下拉或树形组件数据
-				let apis = [];
-				apis.push(["rules", "/app/admin/rule/get?type=0,1,2"]);
-				apis.push(["pid", "/app/admin/role/select?format=tree"]);
-				let apiResults = {};
-				apiResults["rules"] = [];
-				apiResults["pid"] = [];
-				let count = apis.length;
-				layui.each(apis, function (k, item) {
-				    let [field, url] = item;
-				    $.ajax({
-				        url: url,
-				        dateType: "json",
-				        success: function (res) {
+                // 获取表格中下拉或树形组件数据
+                let apis = [];
+                apis.push(["rules", "/app/admin/rule/get?type=0,1,2"]);
+                apis.push(["pid", "/app/admin/role/select?format=tree"]);
+                let apiResults = {};
+                apiResults["rules"] = [];
+                apiResults["pid"] = [];
+                let count = apis.length;
+                layui.each(apis, function (k, item) {
+                    let [field, url] = item;
+                    $.ajax({
+                        url: url,
+                        dateType: "json",
+                        success: function (res) {
                             if (res.code) {
                                 return layui.popup.failure(res.msg);
                             }
-				            function travel(items) {
-				                for (let k in items) {
-				                    let item = items[k];
-				                    apiResults[field][item.value] = item.name;
-				                    if (item.children) {
-				                        travel(item.children);
-				                    }
-				                }
-				            }
-				            travel(res.data);
-				        },
-				        complete: function () {
-				            if (--count === 0) {
-				                render();
-				            }
-				        }
-				    });
-				});
-				if (!count) {
-				    render();
-				}
+
+                            function travel(items) {
+                                for (let k in items) {
+                                    let item = items[k];
+                                    apiResults[field][item.value] = item.name;
+                                    if (item.children) {
+                                        travel(item.children);
+                                    }
+                                }
+                            }
+
+                            travel(res.data);
+                        },
+                        complete: function () {
+                            if (--count === 0) {
+                                render();
+                            }
+                        }
+                    });
+                });
+                if (!count) {
+                    render();
+                }
+
+                table.on("row(data-table)", function (obj) {
+                    treeTable.expandNode(obj.config.id, {
+                        index: obj.index,
+                    });
+                })
 
                 // 编辑或删除行事件
-                table.on("tool(data-table)", function(obj) {
+                table.on("tool(data-table)", function (obj) {
                     if (obj.event === "remove") {
                         remove(obj);
                     } else if (obj.event === "edit") {
@@ -191,7 +199,7 @@
                 });
 
                 // 表格顶部工具栏事件
-                table.on("toolbar(data-table)", function(obj) {
+                table.on("toolbar(data-table)", function (obj) {
                     if (obj.event === "add") {
                         add();
                     } else if (obj.event === "refresh") {
@@ -202,7 +210,7 @@
                 });
 
                 // 表格顶部搜索事件
-                form.on("submit(table-query)", function(data) {
+                form.on("submit(table-query)", function (data) {
                     table.reload("data-table", {
                         page: {
                             curr: 1
@@ -213,14 +221,14 @@
                 });
 
                 // 表格顶部搜索重置事件
-                form.on("submit(table-reset)", function(data) {
+                form.on("submit(table-reset)", function (data) {
                     table.reload("data-table", {
                         where: []
                     })
                 });
 
                 // 表格排序事件
-                table.on("sort(data-table)", function(obj){
+                table.on("sort(data-table)", function (obj) {
                     table.reload("data-table", {
                         initSort: obj,
                         scrollPos: "fixed",
@@ -232,35 +240,35 @@
                 });
 
                 // 表格新增数据
-                let add = function() {
+                let add = function () {
                     layer.open({
                         type: 2,
                         title: "新增",
                         shade: 0.1,
-                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
+                        area: [common.isModile() ? "100%" : "750px", common.isModile() ? "100%" : "625px"],
                         content: INSERT_URL
                     });
                 }
 
                 // 表格编辑数据
-                let edit = function(obj) {
+                let edit = function (obj) {
                     let value = obj.data[PRIMARY_KEY];
                     layer.open({
                         type: 2,
                         title: "修改",
                         shade: 0.1,
-                        area: [common.isModile()?"100%":"750px", common.isModile()?"100%":"625px"],
+                        area: [common.isModile() ? "100%" : "750px", common.isModile() ? "100%" : "625px"],
                         content: UPDATE_URL + "?" + PRIMARY_KEY + "=" + value
                     });
                 }
 
                 // 删除一行
-                let remove = function(obj) {
+                let remove = function (obj) {
                     return doRemove(obj.data[PRIMARY_KEY]);
                 }
 
                 // 删除多行
-                let batchRemove = function(obj) {
+                let batchRemove = function (obj) {
                     let checkIds = common.checkField(obj, PRIMARY_KEY);
                     if (checkIds === "") {
                         layui.popup.warning("未选中数据");
@@ -276,7 +284,7 @@
                     layer.confirm("确定删除?", {
                         icon: 3,
                         title: "提示"
-                    }, function(index) {
+                    }, function (index) {
                         layer.close(index);
                         let loading = layer.load();
                         $.ajax({
@@ -284,7 +292,7 @@
                             data: data,
                             dataType: "json",
                             type: "post",
-                            success: function(res) {
+                            success: function (res) {
                                 layer.close(loading);
                                 if (res.code) {
                                     return layui.popup.failure(res.msg);
@@ -296,20 +304,8 @@
                 }
 
                 // 刷新表格数据
-                window.refreshTable = function() {
-                    table.reloadData("data-table", {
-                        scrollPos: "fixed",
-                        done: function (res, curr) {
-                            if (curr > 1 && res.data && !res.data.length) {
-                                curr = curr - 1;
-                                table.reloadData("data-table", {
-                                    page: {
-                                        curr: curr
-                                    },
-                                })
-                            }
-                        }
-                    });
+                window.refreshTable = function () {
+                    treeTable.reloadData('data-table')
                 }
             })
 

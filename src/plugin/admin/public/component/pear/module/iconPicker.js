@@ -419,7 +419,21 @@ layui.define(['laypage', 'form'], function(exports) {
 						"layui-icon-face-smile-fine", "layui-icon-list", "layui-icon-release",
 						"layui-icon-ok", "layui-icon-help", "layui-icon-chat", "layui-icon-top",
 						"layui-icon-star", "layui-icon-star-fill", "layui-icon-close-fill",
-						"layui-icon-close", "layui-icon-ok-circle", "layui-icon-add-circle-fine"
+						"layui-icon-close", "layui-icon-ok-circle", "layui-icon-add-circle-fine",
+            "layui-icon-sound", "layui-icon-bot", "layui-icon-leaf", "layui-icon-folder",
+            "layui-icon-folder-open", "layui-icon-gitee", "layui-icon-github", "layui-icon-disabled",
+            "layui-icon-moon", "layui-icon-error", "layui-icon-success", "layui-icon-question",
+            "layui-icon-lock", "layui-icon-eye", "layui-icon-eye-invisible", "layui-icon-backspace",
+            "layui-icon-tips-fill", "layui-icon-test", "layui-icon-clear", "layui-icon-heart-fill",
+            "layui-icon-light", "layui-icon-music", "layui-icon-time", "layui-icon-ie", "layui-icon-firefox",
+            "layui-icon-at", "layui-icon-bluetooth", "layui-icon-chrome", "layui-icon-edge",
+            "layui-icon-heart", "layui-icon-key", "layui-icon-android", "layui-icon-mike",
+            "layui-icon-mute", "layui-icon-gift", "layui-icon-windows", "layui-icon-ios", "layui-icon-logout",
+            "layui-icon-wifi", "layui-icon-rss", "layui-icon-email", "layui-icon-reduce-circle",
+            "layui-icon-service", "layui-icon-addition", "layui-icon-subtraction", "layui-icon-slider",
+            "layui-icon-print", "layui-icon-export", "layui-icon-cols", "layui-icon-screen-full",
+            "layui-icon-screen-restore", "layui-icon-layim-download", "layui-icon-layim-uploadfile",
+            "layui-icon-layim-theme", "layui-icon-transfer"
 					];
 					return arr;
 				},
@@ -458,8 +472,22 @@ layui.define(['laypage', 'form'], function(exports) {
 						"&amp;#xe60f;", "&amp;#xe60e;", "&amp;#xe60d;", "&amp;#xe60c;",
 						"&amp;#xe60a;", "&amp;#xe609;", "&amp;#xe605;", "&amp;#xe607;",
 						"&amp;#xe606;", "&amp;#xe604;", "&amp;#xe600;", "&amp;#xe658;",
-						"&amp;#x1007;", "&amp;#x1006;", "&amp;#x1005;", "&amp;#xe608;"
-					];
+						"&amp;#x1007;", "&amp;#x1006;", "&amp;#x1005;", "&amp;#xe608;",
+            "&amp;#xe69d;", "&amp;#xe7d6;", "&amp;#xe701;", "&amp;#xeabe;",
+            "&amp;#xeac1;", "&amp;#xe69b;", "&amp;#xe6a7;", "&amp;#xe6cc;",
+            "&amp;#xe6c2;", "&amp;#xe693;", "&amp;#xe697;", "&amp;#xe699;",
+            "&amp;#xe69a;", "&amp;#xe695;", "&amp;#xe696;", "&amp;#xe694;",
+            "&amp;#xeb2e;", "&amp;#xe692;", "&amp;#xe788;", "&amp;#xe68f;",
+            "&amp;#xe748;", "&amp;#xe690;", "&amp;#xe68d;", "&amp;#xe7bb;",
+            "&amp;#xe686;", "&amp;#xe687;", "&amp;#xe689;", "&amp;#xe68a;",
+            "&amp;#xe68b;", "&amp;#xe68c;", "&amp;#xe683;", "&amp;#xe684;",
+            "&amp;#xe6dc;", "&amp;#xe685;", "&amp;#xe627;", "&amp;#xe67f;",
+            "&amp;#xe680;", "&amp;#xe682;", "&amp;#xe7e0;", "&amp;#xe808;",
+            "&amp;#xe618;", "&amp;#xe616;", "&amp;#xe691;", "&amp;#xe626;",
+            "&amp;#xe624;", "&amp;#xe67e;", "&amp;#xe714;", "&amp;#xe66d;",
+            "&amp;#xe67d;", "&amp;#xe610;", "&amp;#xe622;", "&amp;#xe758;",
+            "&amp;#xe61e;", "&amp;#xe61d;", "&amp;#xe61b;"
+          ];
 				}
 			}
 		};
